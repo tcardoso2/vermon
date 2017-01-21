@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+  },
+    "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  },
+  "description": "A library for detecting motion in general, with an application for Raspberry Pi in particular.",
+  "name": "t-motion-detector",
+  "main": "main",
+  "readmeFilename": "README.md",
+  "version": "0.1.0"
+}
