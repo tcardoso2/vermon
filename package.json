@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "extend": "latest"
   },
     "devDependencies": {
     "chai": "*",
@@ -9,5 +10,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
