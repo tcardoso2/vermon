@@ -14,7 +14,6 @@ var chaiAsPromised = require("chai-as-promised");
 var should = chai.should();
 var fs = require('fs');
 var ent = require('../Entities.js');
-const EventEmitter = require('events');
 
 //Chai will use promises for async events
 chai.use(chaiAsPromised);
