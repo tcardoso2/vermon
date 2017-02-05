@@ -44,10 +44,10 @@ describe("When there is a surroundings change relative to an object, ", function
     //Assert that the detector triggered a motion event
     mDetector.on('hasDetected', (function(oldState, newState, env){
       alternativeCount +=2;
-      console.log("Alternative count is", alternativeCount);
+      //console.log("Alternative count is", alternativeCount);
     }));
     env.AddChange(intensity);
-    console.log("Alternative count is", alternativeCount);
+    //console.log("Alternative count is", alternativeCount);
     
     mDetector.GetCount().should.equal(1);
     alternativeCount.should.equal(2);
@@ -102,11 +102,11 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
 
     //Assert that the detector triggered a motion event
     mD1.on('hasDetected', (function(oldState, newState, env){
-      console.log("MD1 detected movement ", newState);
+      //console.log("MD1 detected movement ", newState);
       count++;
     }));
     mD2.on('hasDetected', (function(oldState, newState, env){
-      console.log("MD2 detected movement ", newState);
+      //console.log("MD2 detected movement ", newState);
       count++;
     }));
     env.AddChange(1);
@@ -127,15 +127,14 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
 
     //Assert that the detector triggered a motion event
     mD1.on('hasDetected', (function(oldState, newState, env){
-      console.log("MD1 detected movement ", newState);
+      //console.log("MD1 detected movement ", newState);
       count++;
     }));
     mD2.on('hasDetected', (function(oldState, newState, env){
-      console.log("MD2 detected movement ", newState);
+      //console.log("MD2 detected movement ", newState);
       count++;
     }));
     env.AddChange(1);
     count.should.equal(1);
   });
 });
-
