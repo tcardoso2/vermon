@@ -14,6 +14,16 @@ function BaseNotifier(){
   this.Notify = function(text){
     this.emit('pushedNotification', this.name, text);
   }
+
+  //Extensibility methods
+  this.UseIn = function(){
+    throw "Needs to be implemented by sub-classes";
+  }
+
+  this.Use = function(_extension){
+    //TODO: Implement, should use Dependency injection techniques / late binding
+    Start(_extension.BaseParameters());
+  }
 }
 function BaseParameters(){
   this.environment;
@@ -56,7 +66,7 @@ function Start(params){
   //Sets the parameters first if they exist
   if (params){
     if (params.environment){
-      parameters = params.environment;
+      environment = params.environment;
     }
   	if (params.initialNotifier){
   	  notifiers.push(params.initialNotifier);
@@ -94,4 +104,5 @@ exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
 exports.RemoveNotifier = RemoveNotifier;
 exports.GetEnvironment = GetEnvironment;
+exports.Entities = ent;
 exports.Start = Start;

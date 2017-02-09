@@ -2,10 +2,17 @@
 //Collaborator: MotionDetector
 var events = require("events");
 
-function Environment(){
+function Environment(params){
   
   var currentState = 0;
   var motionDetectors = [];
+
+  this.name = "No name";
+  if (params)
+  {
+    this.name = params.name;
+  }
+  
   events.EventEmitter.call(this);
   
   //biderectional binding, once a state is changed, the Environment Sends a signal to all the Motion
@@ -43,6 +50,12 @@ function Environment(){
   	var oldState = currentState;
   	currentState += intensity;
     this.emit("changedState", oldState, currentState);
+  }
+
+  //Abstract methods, should be overriden by extender classes, cannot be used directly
+  this.IsActive = function()
+  {
+    throw new Error("Not Implemented.");
   }
 }
 
