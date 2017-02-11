@@ -59,7 +59,7 @@ function Environment(params){
   }
 }
 
-//A generic vase class which creates a motion detector for surrounding environments
+//A generic base class which creates a motion detector for surrounding environments
 //Collaborator: Environment
 function MotionDetector(){
   
@@ -77,9 +77,11 @@ function MotionDetector(){
   //Sends a signal to the motion detector
   this.Send = function(newState, env)
   {
-    count++;
-    this.emit("hasDetected", currentIntensity, newState, this);
-    currentIntensity = newState;
+    if(isActive){
+      count++;
+      this.emit("hasDetected", currentIntensity, newState, this);
+      currentIntensity = newState;
+    }
   }
 
   //Returns the number of movement detections happened since it Started monitoring
@@ -98,6 +100,11 @@ function MotionDetector(){
   this.StartMonitoring = function(){
     isActive = true;
     count = 0;
+  }
+
+  //Resets the state to initial (StartMonitoring)
+  this.Reset = function(){
+    this.StartMonitoring();
   }
 }
 
