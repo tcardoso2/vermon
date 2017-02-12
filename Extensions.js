@@ -35,14 +35,13 @@ class PIRMotionDetector extends MotionDetector{
   startMonitoring(){
     super.startMonitoring();
     if(this.pir){
-      this.pir.m = this;
+      var m = this;
       this.pir.watch(function(err, value){
         if (err) this.Exit();
         console.log('Intruder was detected.');
         if (value == 1)
         {
-          pir.m.Send(value);
-          alert("Does not work! MotionDetector is of Environment type??!??!?!?!");
+          m.send(value);
         }
       });
     }
