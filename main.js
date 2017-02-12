@@ -39,8 +39,13 @@ function AddNotifier(notifier){
 //Adds a detector and binds it to the environment
 function AddDetector(detector){
   motionDetectors.push(detector);
-  environment.BindDetector(detector);
-  detector.StartMonitoring();
+  if (environment)
+  {
+    environment.BindDetector(detector);
+    detector.StartMonitoring();
+  } else {
+    throw new Error("No environment was detected, please add one first.");
+  }
 }
 
 function RemoveNotifier(notifier){
