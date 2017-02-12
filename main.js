@@ -1,5 +1,6 @@
 var events = require("events");
-var ent = require("./Entities.js")
+var ent = require("./Entities.js");
+var ext = require("./Extensions.js");
 var notifiers = [];
 var environment;
 var motionDetectors = [];
@@ -105,4 +106,5 @@ exports.AddDetector = AddDetector;
 exports.RemoveNotifier = RemoveNotifier;
 exports.GetEnvironment = GetEnvironment;
 exports.Entities = ent;
+exports.Extensions = ext;
 exports.Start = Start;

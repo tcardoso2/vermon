@@ -34,14 +34,16 @@ function PIRMotionDetector(pin){
 
   //Starts monitoring any movement
   this.StartMonitoring = function(){
-    pir.watch(function(err, value){
-      if (err) this.Exit();
-      console.log('Intruder was detected.');
-      if (value == 1)
-      {
-        this.AddChange(value);
-      }
-    });
+    if(pir){
+      pir.watch(function(err, value){
+        if (err) this.Exit();
+        console.log('Intruder was detected.');
+        if (value == 1)
+        {
+          this.AddChange(value);
+        }
+      });
+    }
     isActive = true;
     count = 0;
   }
