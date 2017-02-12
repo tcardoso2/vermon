@@ -9,7 +9,7 @@ class PIRMotionDetector extends MotionDetector{
   
   constructor(pin, callback){
     super();
-    this.gpio = undefined;
+    var Gpio = undefined;
     this.pir = undefined;
 
     if (!pin)
@@ -17,7 +17,7 @@ class PIRMotionDetector extends MotionDetector{
       throw new Error('FATAL: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.');
     }
     if (this._isRPi()){
-      this.gpio = require('onoff').Gpio;
+      Gpio = require('onoff').Gpio;
       this.pir = new Gpio(pin, 'in', 'both');
     } else {
       console.error("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
