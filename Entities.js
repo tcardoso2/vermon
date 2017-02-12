@@ -21,7 +21,7 @@ function Environment(params){
   	for (m in motionDetectors)
   	{
   	  motionDetectors[m].Send(newState, this);
-	}
+    }
   });
 
   //Gets the current state of the environment
@@ -56,6 +56,12 @@ function Environment(params){
   this.IsActive = function()
   {
     throw new Error("Not Implemented.");
+  }
+  
+  //Do any exit procedures required here (e.g. releasing memory, etc...)
+  this.Exit = function()
+  {
+    throw new Error("Not Implemented.");    
   }
 }
 

@@ -42,4 +42,17 @@ describe("When a new PIR Motion Detector is added", function() {
     }
     should.fail();
   });
+  
+  it('it must not throw any error if a pin is provided (run only on a Rpi, will show an error if the host if not a RPi)', function (done) {
+    //Prepare
+    var env = new ent.Environment();
+    try{
+      var pir = new ext.PIRMotionDetector(17);
+    } catch(e)
+    {
+      console.error(e);
+      should.fail();
+    }
+    done();
+  });
 });
