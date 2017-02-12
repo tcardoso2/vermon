@@ -35,12 +35,13 @@ function PIRMotionDetector(pin){
   //Starts monitoring any movement
   this.StartMonitoring = function(){
     if(pir){
+      var m = this;
       pir.watch(function(err, value){
         if (err) this.Exit();
         console.log('Intruder was detected.');
         if (value == 1)
         {
-          this.Send(value);
+          m.Send(value);
         }
       });
     }
