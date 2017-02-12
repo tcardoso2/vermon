@@ -55,4 +55,11 @@ describe("When a new PIR Motion Detector is added", function() {
     }
     done();
   });
+  
+  it('it must extend its parent', function (done) {
+    //Prepare
+    var pir = new ext.PIRMotionDetector(17);
+    pir.send.should.not.equal(undefined);
+    done();
+  });
 });

@@ -2,64 +2,66 @@
 //Collaborator: MotionDetector
 var events = require("events");
 
-function Environment(params){
-  
-  var currentState = 0;
-  var motionDetectors = [];
+class Environment{
 
-  this.name = "No name";
-  if (params)
-  {
-    this.name = params.name;
-  }
-  
-  events.EventEmitter.call(this);
-  
-  //biderectional binding, once a state is changed, the Environment Sends a signal to all the Motion
-  //detectors SEQUENTIALLY
-  this.on('changedState', function(oldState, newState){
-  	for (m in motionDetectors)
-  	{
-  	  motionDetectors[m].Send(newState, this);
+  constructor(params){
+    this.currentState = 0;
+    this.motionDetectors = [];
+    this.name = "No name";
+
+    if (params)
+    {
+      this.name = params.name;
     }
-  });
+  
+    events.EventEmitter.call(this);
+  
+    //biderectional binding, once a state is changed, the Environment Sends a signal to all the Motion
+    //detectors SEQUENTIALLY
+    this.on('changedState', function(oldState, newState){
+  	  for (var m in this.motionDetectors)
+  	  {
+  	    this.motionDetectors[m].send(newState, this);
+      }
+    });
+  }
 
   //Gets the current state of the environment
-  this.GetCurrentState = function()
+  getCurrentState()
   {
-  	return currentState;
+  	return this.currentState;
   }
 
   //Expects a MotionDetector entity passed as arg
-  this.BindDetector = function(md){
-    motionDetectors.push(md);
+  bindDetector(md){
+    this.motionDetectors.push(md);
   }
 
   //Expects a MotionDetector entity passed as arg
-  this.UnbindDetector = function(md){
-  	var index = motionDetectors.indexOf(md);
+  unbindDetector(md){
+  	var index = this.motionDetectors.indexOf(md);
     if (index > -1) {
-      motionDetectors.splice(index, 1);
+      this.motionDetectors.splice(index, 1);
     }
   }
 
   //Adds some sort of change to the Environment a change is measured in terms of intensity
   //Emits a changedState event
-  this.AddChange = function(intensity)
+  addChange(intensity)
   {
-  	var oldState = currentState;
-  	currentState += intensity;
-    this.emit("changedState", oldState, currentState);
+  	var oldState = this.currentState;
+  	this.currentState += intensity;
+    this.emit("changedState", oldState, this.currentState);
   }
 
   //Abstract methods, should be overriden by extender classes, cannot be used directly
-  this.IsActive = function()
+  isActive()
   {
     throw new Error("Not Implemented.");
   }
   
   //Do any exit procedures required here (e.g. releasing memory, etc...)
-  this.Exit = function()
+  exit()
   {
     throw new Error("Not Implemented.");    
   }
@@ -67,51 +69,52 @@ function Environment(params){
 
 //A generic base class which creates a motion detector for surrounding environments
 //Collaborator: Environment
-function MotionDetector(){
-  
-  //Gets the status of the Motion detector, 0 is not active
-  var isActive = false;
-  var count;
-  var currentIntensity;
-  events.EventEmitter.call(this);
+class MotionDetector{
+
+  constructor(){
+    this._isActive = false;
+    this.count;
+    this.currentIntensity;
+    events.EventEmitter.call(this);
+  }
 
   //Returns the current Active state
-  this.IsActive = function(){
-  	return isActive;
+  isActive(){
+  	return this._isActive;
   }
 
   //Sends a signal to the motion detector
-  this.Send = function(newState, env)
+  send(newState, env)
   {
     //Does not do anything with the env. Maybe deprecate it?
-    if(isActive){
-      count++;
-      this.emit("hasDetected", currentIntensity, newState, this);
-      currentIntensity = newState;
+    if(this._isActive){
+      this.count++;
+      this.emit("hasDetected", this.currentIntensity, newState, this);
+      this.currentIntensity = newState;
     }
   }
 
   //Returns the number of movement detections happened since it Started monitoring
-  this.GetCount = function()
+  getCount()
   {
-    return count;  	
+    return this.count;  	
   }
 
   //Returns the number of movement detections happened since it Started monitoring
-  this.GetIntensity = function()
+  getIntensity()
   {
-    return currentIntensity;  	
+    return this.currentIntensity;  	
   }
 
   //Starts monitoring any movement
-  this.StartMonitoring = function(){
-    isActive = true;
-    count = 0;
+  startMonitoring(){
+    this._isActive = true;
+    this.count = 0;
   }
 
   //Resets the state to initial (StartMonitoring)
-  this.Reset = function(){
-    this.StartMonitoring();
+  reset(){
+    this.startMonitoring();
   }
 }
 

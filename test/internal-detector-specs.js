@@ -36,8 +36,8 @@ describe("When there is a surroundings change relative to an object, ", function
     var movementCount = mDetector.count;
     var alternativeCount = 0;
 
-    env.BindDetector(mDetector);
-    mDetector.StartMonitoring();
+    env.bindDetector(mDetector);
+    mDetector.startMonitoring();
 
     //Now we'll introduce some change, of a "generic" intensity of 2, it really doesn't matter for this test really.
     var intensity = 2;
@@ -46,10 +46,10 @@ describe("When there is a surroundings change relative to an object, ", function
       alternativeCount +=2;
       //console.log("Alternative count is", alternativeCount);
     }));
-    env.AddChange(intensity);
+    env.addChange(intensity);
     //console.log("Alternative count is", alternativeCount);
     
-    mDetector.GetCount().should.equal(1);
+    mDetector.getCount().should.equal(1);
     alternativeCount.should.equal(2);
   });
 
@@ -57,18 +57,18 @@ describe("When there is a surroundings change relative to an object, ", function
   it('should be active once it starts monitoring', function () {
     //Prepare
     var mDetector = new ent.MotionDetector();
-    mDetector.StartMonitoring();
+    mDetector.startMonitoring();
 
-    mDetector.IsActive().should.equal(true);
+    mDetector.isActive().should.equal(true);
   });
 
   
   it('should change the state of the enviromment if a Add Change method is ran with intensity > 0', function () {
     //Prepare
     var mEnvironment = new ent.Environment();
-    mEnvironment.AddChange(1);
+    mEnvironment.addChange(1);
 
-    mEnvironment.GetCurrentState().should.not.equal(0);
+    mEnvironment.getCurrentState().should.not.equal(0);
   });
 
 
@@ -83,7 +83,7 @@ describe("When there is a surroundings change relative to an object, ", function
       result = true;
     });
 
-    mEnvironment.AddChange(1);
+    mEnvironment.addChange(1);
     result.should.equal(true);
   });
 });
@@ -95,10 +95,10 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
     var mD1 = new ent.MotionDetector();
     var mD2 = new ent.MotionDetector();
     var count = 0;
-    env.BindDetector(mD1);
-    mD1.StartMonitoring();
-    env.BindDetector(mD2);
-    mD2.StartMonitoring();
+    env.bindDetector(mD1);
+    mD1.startMonitoring();
+    env.bindDetector(mD2);
+    mD2.startMonitoring();
 
     //Assert that the detector triggered a motion event
     mD1.on('hasDetected', (function(oldState, newState, env){
@@ -109,7 +109,7 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
       //console.log("MD2 detected movement ", newState);
       count++;
     }));
-    env.AddChange(1);
+    env.addChange(1);
     count.should.equal(2);
   });
 
@@ -119,11 +119,11 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
     var mD1 = new ent.MotionDetector();
     var mD2 = new ent.MotionDetector();
     var count = 0;
-    env.BindDetector(mD1);
-    mD1.StartMonitoring();
-    env.BindDetector(mD2);
-    mD2.StartMonitoring();
-    env.UnbindDetector(mD1);
+    env.bindDetector(mD1);
+    mD1.startMonitoring();
+    env.bindDetector(mD2);
+    mD2.startMonitoring();
+    env.unbindDetector(mD1);
 
     //Assert that the detector triggered a motion event
     mD1.on('hasDetected', (function(oldState, newState, env){
@@ -134,7 +134,7 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
       //console.log("MD2 detected movement ", newState);
       count++;
     }));
-    env.AddChange(1);
+    env.addChange(1);
     count.should.equal(1);
   });
 });

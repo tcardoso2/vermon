@@ -41,8 +41,8 @@ function AddDetector(detector){
   motionDetectors.push(detector);
   if (environment)
   {
-    environment.BindDetector(detector);
-    detector.StartMonitoring();
+    environment.bindDetector(detector);
+    detector.startMonitoring();
   } else {
     throw new Error("No environment was detected, please add one first.");
   }
