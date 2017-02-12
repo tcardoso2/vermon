@@ -40,7 +40,7 @@ function PIRMotionDetector(pin){
         console.log('Intruder was detected.');
         if (value == 1)
         {
-          this.AddChange(value);
+          this.Send(value);
         }
       });
     }

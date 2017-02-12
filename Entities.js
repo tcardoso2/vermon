@@ -83,6 +83,7 @@ function MotionDetector(){
   //Sends a signal to the motion detector
   this.Send = function(newState, env)
   {
+    //Does not do anything with the env. Maybe deprecate it?
     if(isActive){
       count++;
       this.emit("hasDetected", currentIntensity, newState, this);
