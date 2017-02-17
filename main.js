@@ -6,26 +6,31 @@ var environment;
 var motionDetectors = [];
 
 //A Base Notifier object for sending notifications
-function BaseNotifier(){
+//TODO: Change this to the Entities.js file!
+class BaseNotifier{
 
-  this.name = "Default Base Notifier";
+  constructor(name)
+  {
+    this.name = name ? name : "Default Base Notifier";
+    events.EventEmitter.call(this);
+  }
 
-  events.EventEmitter.call(this);
-
-  this.Notify = function(text){
+  notify(text){
     this.emit('pushedNotification', this.name, text);
   }
 
   //Extensibility methods
-  this.UseIn = function(){
+  useIn(){
     throw "Needs to be implemented by sub-classes";
   }
 
-  this.Use = function(_extension){
+  use(_extension){
     //TODO: Implement, should use Dependency injection techniques / late binding
     Start(_extension.BaseParameters());
+    //Don't like the coupling here.
   }
 }
+
 function BaseParameters(){
   this.environment;
   this.initialNotifier;
@@ -97,7 +102,7 @@ function Start(params){
   console.log("Notifying detector is starting...");
   //Pushes message to all notifiers
   for (n in notifiers){
-    notifiers[n].Notify("Started");
+    notifiers[n].notify("Started");
   }
   console.log("ready.");
 }
