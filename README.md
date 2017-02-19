@@ -2,6 +2,8 @@
 A NodeJS Motion detector, initially aimed for Raspberry Pi
 Author: Tiago Cardoso
 
+* v 0.2.3: Created SlackNotifier and internal tests
+* v 0.2.2: Moved BaseNotifier from main into Entities.js
 * v 0.2.1: Converted BaseNotifier to a ES6 class (WIP);
 * v 0.2: Converted classes to new Ecmascript 6 syntax, to real classes that is.
 * v 0.1.5: Added a wip function to detect if the gost is an Rpi, StartMonitoring now monitors any PIR changes.

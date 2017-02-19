@@ -1,41 +1,9 @@
-var events = require("events");
 var ent = require("./Entities.js");
 var ext = require("./Extensions.js");
 var notifiers = [];
 var environment;
 var motionDetectors = [];
-
-//A Base Notifier object for sending notifications
-//TODO: Change this to the Entities.js file!
-class BaseNotifier{
-
-  constructor(name)
-  {
-    this.name = name ? name : "Default Base Notifier";
-    events.EventEmitter.call(this);
-  }
-
-  notify(text){
-    this.emit('pushedNotification', this.name, text);
-  }
-
-  //Extensibility methods
-  useIn(){
-    throw "Needs to be implemented by sub-classes";
-  }
-
-  use(_extension){
-    //TODO: Implement, should use Dependency injection techniques / late binding
-    Start(_extension.BaseParameters());
-    //Don't like the coupling here.
-  }
-}
-
-function BaseParameters(){
-  this.environment;
-  this.initialNotifier;
-  this.initialMotionDetector;
-}
+var local_config = require("./local.js");
 
 function AddNotifier(notifier){
   notifiers.push(notifier);
@@ -107,10 +75,27 @@ function Start(params){
   console.log("ready.");
 }
 
-BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
+function Config() {
+  this.SlackHook = function(profile){
+    //TODO: This is very hard coupled create unit tests to make this easier
+    var config = require('./local.js');
+    if (profile)
+    {
+      if(config.profiles[profile]){
+        return config.profiles[profile].slack.hook;
+      } else {
+        //TODO: Use ES6 string concatenations here
+        throw new Error(`'${profile}' was not found in the local.js file.`);
+      }
+    }
+    else{
+      //fallsback to default hook
+      return config.default.slack.hook;
+    }
+  };
+}
 
 exports.count = 0;
-exports.BaseNotifier = BaseNotifier;
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
 exports.RemoveNotifier = RemoveNotifier;
@@ -118,3 +103,4 @@ exports.GetEnvironment = GetEnvironment;
 exports.Entities = ent;
 exports.Extensions = ext;
 exports.Start = Start;
+exports.Config = Config;

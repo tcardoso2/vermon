@@ -1,4 +1,4 @@
-/*****************************************************
+  /*****************************************************
  * Internal tests
  * What are internal tests?
  * As this is a npm package, it should be tested from
@@ -14,6 +14,7 @@ var chaiAsPromised = require("chai-as-promised");
 var should = chai.should();
 var fs = require('fs');
 var ent = require('../Entities.js');
+var ext = require('../Extensions.js');
 var main = require('../main.js');
 var events = require('events');
 
@@ -39,7 +40,7 @@ describe("When a new motion detector is created, ", function() {
   it('all notifiers are binded with the motion Detectors', function (done) {
     //Prepare
 
-    var n = new main.BaseNotifier();
+    var n = new ent.BaseNotifier();
     var e = new ent.Environment();
     var m = new ent.MotionDetector();
 

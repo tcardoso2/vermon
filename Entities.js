@@ -118,8 +118,42 @@ class MotionDetector{
   }
 }
 
+//A Base Notifier object for sending notifications
+class BaseNotifier{
+
+  constructor(name)
+  {
+    this.name = name ? name : "Default Base Notifier";
+    events.EventEmitter.call(this);
+  }
+
+  notify(text){
+    this.emit('pushedNotification', this.name, text);
+  }
+
+  //Extensibility methods
+  useIn(){
+    throw new Error("Needs to be implemented by sub-classes");
+  }
+
+  use(_extension){
+    //TODO: Implement, should use Dependency injection techniques / late binding
+    throw new Error("Needs to be implemented by sub-classes");
+    //Start(_extension.BaseParameters());
+    //Don't like the coupling here.
+  }
+}
+
+function BaseParameters(){
+  this.environment;
+  this.initialNotifier;
+  this.initialMotionDetector;
+}
+
 Environment.prototype.__proto__ = events.EventEmitter.prototype;
 MotionDetector.prototype.__proto__ = events.EventEmitter.prototype;
+BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
 
 exports.Environment = Environment;
 exports.MotionDetector = MotionDetector;
+exports.BaseNotifier = BaseNotifier;

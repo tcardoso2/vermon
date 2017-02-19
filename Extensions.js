@@ -1,6 +1,9 @@
 //Extensions which use the Base entities
 //Collaborator: MotionDetector
-var MotionDetector = require("./Entities.js").MotionDetector;
+var ent = require("./Entities.js");
+var MotionDetector = ent.MotionDetector;
+var BaseNotifier = ent.BaseNotifier;
+var Slack = require('slack-node');
 os = require("os");
 
 //A concrete MotionDetector class which implements a Raspberry Pi PIR sensor detector
@@ -60,6 +63,37 @@ class PIRMotionDetector extends MotionDetector{
   }
 }
 
-//PIRMotionDetector.prototype.__proto__ = ent.MotionDetector.prototype;
+class SlackNotifier extends BaseNotifier{
+  
+  constructor(name, key){
+    if (!key){
+      throw new Error("'key' is a required argument, which should contain the Slack hook URL.");
+    }
+    super(name);
+    this.slack = new Slack();
+    this.slack.setWebhook(key);
+    this.key = key;
+  }
+
+  notify(some_text){
+    this.lastMessage = some_text;
+    var _this = this;
+    this.slack.webhook({
+      channel: '#general',
+      text: some_text,
+      username: this.name
+    }, function(err, response){
+      if (!err)
+      {
+        _this.emit('pushedNotification', _this.name, _this.lastMessage);
+      }
+      else
+      {
+        new Error(err);
+      } 
+    });
+  }
+}
 
 exports.PIRMotionDetector = PIRMotionDetector;
+exports.SlackNotifier = SlackNotifier;
