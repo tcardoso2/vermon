@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "extend": "latest",
-    "onoff": "latest"
+    "onoff": "latest",
+    "slack-node": "^0.1.8"
   },
   "devDependencies": {
     "chai": "*",
