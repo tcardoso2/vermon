@@ -5,7 +5,8 @@ var environment;
 var motionDetectors = [];
 var local_config = require("./local.js");
 
-function AddNotifier(notifier){
+function AddNotifier(notifier, template){
+  notifier.bindToDetectors(motionDetectors, template);
   notifiers.push(notifier);
 }
 
@@ -40,19 +41,19 @@ function GetEnvironment()
 }
 
 //Will start the motion detector
-function Start(params){
+function Start(params, silent = false){
   console.log("Setting initial parameters...");
   //Sets the parameters first if they exist
   if (params){
     if (params.environment){
       environment = params.environment;
     }
-  	if (params.initialNotifier){
-  	  notifiers.push(params.initialNotifier);
-  	}
   	if (params.initialMotionDetector){
-  	  motionDetectors.push(params.initialMotionDetector);
+      AddDetector(params.initialMotionDetector);
   	}
+    if (params.initialNotifier){
+      AddNotifier(params.initialNotifier);
+    }
   }
 
   //Will set a default Environment if does not exist;
@@ -60,17 +61,13 @@ function Start(params){
   	environment = new ent.Environment();
   }
 
-  console.log("Binding existing motion detectors...");
-  //Binds internal environment with all existing Motion detectors
-  for (m in motionDetectors)
+  if (!silent)
   {
-  	AddDetector(motionDetectors[m]);
-  }
-
-  console.log("Notifying detector is starting...");
-  //Pushes message to all notifiers
-  for (n in notifiers){
-    notifiers[n].notify("Started");
+    console.log("Notifying detector is starting...");
+    //Pushes message to all notifiers
+    for (n in notifiers){
+      notifiers[n].notify("Started");
+    }
   }
   console.log("ready.");
 }

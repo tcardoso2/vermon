@@ -125,10 +125,23 @@ class BaseNotifier{
   {
     this.name = name ? name : "Default Base Notifier";
     events.EventEmitter.call(this);
+    this.detectors = [];
   }
 
   notify(text){
     this.emit('pushedNotification', this.name, text);
+  }
+
+  bindToDetectors(detectors, template = `Notification received!`){
+    //Find a better way since it is not possible to unbind?
+    var n = this;
+    for (var d in detectors)
+    {
+      detectors[d].on("hasDetected", function(currentIntensity, newState, detector){
+        n.notify(template);
+      });
+    }
+    this.detectors.push(detectors);
   }
 
   //Extensibility methods

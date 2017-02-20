@@ -60,3 +60,5 @@ describe("When a new motion detector is created, ", function() {
     e.AddChange(10);
   });
 });
+
+//Create tests removing Detectors and notifiers.

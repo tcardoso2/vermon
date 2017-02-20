@@ -87,3 +87,29 @@ describe("When a new Slack Notifier is created, ", function() {
     n.notify("Hello!");
   });
 });
+
+describe("When a new Environment with a Slack Notifier is created, ", function() {
+  it('should push a Slack notification', function(done) {
+    //Assumes there is some local file with the key
+    var env = new ent.Environment();
+    var detector = new ent.MotionDetector();
+    var notifier = new ext.SlackNotifier("My Slack", "https://hooks.slack.com/services/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");
+
+    notifier.on("pushedNotification", function(name, text){
+      chai.assert.isOk("notified");
+      console.log(`Got a notification from ${name}: ${text}`);
+      done();
+    });
+    detector.on("hasDetected", function(current, newState, d){
+      chai.assert.isOk("detected");
+      console.log(`Detector detected signal from ${current} to: ${newState}`);
+    });
+
+    main.Start({
+      environment: env,
+      initialMotionDetector: detector,
+    }, true);
+    main.AddNotifier(notifier, `Some Template message`);
+    env.addChange(1);
+  });
+});
