@@ -2,6 +2,7 @@
 A NodeJS Motion detector, initially aimed for Raspberry Pi
 Author: Tiago Cardoso
 
+* v 0.2.4: Added slack-node to packages.js dependencies
 * v 0.2.3: Created SlackNotifier and internal tests
 * v 0.2.2: Moved BaseNotifier from main into Entities.js
 * v 0.2.1: Converted BaseNotifier to a ES6 class (WIP);
