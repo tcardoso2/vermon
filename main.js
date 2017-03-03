@@ -73,7 +73,7 @@ function Start(params, silent = false){
 
 class Config {
 
-  constructor()
+  constructor(profile)
   {
     try{
       this.file = require('./local.js');
@@ -83,22 +83,25 @@ class Config {
     }
   }
 
-  slackHook(profile){
-    //TODO: This is very hard coupled create unit tests to make this easier
-    if (profile)
+  profile(name){
+    if (name)
     {
-      if(this.file.profiles[profile]){
-        return this.file.profiles[profile].slack.hook;
+      if(this.file.profiles[name]){
+        return this.file.profiles[name];
       } else {
         //TODO: Use ES6 string concatenations here
-        throw new Error(`'${profile}' was not found in the local.js file.`);
+        throw new Error(`'${name}' was not found in the local.js file.`);
       }
     }
     else{
       //fallsback to default hook
-      return this.file.default.slack.hook;
-    }
-  };
+      return this.file.default;
+    }    
+  }
+
+  slackHook(profile){
+    return this.profile(profile).slack.hook;
+  }
 
   toString()
   {

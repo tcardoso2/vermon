@@ -54,7 +54,7 @@ describe("When a new Slack Notifier is created, ", function() {
   });
 
   it('should check if a local file exists', function () {
-    var local_config = require("../local.js");
+    var local_config = new main.Config();
     local_config.should.not.equal(undefined);
   });
 
@@ -62,8 +62,8 @@ describe("When a new Slack Notifier is created, ", function() {
     //Assumes there is some local file with the key
     var key = new main.Config().slackHook();
     var n = new ext.SlackNotifier("My slack notifier", key);
-    var local_config = require("../local.js");
-    n.key.should.equal(local_config.default.slack.hook);
+    var local_config = new main.Config().profile();
+    n.key.should.equal(local_config.slack.hook);
   });
 
   it('should detect the slack config properties from the default profile equal the fallback', function () {
