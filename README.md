@@ -2,6 +2,7 @@
 A NodeJS Motion detector, initially aimed for Raspberry Pi
 Author: Tiago Cardoso
 
+* v 0.2.7: Fixing a local test to use the config Slack hook key instead of hard-coded one
 * v 0.2.6: Minor bug fixes
 * v 0.2.5: Binded Detectors and notifiers
 * v 0.2.4: Added slack-node to packages.js dependencies

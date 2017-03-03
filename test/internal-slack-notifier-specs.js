@@ -93,7 +93,8 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
     //Assumes there is some local file with the key
     var env = new ent.Environment();
     var detector = new ent.MotionDetector();
-    var notifier = new ext.SlackNotifier("My Slack", "https://hooks.slack.com/services/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");
+    var key = new main.Config().SlackHook();
+    var notifier = new ext.SlackNotifier("My Slack Notifier", key);
 
     notifier.on("pushedNotification", function(name, text){
       chai.assert.isOk("notified");
@@ -113,3 +114,4 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
     env.addChange(1);
   });
 });
+
