@@ -3,7 +3,6 @@ var ext = require("./Extensions.js");
 var notifiers = [];
 var environment;
 var motionDetectors = [];
-var local_config = require("./local.js");
 
 function AddNotifier(notifier, template){
   notifier.bindToDetectors(motionDetectors, template);
@@ -72,14 +71,24 @@ function Start(params, silent = false){
   console.log("ready.");
 }
 
-function Config() {
-  this.SlackHook = function(profile){
+class Config {
+
+  constructor()
+  {
+    try{
+      this.file = require('./local.js');
+    } catch (e)
+    {
+      this.file = require('./config.js');
+    }
+  }
+
+  slackHook(profile){
     //TODO: This is very hard coupled create unit tests to make this easier
-    var config = require('./local.js');
     if (profile)
     {
-      if(config.profiles[profile]){
-        return config.profiles[profile].slack.hook;
+      if(this.file.profiles[profile]){
+        return this.file.profiles[profile].slack.hook;
       } else {
         //TODO: Use ES6 string concatenations here
         throw new Error(`'${profile}' was not found in the local.js file.`);
@@ -87,9 +96,14 @@ function Config() {
     }
     else{
       //fallsback to default hook
-      return config.default.slack.hook;
+      return this.file.default.slack.hook;
     }
   };
+
+  toString()
+  {
+    return this.file;
+  }
 }
 
 exports.count = 0;

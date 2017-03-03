@@ -27,6 +27,12 @@ before(function(done) {
 
 after(function(done) {
   // here you can clear fixtures, etc.
+  if (fs.existsSync('./_local.js')) {
+    fs.rename('./_local.js', './local.js', function (err) {
+      //Nothing I can do here
+      if (err) throw err;
+    });
+  }
   done();
 });
 
@@ -42,7 +48,7 @@ describe("When a new Slack Notifier is created, ", function() {
 
   it('should detect the slack config key property', function() {
     //Assumes there is some local file with the key
-    var key = new main.Config().SlackHook();
+    var key = new main.Config().slackHook();
     var n = new ext.SlackNotifier("My Slack Notifier", key);
     n.key.should.equal(key);
   });
@@ -54,7 +60,7 @@ describe("When a new Slack Notifier is created, ", function() {
 
   it('should detect the slack config properties from the local config file (default profile)', function() {
     //Assumes there is some local file with the key
-    var key = new main.Config().SlackHook();
+    var key = new main.Config().slackHook();
     var n = new ext.SlackNotifier("My slack notifier", key);
     var local_config = require("../local.js");
     n.key.should.equal(local_config.default.slack.hook);
@@ -62,21 +68,21 @@ describe("When a new Slack Notifier is created, ", function() {
 
   it('should detect the slack config properties from the default profile equal the fallback', function () {
     //Assumes there is some local file with the key
-    var key = new main.Config().SlackHook();
-    var key_default = new main.Config().SlackHook("default");
+    var key = new main.Config().slackHook();
+    var key_default = new main.Config().slackHook("default");
     key.should.equal(key_default);
   });
 
   it('should raise an Error if no key is found for an inexisting profile', function () {
     try {
-      var key = new main.Config().SlackHook("some_inexisting_profile");
+      var key = new main.Config().slackHook("some_inexisting_profile");
     } catch (e) {
       e.message.should.equal("'some_inexisting_profile' was not found in the local.js file.");
     }
   });
 
   it('should be able to send a message successfully', function (done) {
-    var key = new main.Config().SlackHook();
+    var key = new main.Config().slackHook();
     var n = new ext.SlackNotifier("My Slack notifier", key);
     n.on('pushedNotification', function(message, text){
       console.log("A new notification was pushed!", message, text);
@@ -93,7 +99,7 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
     //Assumes there is some local file with the key
     var env = new ent.Environment();
     var detector = new ent.MotionDetector();
-    var key = new main.Config().SlackHook();
+    var key = new main.Config().slackHook();
     var notifier = new ext.SlackNotifier("My Slack Notifier", key);
 
     notifier.on("pushedNotification", function(name, text){
@@ -115,3 +121,27 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
   });
 });
 
+describe("When importing local configuration, ", function() {
+  //Note: this test fails but the code behaves properly. The issue is that once the node program starts,
+  //      it seems to take a memory snapshot of all the files and does not recognize local has changed;
+  it('If no local.js file is present, then fallsback to config.js', function(done) {
+    if (fs.existsSync('./local.js')){
+      fs.rename('./local.js', './_local.js', function (err) {
+        if (err) throw err;
+        fs.stat('./_local.js', function (err, stats) {
+          if (err) throw err;
+          console.log('stats: ' + JSON.stringify(stats));
+          var local_config = new main.Config().slackHook();
+          local_config.toString().should.equal('https://hooks.slack.com/services/<Your_Slack_URL_Should_Go_Here>');
+          done();
+        });
+      });
+    } else {
+      done();
+    }
+  });
+  it('A function should be used instead of require("../local.js")', function() {
+    var local_config = new main.Config().slackHook();
+    local_config.should.not.equal(undefined);
+  });
+});
