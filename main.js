@@ -25,7 +25,7 @@ function AddDetector(detector){
 function RemoveNotifier(notifier){
   var index = notifiers.indexOf(notifier);
   if (index > -1) {
-  	notifiers[index].Notify("Removing Notifier...");
+  	notifiers[index].notify("Removing Notifier...");
   	notifiers.splice(index, 1)
   }
 }
