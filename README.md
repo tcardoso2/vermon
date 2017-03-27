@@ -34,6 +34,7 @@ exports.profiles = profiles;
 exports.default = profiles.default;
 ````
 ***
+* v 0.2.9: Updated/improved the readme.md file to get users up and running with example code.
 * v 0.2.8: Implementing fallback from local.js to config.js (WIP)
 * v 0.2.7: Fixing a local test to use the config Slack hook key instead of hard-coded one
 * v 0.2.6: Minor bug fixes
