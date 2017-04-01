@@ -7,6 +7,7 @@ class Environment{
   constructor(params){
     this.currentState = 0;
     this.motionDetectors = [];
+    this.notifiers = [];
     this.name = "No name";
 
     if (params)
@@ -33,8 +34,16 @@ class Environment{
   }
 
   //Expects a MotionDetector entity passed as arg
-  bindDetector(md){
+  bindDetector(md, notifiers){
     this.motionDetectors.push(md);
+    //Todo: should bind the new detector to ALL the notifiers
+    if (notifiers)
+    {
+      for (var n in notifiers)
+      {
+        notifiers[n].bindToDetector(md);
+      }
+    }
   }
 
   //Expects a MotionDetector entity passed as arg
@@ -132,16 +141,22 @@ class BaseNotifier{
     this.emit('pushedNotification', this.name, text);
   }
 
-  bindToDetectors(detectors, template = `Notification received!`){
+  //It's the notifier who has the responsibility to bind to existing detectors
+  bindToDetector(detector, template = `Notification received!`){
     //Find a better way since it is not possible to unbind?
     var n = this;
+    detector.on("hasDetected", function(currentIntensity, newState, detector){
+      n.notify(template);
+    });
+    this.detectors.push(detector);
+  }
+
+  bindToDetectors(detectors, template = `Notification received!`){
+    //Find a better way since it is not possible to unbind?
     for (var d in detectors)
     {
-      detectors[d].on("hasDetected", function(currentIntensity, newState, detector){
-        n.notify(template);
-      });
+      this.bindToDetector(detectors[d], template);
     }
-    this.detectors.push(detectors);
   }
 
   //Extensibility methods

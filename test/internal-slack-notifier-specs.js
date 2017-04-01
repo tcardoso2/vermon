@@ -33,6 +33,7 @@ after(function(done) {
       if (err) throw err;
     });
   }
+  main = require('../main.js');
   done();
 });
 
@@ -82,6 +83,7 @@ describe("When a new Slack Notifier is created, ", function() {
   });
 
   it('should be able to send a message successfully', function (done) {
+    this.timeout(10000);
     var key = new main.Config().slackHook();
     var n = new ext.SlackNotifier("My Slack notifier", key);
     n.on('pushedNotification', function(message, text){

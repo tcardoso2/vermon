@@ -27,6 +27,8 @@ before(function(done) {
 
 after(function(done) {
   // here you can clear fixtures, etc.
+  main = require('../main.js');
+  ent = require('../Entities.js');
   done();
 });
 
@@ -43,12 +45,15 @@ describe("When a new motion detector is created, ", function() {
     var n = new ent.BaseNotifier();
     var e = new ent.Environment();
     var m = new ent.MotionDetector();
-
+    var detected = false;
     n.on('pushedNotification', function(message, text){
-        console.log("A new notification has arrived!", message, text);
-        text.should.equal("Started");
+      console.log("A new notification has arrived!", message, text);
+      if ((text == "Started") && !detected)
+      {
+        detected = true;
         done();
-    })
+      }
+    });
 
     var result = false;
     main.Start({
@@ -57,7 +62,40 @@ describe("When a new motion detector is created, ", function() {
       initialMotionDetector: m
     });
 
-    e.AddChange(10);
+    e.addChange(10);
+  });
+
+  it('a Detector added later should bind with the existing notifiers, 2 notifications should exist.', function (done) {
+    //Prepare
+    this.timeout(4000);
+
+    var n1 = new ent.BaseNotifier();
+    var e1 = new ent.Environment();
+    var m1 = new ent.MotionDetector("First Notifier");
+    var count = 0;
+    n1.on('pushedNotification', function(message, text){
+      count += 1;
+      console.log(">>>>>>>>>>>> Count:", count, message, text);
+
+      if (count == 3)
+      {
+        console.log("Test concluded.");
+        count.should.equal(3);
+        done();
+      }
+    })
+    var mLateMotionDetector = new ent.MotionDetector("Second Notifier");
+
+    var result = false;
+    //TODO: Imported again as it seems the tests are affecting each other
+    main.Start({
+      environment: e1,
+      initialNotifier: n1,
+      initialMotionDetector: m1
+    });
+
+    main.AddDetector(mLateMotionDetector);
+    e1.addChange(10);
   });
 });
 
