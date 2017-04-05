@@ -1,7 +1,6 @@
 //Extensions which use the Base entities
 //Collaborator: MotionDetector
 var ent = require("./Entities.js");
-var log = require("./main.js").Log;
 var MotionDetector = ent.MotionDetector;
 var BaseNotifier = ent.BaseNotifier;
 var Slack = require('slack-node');
@@ -13,7 +12,7 @@ class PIRMotionDetector extends MotionDetector{
   
   constructor(pin, callback){
     super();
-    this.log = log;
+    this.log = require("./main.js").Log;
     var Gpio = undefined;
     this.pir = undefined;
 
@@ -24,6 +23,7 @@ class PIRMotionDetector extends MotionDetector{
     if (this._isRPi()){
       Gpio = require('onoff').Gpio;
       this.pir = new Gpio(pin, 'in', 'both');
+      this.log.info("Pin was set to: ", pin);
     } else {
       this.log.error("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
     }
@@ -42,7 +42,7 @@ class PIRMotionDetector extends MotionDetector{
     if(this.pir){
       var m = this;
       this.pir.watch(function(err, value){
-        if (err) this.Exit();
+        if (err) this.exit();
         m.log.info('Intruder was detected.');
         if (value == 1)
         {

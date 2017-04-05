@@ -34,6 +34,7 @@ exports.profiles = profiles;
 exports.default = profiles.default;
 ````
 ***
+* v 0.2.12:Bug fixes on loging inside pir detection event.
 * v 0.2.11:Changed console log to proper logging (saves a file into local disk) 
 * v 0.2.10:Fixed a bug whereby a Detector added after starting the main function was not binded with the Notifiers.
 * v 0.2.9: Updated/improved the readme.md file to get users up and running with example code.
