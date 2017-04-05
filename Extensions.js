@@ -13,6 +13,7 @@ class PIRMotionDetector extends MotionDetector{
   
   constructor(pin, callback){
     super();
+    this.log = log;
     var Gpio = undefined;
     this.pir = undefined;
 
@@ -24,7 +25,7 @@ class PIRMotionDetector extends MotionDetector{
       Gpio = require('onoff').Gpio;
       this.pir = new Gpio(pin, 'in', 'both');
     } else {
-      log.error("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
+      this.log.error("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
     }
   }
  
@@ -42,7 +43,7 @@ class PIRMotionDetector extends MotionDetector{
       var m = this;
       this.pir.watch(function(err, value){
         if (err) this.Exit();
-        log.info('Intruder was detected.');
+        m.log.info('Intruder was detected.');
         if (value == 1)
         {
           m.send(value);
