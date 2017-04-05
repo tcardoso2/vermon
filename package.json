@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "extend": "latest",
+    "log": "^1.4.0",
     "onoff": "latest",
     "slack-node": "^0.1.8"
   },
@@ -8,9 +9,14 @@
     "chai": "*",
     "mocha": "*"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tcardoso2/t-motion-detector.git"
+  },
+  "license": "MIT license",
   "description": "A library for detecting motion in general, with an application for Raspberry Pi in particular.",
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.2.10"
+  "version": "0.2.11"
 }

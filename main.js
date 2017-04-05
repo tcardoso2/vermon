@@ -3,6 +3,9 @@ var ext = require("./Extensions.js");
 var notifiers = [];
 var environment;
 var motionDetectors = [];
+var fs = require('fs')
+  , Log = require('log')
+  , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
 
 function AddNotifier(notifier, template){
   notifier.bindToDetectors(motionDetectors, template);
@@ -41,7 +44,7 @@ function GetEnvironment()
 
 //Will start the motion detector
 function Start(params, silent = false){
-  console.log("Setting initial parameters...");
+  log.info("Setting initial parameters...");
   //Sets the parameters first if they exist
   if (params){
     if (params.environment){
@@ -62,13 +65,13 @@ function Start(params, silent = false){
 
   if (!silent)
   {
-    console.log("Notifying detector is starting...");
+    log.info("Notifying detector is starting...");
     //Pushes message to all notifiers
     for (n in notifiers){
       notifiers[n].notify("Started");
     }
   }
-  console.log("ready.");
+  log.info("ready.");
 }
 
 class Config {
@@ -118,3 +121,4 @@ exports.Entities = ent;
 exports.Extensions = ext;
 exports.Start = Start;
 exports.Config = Config;
+exports.Log = log;
