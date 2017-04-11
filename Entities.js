@@ -146,16 +146,12 @@ class BaseNotifier{
   }
 
   //It's the notifier who has the responsibility to bind to existing detectors
-  //template can have the following:
-  //${currentIntensity}
-  //${newState}
-  //${detector.xxx}
   bindToDetector(detector, template){
     //Find a better way since it is not possible to unbind?
     var n = this;
     if (!template)
     {
-      template = "Notification received from: " + detector.name;      
+      template = `Notification received from: ${detector.name}`;      
     }
     detector.on("hasDetected", function(currentIntensity, newState, detector){
       n.notify(template, currentIntensity, newState, detector);
