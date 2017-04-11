@@ -5,22 +5,43 @@ Author: Tiago Cardoso
 ***
 Code snippet:  
 
+	var main = require('t-motion-detector');
+	var ent = main.Entities;
+
     var n = new ent.BaseNotifier();
-    var e = new ent.Environment();
-    var m = new ent.MotionDetector();
     n.on('pushedNotification', function(message, text){
         console.log("A new notification has arrived!", message, text);
     })
-    var result = false;
+
     main.Start({
-      environment: e,
+      environment: new ent.Environment(),
       initialNotifier: n,
-      initialMotionDetector: m
+      initialMotionDetector: new ent.MotionDetector()
     });
 
     e.AddChange(10);
 
-To be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (I know it is uglyish for now):  
+If you want to override the notification message do (example with SlackNotifier):
+
+	var main = require('t-motion-detector');
+	var ent = main.Entities;
+
+    var n = new main.Extensions.SlackNotifier("My Slack", "https://hooks.slack.com/services/<Your_Slack_URL_Should_Go_Here>");
+    var e = new ent.Environment();
+    var m = new ent.MotionDetector();
+    m.name = "My mock detector";
+    n.on('pushedNotification', function(message, text){
+        console.log("A new notification has arrived!", message, text);
+    })
+
+    main.Start({
+      environment: e,
+      initialMotionDetector: m
+    });
+	main.AddNotifier(n, `Received notification from: ${m.name}`);
+    e.AddChange(10);
+
+To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (I know it is uglyish for now)):  
 ````  
 profiles = {
   default: {
@@ -34,6 +55,7 @@ exports.profiles = profiles;
 exports.default = profiles.default;
 ````
 ***
+* v 0.3.1: Update on the README file, noticed example code had bugs in it.
 * v 0.3.0: Added capability to customize the notification message, minor fixes.
 * v 0.2.12:Bug fixes on loging inside pir detection event.
 * v 0.2.11:Changed console log to proper logging (saves a file into local disk) 
