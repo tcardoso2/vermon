@@ -36,7 +36,6 @@ class Environment{
   //Expects a MotionDetector entity passed as arg
   bindDetector(md, notifiers){
     this.motionDetectors.push(md);
-    //Todo: should bind the new detector to ALL the notifiers
     if (notifiers)
     {
       for (var n in notifiers)
@@ -84,6 +83,7 @@ class MotionDetector{
     this._isActive = false;
     this.count;
     this.currentIntensity;
+    this.name = "unnamed detector."
     events.EventEmitter.call(this);
   }
 
@@ -137,21 +137,33 @@ class BaseNotifier{
     this.detectors = [];
   }
 
-  notify(text){
-    this.emit('pushedNotification', this.name, text);
+  notify(text, oldState, newState, detector){
+    this.emit('pushedNotification', this.name, text, { 
+      "oldState": oldState,
+      "newState": newState,
+      "detector": detector
+    });
   }
 
   //It's the notifier who has the responsibility to bind to existing detectors
-  bindToDetector(detector, template = `Notification received!`){
+  //template can have the following:
+  //${currentIntensity}
+  //${newState}
+  //${detector.xxx}
+  bindToDetector(detector, template){
     //Find a better way since it is not possible to unbind?
     var n = this;
+    if (!template)
+    {
+      template = "Notification received from: " + detector.name;      
+    }
     detector.on("hasDetected", function(currentIntensity, newState, detector){
-      n.notify(template);
+      n.notify(template, currentIntensity, newState, detector);
     });
     this.detectors.push(detector);
   }
 
-  bindToDetectors(detectors, template = `Notification received!`){
+  bindToDetectors(detectors, template){
     //Find a better way since it is not possible to unbind?
     for (var d in detectors)
     {

@@ -38,7 +38,7 @@ after(function(done) {
 });
 
 describe("When a new Slack Notifier is created, ", function() {
-  it('should throw an Exeption if no hook is provided', function() {
+  it('should throw an Exception if no hook is provided', function() {
     //Assumes there is some local file with the key
     try{
       var n = new ext.SlackNotifier();
@@ -87,7 +87,7 @@ describe("When a new Slack Notifier is created, ", function() {
     var key = new main.Config().slackHook();
     var n = new ext.SlackNotifier("My Slack notifier", key);
     n.on('pushedNotification', function(message, text){
-      console.log("A new notification was pushed!", message, text);
+      //console.log("A new notification was pushed!", message, text);
       chai.assert.isOk("Everything is ok");
       done();
     });
@@ -99,27 +99,57 @@ describe("When a new Slack Notifier is created, ", function() {
 describe("When a new Environment with a Slack Notifier is created, ", function() {
   it('should push a Slack notification', function(done) {
     //Assumes there is some local file with the key
+    this.timeout(6000);
     var env = new ent.Environment();
     var detector = new ent.MotionDetector();
+    detector.name = "Mock_detector";
     var key = new main.Config().slackHook();
     var notifier = new ext.SlackNotifier("My Slack Notifier", key);
 
     notifier.on("pushedNotification", function(name, text){
       chai.assert.isOk("notified");
-      console.log(`Got a notification from ${name}: ${text}`);
+      //console.log(`Got a notification from ${name}: ${text}`);
       done();
     });
     detector.on("hasDetected", function(current, newState, d){
       chai.assert.isOk("detected");
-      console.log(`Detector detected signal from ${current} to: ${newState}`);
+      //console.log(`Detector detected signal from ${current} to: ${newState}`);
     });
 
     main.Start({
       environment: env,
       initialMotionDetector: detector,
     }, true);
-    main.AddNotifier(notifier, `Some Template message`);
+    main.AddNotifier(notifier, `Received notification from: ${detector.name}`);
     env.addChange(1);
+  });
+
+  it('the pushedNotification event should receive the source detector as parameter, and notifier name and notification text', function (done) {
+    //Prepare
+
+    var n0 = new ent.BaseNotifier();
+    var e0 = new ent.Environment();
+    var m0 = new ent.MotionDetector();
+    var detected = false;
+    n0.on('pushedNotification', function(notifierName, text, source){
+      if ((text != "Started") && !detected)
+      {
+        detected = true;
+        notifierName.should.equal("Default Base Notifier");
+        text.should.equal("Notification received from: unnamed detector.");
+        source.detector.name.should.equal("unnamed detector.");
+        done();
+      }
+    });
+
+    var result = false;
+    main.Start({
+      environment: e0,
+      initialNotifier: n0,
+      initialMotionDetector: m0
+    });
+
+    e0.addChange(10);
   });
 });
 

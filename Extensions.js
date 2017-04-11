@@ -77,8 +77,13 @@ class SlackNotifier extends BaseNotifier{
     this.key = key;
   }
 
-  notify(some_text){
+  notify(some_text, oldState, newState, detector){
     this.lastMessage = some_text;
+    this.data = {
+          "oldState": oldState,
+          "newState": newState,
+          "detector": detector
+        };
     var _this = this;
     this.slack.webhook({
       channel: '#general',
@@ -87,7 +92,7 @@ class SlackNotifier extends BaseNotifier{
     }, function(err, response){
       if (!err)
       {
-        _this.emit('pushedNotification', _this.name, _this.lastMessage);
+        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
       }
       else
       {

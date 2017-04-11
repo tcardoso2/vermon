@@ -47,7 +47,7 @@ describe("When a new motion detector is created, ", function() {
     var m = new ent.MotionDetector();
     var detected = false;
     n.on('pushedNotification', function(message, text){
-      console.log("A new notification has arrived!", message, text);
+      //console.log("A new notification has arrived!", message, text);
       if ((text == "Started") && !detected)
       {
         detected = true;
@@ -65,6 +65,35 @@ describe("When a new motion detector is created, ", function() {
     e.addChange(10);
   });
 
+  it('the pushedNotification event should receive the source detector as parameter, and notifier name and notification text', function (done) {
+    //Prepare
+
+    var n0 = new ent.BaseNotifier();
+    var e0 = new ent.Environment();
+    var m0 = new ent.MotionDetector();
+    m0.name = "My motion detector";
+    var detected = false;
+    n0.on('pushedNotification', function(notifierName, text, source){
+      if ((text != "Started") && !detected)
+      {
+        detected = true;
+        notifierName.should.equal("Default Base Notifier");
+        text.should.equal("Received message from: My motion detector");
+        source.detector.name.should.equal("My motion detector");
+        done();
+      }
+    });
+
+    var result = false;
+    main.Start({
+      environment: e0,
+      initialMotionDetector: m0
+    });
+    main.AddNotifier(n0, `Received message from: ${m0.name}`);
+
+    e0.addChange(10);
+  });
+
   it('a Detector added later should bind with the existing notifiers, 2 notifications should exist.', function (done) {
     //Prepare
     this.timeout(4000);
@@ -75,11 +104,11 @@ describe("When a new motion detector is created, ", function() {
     var count = 0;
     n1.on('pushedNotification', function(message, text){
       count += 1;
-      console.log(">>>>>>>>>>>> Count:", count, message, text);
+      //console.log(">>>>>>>>>>>> Count:", count, message, text);
 
       if (count == 3)
       {
-        console.log("Test concluded.");
+        //console.log("Test concluded.");
         count.should.equal(3);
         done();
       }
