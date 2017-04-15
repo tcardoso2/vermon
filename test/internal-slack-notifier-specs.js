@@ -126,11 +126,10 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
 
   it('the pushedNotification event should receive the source detector as parameter, and notifier name and notification text', function (done) {
     //Prepare
-
-    var n0 = new ent.BaseNotifier();
-    var e0 = new ent.Environment();
-    var m0 = new ent.MotionDetector();
-    var detected = false;
+    let n0 = new ent.BaseNotifier();
+    let e0 = new ent.Environment();
+    let m0 = new ent.MotionDetector();
+    let detected = false;
     n0.on('pushedNotification', function(notifierName, text, source){
       if ((text != "Started") && !detected)
       {
@@ -142,7 +141,7 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
       }
     });
 
-    var result = false;
+    let result = false;
     main.Start({
       environment: e0,
       initialNotifier: n0,

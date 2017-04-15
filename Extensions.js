@@ -5,6 +5,7 @@ var MotionDetector = ent.MotionDetector;
 var BaseNotifier = ent.BaseNotifier;
 var Slack = require('slack-node');
 os = require("os");
+const Raspistill = require('node-raspistill').Raspistill;
 
 //A concrete MotionDetector class which implements a Raspberry Pi PIR sensor detector
 //Collaborator: Environment
@@ -77,6 +78,11 @@ class SlackNotifier extends BaseNotifier{
     this.key = key;
   }
 
+  hasInternalObj()
+  {
+    return this.slack !== undefined;
+  }
+
   notify(some_text, oldState, newState, detector){
     this.lastMessage = some_text;
     this.data = {
@@ -84,7 +90,7 @@ class SlackNotifier extends BaseNotifier{
           "newState": newState,
           "detector": detector
         };
-    var _this = this;
+    let _this = this;
     this.slack.webhook({
       channel: '#general',
       text: some_text,
@@ -102,5 +108,33 @@ class SlackNotifier extends BaseNotifier{
   }
 }
 
+class RaspistillNotifier extends BaseNotifier{
+  
+  constructor(name, options){
+    super(name);
+    this.options = options;
+    this.internalObj = new Raspistill(this.options);
+  }
+
+  notify(some_text, oldState, newState, detector){
+    this.lastMessage = some_text;
+    this.data = {
+          "oldState": oldState,
+          "newState": newState,
+          "detector": detector
+        };
+    let _this = this;
+    this.internalObj.takePhoto()
+        .then((photo) => {
+            console.log('took photo', photo);
+            _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
+        })
+        .catch((error) => {
+            _this.emit('pushedNotification', _this.name, 'something bad happened', error);
+      });
+  }
+}
+
 exports.PIRMotionDetector = PIRMotionDetector;
 exports.SlackNotifier = SlackNotifier;
+exports.RaspistillNotifier = RaspistillNotifier;

@@ -135,6 +135,7 @@ class BaseNotifier{
     this.name = name ? name : "Default Base Notifier";
     events.EventEmitter.call(this);
     this.detectors = [];
+    this.internalObj;
   }
 
   notify(text, oldState, newState, detector){
@@ -143,6 +144,11 @@ class BaseNotifier{
       "newState": newState,
       "detector": detector
     });
+  }
+
+  hasInternalObj()
+  {
+    return this.internalObj !== undefined;
   }
 
   //It's the notifier who has the responsibility to bind to existing detectors

@@ -105,6 +105,11 @@ class Config {
   slackHook(profile){
     return this.profile(profile).slack.hook;
   }
+  //TODO: Needs a better design, if keep adding extensions, I should not 
+  //have to add additional methods here for each of the new extensions?
+  raspistillOptions(profile){
+    return this.profile(profile).raspistill.options;
+  }
 
   toString()
   {

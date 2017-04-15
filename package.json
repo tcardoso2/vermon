@@ -2,6 +2,7 @@
   "dependencies": {
     "extend": "latest",
     "log": "^1.4.0",
+    "node-raspistill": "0.0.10",
     "onoff": "latest",
     "slack-node": "^0.1.8"
   },
@@ -18,5 +19,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.3.1"
+  "version": "0.3.2"
 }

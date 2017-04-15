@@ -1,6 +1,6 @@
 # t-motion-detector
 A NodeJS Motion detector, initially aimed for Raspberry Pi.
-The Motion Detectors detect changes in the environment and the Notifiers receive the Motion Detectors's event changes.  
+The Motion Detectors detect changes in the Environment and the Notifiers receive the Motion Detectors's event changes.  
 Author: Tiago Cardoso
 ***
 Code snippet:  
@@ -55,6 +55,25 @@ exports.profiles = profiles;
 exports.default = profiles.default;
 ````
 ***
+Extend your own notifier: 
+More info coming soon!
+
+***
+Extend your own motion detector: 
+More info coming soon!
+
+***
+Events: 
+More info coming soon!
+
+***
+Unit tests: 
+t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go.
+
+***
+* v 0.3.2: Adding node-raspistill as RaspistillNotifier wrapper into Extensions classes. Will allow to take
+A snapshot picture if movement is detected using a properly configured raspberry camera and the
+node-raspistill library. Adding unit test (WIP).
 * v 0.3.1: Update on the README file, noticed example code had bugs in it.
 * v 0.3.0: Added capability to customize the notification message, minor fixes.
 * v 0.2.12:Bug fixes on loging inside pir detection event.

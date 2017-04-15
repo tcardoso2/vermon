@@ -39,6 +39,12 @@ describe("When a new motion detector is created, ", function() {
     main.GetEnvironment().should.not.equal(undefined);
   });
 
+  it('the BaseNotifier has no internal objects (only meant to be used by descendant classes)', function () {
+    //Prepare
+    var n = new ent.BaseNotifier();
+    n.hasInternalObj().should.equal(false);
+  });
+
   it('all notifiers are binded with the motion Detectors', function (done) {
     //Prepare
 
