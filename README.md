@@ -41,6 +41,25 @@ If you want to override the notification message do (example with SlackNotifier)
 	main.AddNotifier(n, `Received notification from: ${m.name}`);
     e.AddChange(10);
 
+From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
+RaspistillNotifier, which means you can use your Raspberry pi camera to take pictures when
+movement is detected. Here's an example which takes a snapshot once the Raspberry pi detects
+movement via the PIRMotionDetector connected to pin 17 (requires a sensor like the Infrared 
+motion sensor HC-SR501):
+
+	var md = require('t-motion-detector');
+	var mdr = require('t-motion-detector-433');
+
+	var env = new md.Entities.Environment();
+	initialMD = new md.Extensions.PIRMotionDetector(17);
+	md.Start({
+		environment: env,
+		initialMotionDetector: initialMD
+	});
+
+	camNotifier = new md.Extensions.RaspistillNotifier();
+	md.AddNotifier(camNotifier);
+
 To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (I know it is uglyish for now)):  
 ````  
 profiles = {
