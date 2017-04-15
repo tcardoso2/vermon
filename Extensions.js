@@ -130,7 +130,7 @@ class RaspistillNotifier extends BaseNotifier{
             _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
         })
         .catch((error) => {
-            _this.emit('pushedNotification', _this.name, 'something bad happened', error);
+            //_this.emit('pushedNotification', _this.name, 'something bad happened', error);
       });
   }
 }

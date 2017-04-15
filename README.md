@@ -71,6 +71,7 @@ Unit tests:
 t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go.
 
 ***
+* v 0.3.3: first version for the RaspistillNotifier
 * v 0.3.2: Adding node-raspistill as RaspistillNotifier wrapper into Extensions classes. Will allow to take
 A snapshot picture if movement is detected using a properly configured raspberry camera and the
 node-raspistill library. Adding unit test (WIP).

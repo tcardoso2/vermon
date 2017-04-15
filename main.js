@@ -78,11 +78,13 @@ class Config {
 
   constructor(profile)
   {
+    //config.js must always exist
+    this.fallback = require('./config.js'); 
     try{
       this.file = require('./local.js');
     } catch (e)
     {
-      this.file = require('./config.js');
+      this.file = this.fallback;
     }
   }
 
@@ -102,13 +104,21 @@ class Config {
     }    
   }
 
+  getProperty(profile, prop){
+    //searches first in the file
+    let file_val = this.profile(profile)[prop];
+    let fallback_val = this.fallback.profiles[profile] ? this.fallback.profiles[profile][prop] : this.fallback.default[prop];
+    return file_val ? file_val : fallback_val; 
+  }
+
   slackHook(profile){
     return this.profile(profile).slack.hook;
   }
+  
   //TODO: Needs a better design, if keep adding extensions, I should not 
   //have to add additional methods here for each of the new extensions?
   raspistillOptions(profile){
-    return this.profile(profile).raspistill.options;
+    return this.getProperty(profile, "raspistill").options;
   }
 
   toString()
