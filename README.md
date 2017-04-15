@@ -48,7 +48,6 @@ movement via the PIRMotionDetector connected to pin 17 (requires a sensor like t
 motion sensor HC-SR501):
 
 	var md = require('t-motion-detector');
-	var mdr = require('t-motion-detector-433');
 
 	var env = new md.Entities.Environment();
 	initialMD = new md.Extensions.PIRMotionDetector(17);
