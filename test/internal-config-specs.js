@@ -33,22 +33,35 @@ after(function(done) {
 });
 
 describe("When a new t-motion-detector instance is started from main, ", function() {
-  it('the function StartWithConfig function should expect a Config type object or extension of it', function () {
+  it('the function StartWithConfig function should throw exception if no argument is provided', function () {
     //Prepare
     try{
       main.StartWithConfig();
     } catch(e){
       e.message.should.equal("Requires a Config type object as first argument.");
+      return;
     }
+    should.fail("Should have caught exception.");
   });
 
-  it('the function StartWithConfig function should not fail if a Config object is passed', function () {
+  it('the function StartWithConfig function should expect a Config type object or extension of it', function () {
+    //Prepare
+    try{
+      main.StartWithConfig({ other: "object" });
+    } catch(e){
+      e.message.should.equal("Requires a Config type object as first argument.");
+      return;
+    }
+    should.fail("Should have caught exception.");;
+  });
+
+  it('the function StartWithConfig function should not fail if a Config object is passed', function (done) {
     //Prepare
     main.StartWithConfig(new main.Config());
-    should.pass()
+    done();
   });
 
-  it('the function StartWithConfig function should not fail if an object extending Config object is passed', function () {
+  it('the function StartWithConfig function should not fail if an object extending Config object is passed', function (done) {
     //Prepare
     class ConfigExtended extends main.Config{
       constructor()
@@ -58,29 +71,32 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     }
 
     main.StartWithConfig(new ConfigExtended());
-    should.pass()
+    done()
   });
 
   it('the object Config can receive a mock profile and saves it', function (done) {
+    let slackHook = new main.Config().slackHook("default");
     let myMockProfile = 
     {
       slack: {
-        hook: 'https://hooks.slack.com/services/MyHook'
+        hook: slackHook
       },
       raspistill: {
         options: {
         }
       }
     }
-    let c = new Config(myMockProfile);
+    let c = new main.Config(myMockProfile);
 
-    c.profile.should.equal(myMockProfile);
+    JSON.stringify(c.profile()).should.equal(JSON.stringify(myMockProfile));
+    done();
   });
 
   it('the object Config can receive a set of mock profiles and saves the default (active) one', function (done) {
+    let slackHook = new main.Config().slackHook("default");
     let defaultProfile = {
         slack: {
-          hook: 'https://hooks.slack.com/services/MyHook'
+          hook: slackHook
         },
         raspistill: {
           options: {
@@ -94,16 +110,18 @@ describe("When a new t-motion-detector instance is started from main, ", functio
       profile2: {},
       default: defaultProfile
     }
-    let c = new Config(myMockProfile);
+    let c = new main.Config(myMockProfiles);
 
-    c.profile.should.equal(defaultProfile);
+    JSON.stringify(c.profile()).should.equal(JSON.stringify(defaultProfile));
+    done();
   });
 
   it('the object Config can receive a set of mock profiles in Array format and saves the default (active) one', function (done) {
+    let slackHook = new main.Config().slackHook("default");
     let defaultProfile = {
         active: true,
         slack: {
-          hook: 'https://hooks.slack.com/services/MyHook'
+          hook: slackHook
         },
         raspistill: {
           options: {
@@ -112,18 +130,20 @@ describe("When a new t-motion-detector instance is started from main, ", functio
       }
 
     let myMockProfiles = [];
-    myMockProfiles.push({ profile1: {}} ); 
-    myMockProfiles.push({ profile2: defaultProfile })
-    myMockProfiles.push({ profile3: {}} ); 
-    let c = new Config(myMockProfile);
+    myMockProfiles.push({}); 
+    myMockProfiles.push(defaultProfile)
+    myMockProfiles.push({}); 
+    let c = new main.Config(myMockProfiles);
 
-    c.profile.should.equal(defaultProfile);
+    JSON.stringify(c.profile()).should.equal(JSON.stringify(defaultProfile));
+    done();
   });
 
   it('the object Config can receive profiles with the name of the class (dependency injection), and array of attributes', function (done) {
+    let slackHook = new main.Config().slackHook("default");
     let defaultProfile = {
         SlackNotifier: [
-          'https://hooks.slack.com/services/MyHook'
+          slackHook
         ],
         PIRMotionDetector: [
           {}
@@ -136,9 +156,14 @@ describe("When a new t-motion-detector instance is started from main, ", functio
       profile2: {},
       default: defaultProfile
     }
-    let c = new Config(myMockProfile);
+    let c = new main.Config(myMockProfiles);
 
-    c.profile.should.equal(defaultProfile); //Continue here!
+    let {e, d, n} = main.StartWithConfig(c);
+
+    (e instanceof Environment).should.equal(true);
+    (d instanceof PIRMotionDetector).should.equal(true);
+    (n instanceof SlackNotifier).should.equal(true);
+    done();
   });
 
   it('TODO', function (done) {
@@ -165,6 +190,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     });
 
     e.addChange(10);
+    should.fail("Continue from here!");
   });
 });
 

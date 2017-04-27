@@ -44,7 +44,7 @@ function GetEnvironment()
 
 //Will start the motion detector
 function Start(params, silent = false){
-  log.info("Setting initial parameters...");
+  log.info("Starting t-motion-detector with parameters...");
   //Sets the parameters first if they exist
   if (params){
     if (params.environment){
@@ -74,17 +74,57 @@ function Start(params, silent = false){
   log.info("ready.");
 }
 
+//Will start the motion detector based on the existing configuration
+function StartWithConfig(configParams){
+  log.info("Starting t-motion-detector with config parameters...");
+  //Sets the parameters first if they exist
+  if (!configParams 
+    || !(configParams instanceof Config))
+  {
+    throw new Error("Requires a Config type object as first argument.");
+  }
+}
+
 class Config {
 
   constructor(profile)
   {
     //config.js must always exist
-    this.fallback = require('./config.js'); 
-    try{
-      this.file = require('./local.js');
-    } catch (e)
+    if (!profile)
     {
-      this.file = this.fallback;
+      this.fallback = require('./config.js');
+      try{
+        this.file = require('./local.js');
+      } catch (e)
+      {
+        this.file = this.fallback;
+      }
+    } else {
+      let myProfile = {};
+      if (profile.hasOwnProperty('default')){
+        //I consider the object is actually a set of profiles, being "default" the active one
+        myProfile = profile;
+      }
+      else {
+        if (Array.isArray(profile)) {
+          //I assume this is an Array of profiles, and it is the caller's responsibility to set
+          //one of them with the property active = true
+          for (let i = 0; i < profile.length; ++i) {
+            if (profile[i].hasOwnProperty("active") && profile[i].active) {
+              myProfile["default"] = profile[i];
+            }
+            else {
+              myProfile["profile"+i] = profile[i];
+            }
+          }
+        }
+        else
+        {
+          //Just one profile as argument so that will be the default profile
+          myProfile = { default: profile };
+        }
+      }
+      this.file = { profiles: myProfile };
     }
   }
 
@@ -100,7 +140,7 @@ class Config {
     }
     else{
       //fallsback to default hook
-      return this.file.default;
+      return this.file.profiles["default"];
     }    
   }
 
@@ -135,5 +175,6 @@ exports.GetEnvironment = GetEnvironment;
 exports.Entities = ent;
 exports.Extensions = ext;
 exports.Start = Start;
+exports.StartWithConfig = StartWithConfig;
 exports.Config = Config;
 exports.Log = log;
