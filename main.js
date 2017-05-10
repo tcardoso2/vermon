@@ -90,41 +90,52 @@ class Config {
   constructor(profile)
   {
     //config.js must always exist
+    this.fallback = require('./config.js');
     if (!profile)
     {
-      this.fallback = require('./config.js');
-      try{
-        this.file = require('./local.js');
-      } catch (e)
-      {
-        this.file = this.fallback;
-      }
+      this.mapToFile('./local.js');
     } else {
       let myProfile = {};
-      if (profile.hasOwnProperty('default')){
-        //I consider the object is actually a set of profiles, being "default" the active one
-        myProfile = profile;
+      if (typeof profile == "string") {
+        this.mapToFile(profile);
       }
       else {
-        if (Array.isArray(profile)) {
-          //I assume this is an Array of profiles, and it is the caller's responsibility to set
-          //one of them with the property active = true
-          for (let i = 0; i < profile.length; ++i) {
-            if (profile[i].hasOwnProperty("active") && profile[i].active) {
-              myProfile["default"] = profile[i];
-            }
-            else {
-              myProfile["profile"+i] = profile[i];
+        if (profile.hasOwnProperty('default')){
+          //I consider the object is actually a set of profiles, being "default" the active one
+          myProfile = profile;
+        }
+        else {
+          if (Array.isArray(profile)) {
+            //I assume this is an Array of profiles, and it is the caller's responsibility to set
+            //one of them with the property active = true
+            for (let i = 0; i < profile.length; ++i) {
+              if (profile[i].hasOwnProperty("active") && profile[i].active) {
+                myProfile["default"] = profile[i];
+              }
+              else {
+                myProfile["profile"+i] = profile[i];
+              }
             }
           }
+          else
+          {
+            //Just one profile as argument so that will be the default profile
+            myProfile = { default: profile };
+          }
         }
-        else
-        {
-          //Just one profile as argument so that will be the default profile
-          myProfile = { default: profile };
-        }
+        this.file = { profiles: myProfile };
       }
-      this.file = { profiles: myProfile };
+    }
+  }
+
+  mapToFile(file_name)
+  {
+    try{
+      this.file = require(file_name);
+    } catch (e)
+    {
+      console.log(`Warning:'${e.message}, will fallback to config file...`);
+      this.file = this.fallback;
     }
   }
 
@@ -144,21 +155,21 @@ class Config {
     }    
   }
 
-  getProperty(profile, prop){
+  getProperty(profile_name, prop){
     //searches first in the file
-    let file_val = this.profile(profile)[prop];
-    let fallback_val = this.fallback.profiles[profile] ? this.fallback.profiles[profile][prop] : this.fallback.default[prop];
+    let file_val = this.profile(profile_name)[prop];
+    let fallback_val = this.fallback.profiles[profile_name] ? this.fallback.profiles[profile_name][prop] : this.fallback.default[prop];
     return file_val ? file_val : fallback_val; 
   }
 
-  slackHook(profile){
-    return this.profile(profile).slack.hook;
+  slackHook(profile_name){
+    return this.profile(profile_name).slack.hook;
   }
   
   //TODO: Needs a better design, if keep adding extensions, I should not 
   //have to add additional methods here for each of the new extensions?
-  raspistillOptions(profile){
-    return this.getProperty(profile, "raspistill").options;
+  raspistillOptions(profile_name){
+    return this.getProperty(profile_name, "raspistill").options;
   }
 
   toString()

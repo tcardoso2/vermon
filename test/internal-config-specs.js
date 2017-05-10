@@ -92,6 +92,28 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     done();
   });
 
+  it('the object Config can accept alternative mock config files', function (done) {
+    let alternativeConfig = new main.Config("./test/config_test1.js");
+    let file = require("./config_test1.js");
+    alternativeConfig.file.should.equal(file);
+    done();
+  });
+
+  it('the object Config can detect the default profile of a mock config file', function (done) {
+    let alternativeConfig = new main.Config("./test/config_test1.js");
+    let file_val = alternativeConfig.profile("default");
+
+    JSON.stringify(file_val.some_group).should.equal(JSON.stringify({some_property: "Test Property" }));
+    done();
+  });
+
+  it('the object Config can detect properties from mock config files', function (done) {
+    let alternativeConfig = new main.Config("./test/config_test1.js");
+
+    alternativeConfig.getProperty("default", "some_group").some_property.should.equal("");
+    done();
+  });
+
   it('the object Config can receive a set of mock profiles and saves the default (active) one', function (done) {
     let slackHook = new main.Config().slackHook("default");
     let defaultProfile = {
@@ -140,29 +162,12 @@ describe("When a new t-motion-detector instance is started from main, ", functio
   });
 
   it('the object Config can receive profiles with the name of the class (dependency injection), and array of attributes', function (done) {
-    let slackHook = new main.Config().slackHook("default");
-    let defaultProfile = {
-        SlackNotifier: [
-          slackHook
-        ],
-        PIRMotionDetector: [
-          {}
-        ]
-      }
+    let alternativeConfig = new main.Config("./test/config_test1.js");
+    main.StartWithConfig(alternativeConfig);
 
-    let myMockProfiles = 
-    {
-      profile1: {},
-      profile2: {},
-      default: defaultProfile
-    }
-    let c = new main.Config(myMockProfiles);
+    let slackNotifier = main.getNotifiers()[0];
+    slackNotifier.name.should.equal("My Slack channel");
 
-    let {e, d, n} = main.StartWithConfig(c);
-
-    (e instanceof Environment).should.equal(true);
-    (d instanceof PIRMotionDetector).should.equal(true);
-    (n instanceof SlackNotifier).should.equal(true);
     done();
   });
 
@@ -194,4 +199,22 @@ describe("When a new t-motion-detector instance is started from main, ", functio
   });
 });
 
+describe("After installing a new t-motion-detector, ", function() {
+  it('a setup executable should run/exist', function () {
+    //Prepare
+
+    var e = new ent.ConsoleEnvironment("setup.js");
+    var m = new ent.ConsoleReadDetector();
+    var n = new ent.ConsoleWriteNotifier();
+    should.fail();
+  });
+  it('should prompt if the user wishes to exit or setup', function () {
+    //Prepare
+    should.fail();
+  });
+  it('should allow the user set options from a list (e.g. slack, raspbian camera, etc)', function () {
+    //Prepare
+    should.fail();
+  });
+});
 //Create tests removing Detectors and notifiers.
