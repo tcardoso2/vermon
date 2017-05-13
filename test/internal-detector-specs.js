@@ -9,11 +9,13 @@
  * var md = require('t-motion-detector');
  *****************************************************/
 
-var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
-var should = chai.should();
-var fs = require('fs');
-var ent = require('../Entities.js');
+let chai = require('chai');
+let chaiAsPromised = require("chai-as-promised");
+let should = chai.should();
+let fs = require('fs');
+let ent = require('../Entities.js');
+let ext = require('../Extensions.js');
+let main = require('../main.js');
 
 //Chai will use promises for async events
 chai.use(chaiAsPromised);
@@ -24,7 +26,24 @@ before(function(done) {
 
 after(function(done) {
   // here you can clear fixtures, etc.
+  main.Reset();
   done();
+});
+
+describe("When a detector is added, ", function() {
+  it('should not be added if object is not of type MotionDetector', function () {
+    //Prepare
+    let m = main.GetMotionDetectors().length;
+    main.AddDetector(3);
+    main.GetMotionDetectors().length.should.equal(m);
+  });
+
+  it('should be added if object is of type Detector', function () {
+    //Prepare
+    let m = main.GetMotionDetectors().length;
+    main.AddDetector(new ext.PIRMotionDetector(12));
+    main.GetMotionDetectors().length.should.equal(m + 1);
+  });
 });
 
 describe("When there is a surroundings change relative to an object, ", function() {

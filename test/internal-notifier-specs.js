@@ -9,14 +9,14 @@
  * var md = require('t-motion-detector');
  *****************************************************/
 
-var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
-var should = chai.should();
-var fs = require('fs');
-var ent = require('../Entities.js');
-var ext = require('../Extensions.js');
-var main = require('../main.js');
-var events = require('events');
+let chai = require('chai');
+let chaiAsPromised = require("chai-as-promised");
+let should = chai.should();
+let fs = require('fs');
+let ent = require('../Entities.js');
+let ext = require('../Extensions.js');
+let main = require('../main.js');
+let events = require('events');
 
 //Chai will use promises for async events
 chai.use(chaiAsPromised);
@@ -28,8 +28,25 @@ before(function(done) {
 after(function(done) {
   // here you can clear fixtures, etc.
   main = require('../main.js');
+  main.Reset();
   ent = require('../Entities.js');
   done();
+});
+
+describe("When a notifier is added, ", function() {
+  it('should not be added if object is not of type Notifier', function () {
+    //Prepare
+    let n = main.GetNotifiers().length;
+    main.AddNotifier(3);
+    main.GetNotifiers().length.should.equal(n);
+  });
+
+  it('should be added if object is of type Notifier', function () {
+    //Prepare
+    let n = main.GetNotifiers().length;
+    main.AddNotifier(new ext.SlackNotifier("some name", "some_url"));
+    main.GetNotifiers().length.should.equal(n + 1);
+  });
 });
 
 describe("When a new motion detector is created, ", function() {

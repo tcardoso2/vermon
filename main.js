@@ -1,26 +1,37 @@
-var ent = require("./Entities.js");
-var ext = require("./Extensions.js");
-var notifiers = [];
-var environment;
-var motionDetectors = [];
-var fs = require('fs')
+let ent = require("./Entities.js");
+let ext = require("./Extensions.js");
+let notifiers = [];
+let environment;
+let motionDetectors = [];
+let config;
+let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
 
 function AddNotifier(notifier, template){
-  notifier.bindToDetectors(motionDetectors, template);
-  notifiers.push(notifier);
+  if (notifier instanceof ent.BaseNotifier)
+  {
+    notifier.bindToDetectors(motionDetectors, template);
+    notifiers.push(notifier);
+  } else {
+    log.warning("'notifier' object is not of type BaseNotifier");
+  }
 }
 
 //Adds a detector and binds it to the environment
 function AddDetector(detector){
-  motionDetectors.push(detector);
-  if (environment)
+  if (detector instanceof ent.MotionDetector)
   {
-    environment.bindDetector(detector, notifiers);
-    detector.startMonitoring();
+    motionDetectors.push(detector);
+    if (environment)
+    {
+      environment.bindDetector(detector, notifiers);
+      detector.startMonitoring();
+    } else {
+      throw new Error("No environment was detected, please add one first.");
+    }
   } else {
-    throw new Error("No environment was detected, please add one first.");
+    log.warning("'detector' object is not of type MotionDetector");
   }
 }
 
@@ -40,6 +51,23 @@ function GetEnvironment()
   }
 
   return environment;	
+}
+
+function GetNotifiers()
+{
+  return notifiers;
+}
+
+function GetMotionDetectors()
+{
+  return motionDetectors;
+}
+
+function Reset()
+{
+  notifiers = [];
+  environment = undefined;
+  motionDetectors = [];
 }
 
 //Will start the motion detector
@@ -82,6 +110,17 @@ function StartWithConfig(configParams){
     || !(configParams instanceof Config))
   {
     throw new Error("Requires a Config type object as first argument.");
+  }
+  //Should now instanciate the objects if they exist in the default profile
+  config = configParams;
+  let profileObj = config.profile();
+  for(let p in profileObj)
+  {
+    if (profileObj.hasOwnProperty(p)) {
+      //It is only supposed to add if the object is of the expected type
+      AddNotifier(p);
+      AddDetector(p);
+    }
   }
 }
 
@@ -183,6 +222,9 @@ exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
 exports.RemoveNotifier = RemoveNotifier;
 exports.GetEnvironment = GetEnvironment;
+exports.GetNotifiers = GetNotifiers;
+exports.GetMotionDetectors = GetMotionDetectors;
+exports.Reset = Reset;
 exports.Entities = ent;
 exports.Extensions = ext;
 exports.Start = Start;
