@@ -123,10 +123,13 @@ function StartWithConfig(configParams){
     if (profileObj.hasOwnProperty(p)) {
       //It is only supposed to add if the object is of the expected type
       let f = new ent.EntitiesFactory();
-      let o = new (f.create(p))();
-      if (!AddNotifier(o)){
-        if(!AddDetector(o)){
-          console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+      if (!f.isReserved(p))
+      {
+        let o = new (f.create(p))();
+        if (!AddNotifier(o)){
+          if(!AddDetector(o)){
+            console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+          }
         }
       }
     }

@@ -194,6 +194,8 @@ function BaseParameters(){
 
 //Entities Factory
 const classes = { Environment, MotionDetector, BaseNotifier};
+//Keys 
+const reservedKeys = [ "slack", "raspistill" ]
 
 class EntitiesFactory
 {
@@ -205,9 +207,19 @@ class EntitiesFactory
     }
     //If reaches here the user can still use the same factory object and instiate using 'create'
   }
+  
+  isReserved(name)
+  {
+    return reservedKeys.indexOf(name) >= 0;
+  }
 
   create(name)
   {
+    if (this.isReserved(name))
+    {
+      throw new Error(`'${name}' is a reserved keyword and may not be used as Configuration object`);
+    }
+
     let result = classes[name];
     if (!result)
     {

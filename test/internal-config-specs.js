@@ -74,6 +74,24 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     done()
   });
 
+  it('the function StartWithConfig skips known static keywords such as slack or raspistill from being dinamically instantiated', function (done) {
+    let myMockProfile = 
+    {
+      slack: {
+        hook: "test"
+      },
+      raspistill: {
+        options: {
+        }
+      }
+    }
+    let c = new main.Config(myMockProfile);
+    //Prepare
+    main.StartWithConfig(new main.Config());
+    done();
+
+  });
+
   it('the object Config can receive a mock profile and saves it', function (done) {
     let slackHook = new main.Config().slackHook("default");
     let myMockProfile = 
@@ -279,6 +297,17 @@ describe("When using the EntitiesFactory function, ", function() {
     } catch(exc)
     {
       exc.message.should.equal("Class name 'someRandomObject' is not recognized, did you forget to use the 'extend' method?");
+      return;
+    }
+    should.fail();
+  });
+  it('should throw an exception if object is a reserved keyworkd', function () {
+    //Prepare
+    try{
+      let f = new ent.EntitiesFactory("slack");
+    } catch(exc)
+    {
+      exc.message.should.equal("'slack' is a reserved keyword and may not be used as Configuration object");
       return;
     }
     should.fail();
