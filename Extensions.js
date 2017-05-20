@@ -135,6 +135,13 @@ class RaspistillNotifier extends BaseNotifier{
   }
 }
 
+//Extending Factory methods
+
+//Extending Entities Factory
+const classes = { PIRMotionDetector, SlackNotifier, RaspistillNotifier};
+
+new ent.EntitiesFactory().extend(classes);
+
 exports.PIRMotionDetector = PIRMotionDetector;
 exports.SlackNotifier = SlackNotifier;
 exports.RaspistillNotifier = RaspistillNotifier;

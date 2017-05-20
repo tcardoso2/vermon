@@ -37,15 +37,17 @@ describe("When a notifier is added, ", function() {
   it('should not be added if object is not of type Notifier', function () {
     //Prepare
     let n = main.GetNotifiers().length;
-    main.AddNotifier(3);
+    let result = main.AddNotifier(3);
     main.GetNotifiers().length.should.equal(n);
+    result.should.equal(false);
   });
 
   it('should be added if object is of type Notifier', function () {
     //Prepare
     let n = main.GetNotifiers().length;
-    main.AddNotifier(new ext.SlackNotifier("some name", "some_url"));
+    let result = main.AddNotifier(new ext.SlackNotifier("some name", "some_url"));
     main.GetNotifiers().length.should.equal(n + 1);
+    result.should.equal(true);
   });
 });
 

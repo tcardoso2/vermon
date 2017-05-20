@@ -192,10 +192,44 @@ function BaseParameters(){
   this.initialMotionDetector;
 }
 
+//Entities Factory
+const classes = { Environment, MotionDetector, BaseNotifier};
+
+class EntitiesFactory
+{
+  constructor(name)
+  {
+    if (name)
+    {
+      return this.create(name);
+    }
+    //If reaches here the user can still use the same factory object and instiate using 'create'
+  }
+
+  create(name)
+  {
+    let result = classes[name];
+    if (!result)
+    {
+      throw new Error(`Class name '${name}' is not recognized, did you forget to use the 'extend' method?`);
+    }
+    return result;    
+  }
+
+  extend(newClasses)
+  {
+    for (let prop in newClasses) {
+      classes[prop] = newClasses[prop];
+    }
+    return classes;
+  }
+}
+
 Environment.prototype.__proto__ = events.EventEmitter.prototype;
 MotionDetector.prototype.__proto__ = events.EventEmitter.prototype;
 BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
 
+exports.EntitiesFactory = EntitiesFactory;
 exports.Environment = Environment;
 exports.MotionDetector = MotionDetector;
 exports.BaseNotifier = BaseNotifier;

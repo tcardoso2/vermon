@@ -175,8 +175,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     let alternativeConfig = new main.Config("./test/config_test2.js");
     main.StartWithConfig(alternativeConfig);
 
-    let slackNotifier = main.GetNotifiers()[0];
-    slackNotifier.name.should.equal("My Slack channel");
+    main.GetNotifiers().length.should.equal(1);
 
     done();
   });
@@ -232,9 +231,9 @@ describe("After installing a new t-motion-detector, ", function() {
   it('a setup executable should run/exist', function () {
     //Prepare
 
-    var e = new ent.ConsoleEnvironment("setup.js");
-    var m = new ent.ConsoleReadDetector();
-    var n = new ent.ConsoleWriteNotifier();
+    let e = new ent.ConsoleEnvironment("setup.js");
+    let m = new ent.ConsoleReadDetector();
+    let n = new ent.ConsoleWriteNotifier();
     should.fail();
   });
   it('should prompt if the user wishes to exit or setup', function () {
@@ -243,6 +242,45 @@ describe("After installing a new t-motion-detector, ", function() {
   });
   it('should allow the user set options from a list (e.g. slack, raspbian camera, etc)', function () {
     //Prepare
+    should.fail();
+  });
+});
+
+describe("When using the EntitiesFactory function, ", function() {
+  it('should create an Environment', function () {
+    //Prepare
+
+    let e = new (new ent.EntitiesFactory("Environment"))();
+    (e instanceof ent.Environment).should.equal(true);
+  });
+  it('should create a MotionDetector', function () {
+    //Prepare
+
+    let m = new (new ent.EntitiesFactory("MotionDetector"))();
+    (m instanceof ent.MotionDetector).should.equal(true);
+  });
+  it('should create a BaseNotifier', function () {
+    //Prepare
+
+    let n = new (new ent.EntitiesFactory("BaseNotifier"))();
+    (n instanceof ent.BaseNotifier).should.equal(true);
+  });
+  it('should be able to accept extensions such as SlackNotifier', function () {
+    //Prepare
+
+    let slackNotifierObj = new ent.EntitiesFactory("SlackNotifier");
+    let n = new slackNotifierObj("name", "some key");
+    (n instanceof ent.BaseNotifier).should.equal(true);
+  });
+  it('should throw an exception if object is not recognized', function () {
+    //Prepare
+    try{
+      let f = new ent.EntitiesFactory("someRandomObject");
+    } catch(exc)
+    {
+      exc.message.should.equal("Class name 'someRandomObject' is not recognized, did you forget to use the 'extend' method?");
+      return;
+    }
     should.fail();
   });
 });

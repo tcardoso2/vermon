@@ -34,15 +34,17 @@ describe("When a detector is added, ", function() {
   it('should not be added if object is not of type MotionDetector', function () {
     //Prepare
     let m = main.GetMotionDetectors().length;
-    main.AddDetector(3);
+    let result = main.AddDetector(3);
     main.GetMotionDetectors().length.should.equal(m);
+    result.should.equal(false);
   });
 
   it('should be added if object is of type Detector', function () {
     //Prepare
     let m = main.GetMotionDetectors().length;
-    main.AddDetector(new ext.PIRMotionDetector(12));
+    let result = main.AddDetector(new ext.PIRMotionDetector(12));
     main.GetMotionDetectors().length.should.equal(m + 1);
+    result.should.equal(true);
   });
 });
 

@@ -13,9 +13,11 @@ function AddNotifier(notifier, template){
   {
     notifier.bindToDetectors(motionDetectors, template);
     notifiers.push(notifier);
+    return true;
   } else {
     log.warning("'notifier' object is not of type BaseNotifier");
   }
+  return false;
 }
 
 //Adds a detector and binds it to the environment
@@ -27,12 +29,14 @@ function AddDetector(detector){
     {
       environment.bindDetector(detector, notifiers);
       detector.startMonitoring();
+      return true;
     } else {
       throw new Error("No environment was detected, please add one first.");
     }
   } else {
     log.warning("'detector' object is not of type MotionDetector");
   }
+  return false;
 }
 
 function RemoveNotifier(notifier){
@@ -118,11 +122,16 @@ function StartWithConfig(configParams){
   {
     if (profileObj.hasOwnProperty(p)) {
       //It is only supposed to add if the object is of the expected type
-      AddNotifier(p);
-      AddDetector(p);
+      let f = new ent.EntitiesFactory();
+      let o = new (f.create(p))();
+      if (!AddNotifier(o)){
+        if(!AddDetector(o)){
+          console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+        }
+      }
     }
   }
-}
+} 
 
 class Config {
 
