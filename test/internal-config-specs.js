@@ -189,7 +189,19 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     done();
   });
 
-  it('When starting with alternate config, the Notification Objects contained in the config file are automatically instanced as Notificators of main.', function (done) {
+  it('When starting with alternate config, the Notification Objects contained in the config file are automatically instanced as Notificators of main', function (done) {
+    //Main needs to be reset explicitely because it keeps objects from previous test
+    main.Reset();
+    let alternativeConfig = new main.Config("./test/config_test2.js");
+    main.StartWithConfig(alternativeConfig);
+    main.GetNotifiers().length.should.equal(1);
+
+    done();
+  });
+
+  it('When starting with alternate config, the Environment Objects contained in the config file are automatically instanced as Environments of main', function (done) {
+    //Main needs to be reset explicitely because it keeps objects from previous test
+    main.Reset();
     let alternativeConfig = new main.Config("./test/config_test2.js");
     main.StartWithConfig(alternativeConfig);
 
@@ -198,16 +210,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     done();
   });
 
-  it('When starting with alternate config, the Environment Objects contained in the config file are automatically instanced as Environments of main.', function (done) {
-    let alternativeConfig = new main.Config("./test/config_test2.js");
-    main.StartWithConfig(alternativeConfig);
-
-    main.GetNotifiers().length.should.equal(1);
-
-    done();
-  });
-
-  it('When starting with alternate config, the MotionDetector Objects contained in the config file are automatically instanced as MotionDetectors of main.', function (done) {
+  it('When starting with alternate config, the MotionDetector Objects contained in the config file are automatically instanced as MotionDetectors of main', function (done) {
     let alternativeConfig = new main.Config("./test/config_test2.js");
     main.StartWithConfig(alternativeConfig);
 
@@ -289,6 +292,14 @@ describe("When using the EntitiesFactory function, ", function() {
     let slackNotifierObj = new ent.EntitiesFactory("SlackNotifier");
     let n = new slackNotifierObj("name", "some key");
     (n instanceof ent.BaseNotifier).should.equal(true);
+  });
+  it('should be able to accept extensions such as SlackNotifier, with parameters directly from the config file', function () {
+    //Prepare
+    let slackNotifierFactory = new ent.EntitiesFactory();
+    n = slackNotifierFactory.instanciate("SlackNotifier", { name: "A", key: "K"});
+    (n instanceof ent.BaseNotifier).should.equal(true);
+    n.name.should.equal("A");
+    n.key.should.equal("K")
   });
   it('should throw an exception if object is not recognized', function () {
     //Prepare

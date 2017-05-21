@@ -212,7 +212,7 @@ class EntitiesFactory
   {
     return reservedKeys.indexOf(name) >= 0;
   }
-
+  //Just creates the object, does not instanciate
   create(name)
   {
     if (this.isReserved(name))
@@ -226,6 +226,18 @@ class EntitiesFactory
       throw new Error(`Class name '${name}' is not recognized, did you forget to use the 'extend' method?`);
     }
     return result;    
+  }
+
+  instanciate(name, params)
+  {
+    let _p = [];
+    let o = this.create(name);
+    //converts params object to a list of it's values
+    for (let p in params) {
+      _p.push(params[p])
+    }
+    //Will attempt to instanciate the object via rest parameters
+    return new o(..._p);
   }
 
   extend(newClasses)

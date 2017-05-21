@@ -8,6 +8,18 @@ let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
 
+//This function should stay internal to this module!
+function InternalAddEnvironment(env = new ent.Environment()){
+  if (env instanceof ent.Environment)
+  {
+    environment = env;
+    return true;
+  } else {
+    log.warning("'environment' object is not of type Environment");
+  }
+  return false;
+}
+
 function AddNotifier(notifier, template){
   if (notifier instanceof ent.BaseNotifier)
   {
@@ -92,7 +104,8 @@ function Start(params, silent = false){
 
   //Will set a default Environment if does not exist;
   if(!environment){
-  	environment = new ent.Environment();
+    InternalAddEnvironment();
+  	//environment = new ent.Environment();
   }
 
   if (!silent)
@@ -118,6 +131,7 @@ function StartWithConfig(configParams){
   //Should now instanciate the objects if they exist in the default profile
   config = configParams;
   let profileObj = config.profile();
+
   for(let p in profileObj)
   {
     if (profileObj.hasOwnProperty(p)) {
@@ -125,10 +139,13 @@ function StartWithConfig(configParams){
       let f = new ent.EntitiesFactory();
       if (!f.isReserved(p))
       {
-        let o = new (f.create(p))();
-        if (!AddNotifier(o)){
-          if(!AddDetector(o)){
-            console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+        let o = f.instanciate(p, profileObj[p]);
+        //The way this is written, forces the environment to be created first
+        if(!InternalAddEnvironment(o)){
+          if (!AddNotifier(o)){
+            if(!AddDetector(o)){
+              console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+            }
           }
         }
       }
