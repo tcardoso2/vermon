@@ -9,11 +9,12 @@
  * var md = require('t-motion-detector');
  *****************************************************/
 
-var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
-var should = chai.should();
-var fs = require('fs');
+let chai = require('chai');
+let chaiAsPromised = require("chai-as-promised");
+let should = chai.should();
+let fs = require('fs');
 const ent = require('../Entities.js');
+let main = require('../main.js');
 const ext = require('../Extensions.js');
 
 //Chai will use promises for async events
@@ -64,5 +65,43 @@ describe("When a new PIR Motion Detector is added", function() {
     let pir1 = new ext.PIRMotionDetector(17);
     (pir1 instanceof ent.MotionDetector).should.equal(true);
     done();
+  });
+});
+
+describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the front of your RPi in the next 10 seconds)", function(done) {
+
+  it('when the user waves in front of the sensor it should trigger a notification', function (done) {
+
+    console.log(process);
+    if (process.platform != "linux"){
+      done();
+      return;
+    }
+    //Prepare - This test is similar to the code that resides in the RPI deployments (May 2017)
+    this.timeout(10000);
+    var env = new main.Entities.Environment();
+    initialMD = new main.Extensions.PIRMotionDetector(17);
+    initialMD.name = "test PIR";
+    main.Start({
+      environment: env,
+      initialMotionDetector: initialMD
+    });
+    initialNotifier = new main.Extensions.SlackNotifier("My Slack", "https://hooks.slack.com/services/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")
+    main.AddNotifier(initialNotifier, `Notification: ${initialMD.name}`);
+
+    camNotifier = new main.Extensions.RaspistillNotifier();
+    main.AddNotifier(camNotifier);
+    initialNotifier.on("pushedNotification", function(name, text){
+      chai.assert.isOk("notified");
+      //console.log(`Got a notification from ${name}: ${text}`);
+      done();
+    });
+    initialMD.on("hasDetected", function(current, newState, d){
+      chai.assert.isOk("detected");
+      //console.log(`Detector detected signal from ${current} to: ${newState}`);
+    });
+    //var m433 = new mdr.Entities.R433Detector("My 433 Detector", 2);
+    //md.AddDetector(m433);
+    //env.addChange(1);
   });
 });
