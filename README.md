@@ -92,7 +92,7 @@ motion sensor HC-SR501):
 	camNotifier = new md.Extensions.RaspistillNotifier();
 	md.AddNotifier(camNotifier);
 
-Static configuration (to be deprecated): To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (HINT: use the new way of configuring the module)):  
+Static configuration (to be deprecated): To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (HINT: use the new way of configuring the module from version 0.3.7 onwards - this one below still works but will be deprecated)):  
 ````  
 profiles = {
   default: {
