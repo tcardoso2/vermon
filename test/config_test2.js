@@ -1,7 +1,9 @@
 profiles = {
   default: {
   	Environment: {},
-  	MotionDetector: {},
+  	PIRMotionDetector: {
+          pin: 17
+        },
 	SlackNotifier: {
 	  name: "My Slack channel",
 	  key: "https://hooks.slack.com/services/<MySlackURL>"
