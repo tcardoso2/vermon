@@ -73,7 +73,7 @@ describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the f
   it('when the user waves in front of the sensor it should trigger a notification', function (done) {
 
     console.log(process);
-    if (process.platform != "linux"){
+    if (process.platform != "linux" || process.arch != "arm"){
       done();
       return;
     }
@@ -88,13 +88,17 @@ describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the f
     });
     initialNotifier = new main.Extensions.SlackNotifier("My Slack", "https://hooks.slack.com/services/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")
     main.AddNotifier(initialNotifier, `Notification: ${initialMD.name}`);
-
+    var _detected = false;
     camNotifier = new main.Extensions.RaspistillNotifier();
     main.AddNotifier(camNotifier);
     initialNotifier.on("pushedNotification", function(name, text){
-      chai.assert.isOk("notified");
-      //console.log(`Got a notification from ${name}: ${text}`);
-      done();
+      if(!_detected){
+        _detected = true; 
+        chai.assert.isOk("notified");
+        //console.log(`Got a notification from ${name}: ${text}`);
+        done();
+        return;
+      }
     });
     initialMD.on("hasDetected", function(current, newState, d){
       chai.assert.isOk("detected");

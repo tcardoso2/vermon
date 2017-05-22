@@ -139,6 +139,7 @@ function StartWithConfig(configParams){
       let f = new ent.EntitiesFactory();
       if (!f.isReserved(p))
       {
+        log.info(`Creating entity "${p}"...`);
         let o = f.instanciate(p, profileObj[p]);
         //The way this is written, forces the environment to be created first
         if(!InternalAddEnvironment(o)){
@@ -151,6 +152,7 @@ function StartWithConfig(configParams){
       }
     }
   }
+  log.info("ready.");
 } 
 
 class Config {
@@ -200,6 +202,7 @@ class Config {
   {
     try{
       this.file = require(file_name);
+      log.info(`Loaded ${file_name}`);
     } catch (e)
     {
       console.log(`Warning:'${e.message}, will fallback to config file...`);
