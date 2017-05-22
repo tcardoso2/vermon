@@ -4,13 +4,29 @@
     "log": "^1.4.0",
     "node-raspistill": "0.0.10",
     "onoff": "latest",
-    "slack-node": "^0.1.8"
+    "slack-node": "^0.1.8",
+    "readline": "latest"
   },
   "devDependencies": {
     "chai-as-promised": "*",
     "chai": "*",
     "mocha": "*"
   },
+  "config": {},
+  "scripts": {
+    "preinstall": "node scripts/preinstall.js",
+    "postinstall": "node scripts/postinstall.js",
+    "test": "node scripts/test.js"
+  },
+  "bin": {
+    "setup": "bin/setup"
+  },
+  "contributors": [
+    {
+      "name": "Tiago Cardoso",
+      "url": "https://github.com/tcardoso2"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/tcardoso2/t-motion-detector.git"
@@ -20,5 +36,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.3.5"
+  "version": "0.3.6"
 }

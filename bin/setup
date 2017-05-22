@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander');
+var path = require('path');
+
+console.log("t-motion-detector Starting Setup...");
+
+
+
+
+console.log("t-motion-detector Closing Setup.");
