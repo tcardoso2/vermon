@@ -6,7 +6,7 @@ NOTE: this code has only been tested in the following Linux OS:
 - Raspbian: works only for ARM7 processors, meaning old Rpis won't work
 - OSX: Tests and code runs / works where no real sensors are involved
 ***
-Code snippet:  
+Code snippet (to programatically set events, detectors and notifiers):  
 
 	var main = require('t-motion-detector');
 	var ent = main.Entities;
@@ -44,6 +44,36 @@ If you want to override the notification message do (example with SlackNotifier)
 	main.AddNotifier(n, `Received notification from: ${m.name}`);
     e.AddChange(10);
 
+
+NEW: From version 0.3.7 onwards there is a simpler way to call the API, using your own config file, which does a similar job as the one above:
+````
+var md = require('t-motion-detector');
+console.log(__dirname); //To get the absolute path of your config file
+md.StartWithConfig(new md.Config(__dirname + "/config.js"));
+````
+
+If called via "StartWithConfig", method, the program expects your config file as such (below). Note
+the key names are real names of objects, which means you can use dependency injection to configure
+your entities. Make sure you also pass the start parameters for the constructor(s), if any:
+
+````
+profiles = {
+  default: {
+    Environment: {},
+    PIRMotionDetector: {
+          pin: 17
+        },
+    SlackNotifier: {
+      name: "My Slack channel",
+      key: "https://hooks.slack.com/services/<MySlackURL>"
+    }
+  }
+}
+
+exports.profiles = profiles;
+exports.default = profiles.default;
+````
+
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
 RaspistillNotifier, which means you can use your Raspberry pi camera to take pictures when
 movement is detected. Here's an example which takes a snapshot once the Raspberry pi detects
@@ -62,7 +92,7 @@ motion sensor HC-SR501):
 	camNotifier = new md.Extensions.RaspistillNotifier();
 	md.AddNotifier(camNotifier);
 
-To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (I know it is uglyish for now)):  
+Static configuration (to be deprecated): To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (HINT: use the new way of configuring the module)):  
 ````  
 profiles = {
   default: {

@@ -1,6 +1,7 @@
 # Change log:
 
 ***
+* v 0.3.7: Integration tests on Raspberry pi for the new configuration mode (simpler) for setting up detectors and notifiers (Added to readme.md)
 * v 0.3.6: Started (WIP) creating setup initial script to setup t-motion-detector via console. Added pre-install script for installing only on permitted OS. Separated Change log from README file.
 * v 0.3.5: Created a Factory to dynamically instanciate classes (via dependency injection) in Entities.
 * v 0.3.4: Implementing dependency injection with config.js (WIP), setting up t-motion from config without requiring hard-coding. Allowing Config object to receive alternate (mock) config file name. Replaced vars
