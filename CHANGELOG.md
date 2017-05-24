@@ -1,6 +1,7 @@
 # Change log:
 
 ***
+* v 0.3.8: Continuing on setup script (post-install).
 * v 0.3.7: Integration tests on Raspberry pi for the new configuration mode (simpler) for setting up detectors and notifiers (Added to readme.md)
 * v 0.3.6: Started (WIP) creating setup initial script to setup t-motion-detector via console. Added pre-install script for installing only on permitted OS. Separated Change log from README file.
 * v 0.3.5: Created a Factory to dynamically instanciate classes (via dependency injection) in Entities.

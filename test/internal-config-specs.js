@@ -9,17 +9,14 @@
  * var md = require('t-motion-detector');
  *****************************************************/
 
-var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
-var should = chai.should();
-var fs = require('fs');
-var ent = require('../Entities.js');
-var ext = require('../Extensions.js');
-var main = require('../main.js');
-var events = require('events');
-
-//Chai will use promises for async events
-chai.use(chaiAsPromised);
+let chai = require('chai');
+let chaiAsPromised = require("chai-as-promised");
+let should = chai.should();
+let fs = require('fs');
+let ent = require('../Entities.js');
+let ext = require('../Extensions.js');
+let main = require('../main.js');
+let events = require('events');
 
 before(function(done) {
   done();
@@ -249,20 +246,85 @@ describe("When a new t-motion-detector instance is started from main, ", functio
 });
 
 describe("After installing a new t-motion-detector, ", function() {
-  it('a setup executable should run/exist', function () {
+  /*it('a setup executable should run/exist (postinstall)', function (done) {
+    //Disabled as this seems to always timeout
+    this.timeout(5000);
+    //let pi = require('../scripts/postinstall.js');
+    var exec = require('child_process').exec;
+ 
+    //var cmd = exec("Y");
+    var cmd = exec("npm run-script postinstall", function (error, stdout, stderr) {
+      // ...
+      console.log("stdout, "E:", stderr, error);
+      pi.count.should.equal(1);
+      done();
+    });
+  });*/
+  it('if file is imported with the "require" keyword the setup should not run', function (done) {
     //Prepare
 
-    let e = new ent.ConsoleEnvironment("setup.js");
-    let m = new ent.ConsoleReadDetector();
-    let n = new ent.ConsoleWriteNotifier();
+    let pi = require('../scripts/postinstall.js');
+    pi.count.should.equal(0);
+    done();
+  });
+  it('When choosing option 1 the program should add an Environment', function (done) {
+    //Prepare
+
+    let pi = require('../scripts/postinstall.js');
+    let setup = pi.Setup();
+    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
+      done();
+    });
     should.fail();
   });
-  it('should prompt if the user wishes to exit or setup', function () {
+  it('When choosing option 2 the program should add an Environment', function (done) {
     //Prepare
+
+    let pi = require('../scripts/postinstall.js');
+    let setup = pi.Setup();
+    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
+      done();
+    });
     should.fail();
   });
-  it('should allow the user set options from a list (e.g. slack, raspbian camera, etc)', function () {
+  it('When choosing option 3 the program should add a PIR Motion Detector', function (done) {
     //Prepare
+
+    let pi = require('../scripts/postinstall.js');
+    let setup = pi.Setup();
+    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
+      done();
+    });
+    should.fail();
+  });
+  it('When choosing option 4 the program should add an Slack Notifier', function (done) {
+    //Prepare
+
+    let pi = require('../scripts/postinstall.js');
+    let setup = pi.Setup();
+    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
+      done();
+    });
+    should.fail();
+  });
+  it('When choosing option 5 the program should add an Raspistill Notifier', function (done) {
+    //Prepare
+
+    let pi = require('../scripts/postinstall.js');
+    let setup = pi.Setup();
+    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
+      done();
+    });
+    should.fail();
+  });
+  it('When choosing option 6 the program should delete the config file', function (done) {
+    //Prepare
+
+    let pi = require('../scripts/postinstall.js');
+    let setup = pi.Setup();
+    setup.deleteConfig(function(err, deleted){
+      done();
+    });
     should.fail();
   });
 });

@@ -73,6 +73,14 @@ profiles = {
 exports.profiles = profiles;
 exports.default = profiles.default;
 ````
+To access your Motion Detectors and Notifiers, use:
+````
+var md = require('t-motion-detector');
+let myEnvironment = md.GetEnvironment();
+let myDetectors = md.GetMotionDetectors(); // returns array
+let myNotifiers = md.GetNotifiers(); // returns array
+````
+
 
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
 RaspistillNotifier, which means you can use your Raspberry pi camera to take pictures when

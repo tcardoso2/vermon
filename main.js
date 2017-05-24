@@ -249,7 +249,6 @@ class Config {
   }
 }
 
-exports.count = 0;
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
 exports.RemoveNotifier = RemoveNotifier;
