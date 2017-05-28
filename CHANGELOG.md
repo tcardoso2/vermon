@@ -1,7 +1,8 @@
 # Change log:
 
 ***
-* v 0.3.8: Continuing on setup script (post-install).
+* v 0.3.9: function Config.isFallback() now allows to know if the requested configuration file is not found (it does not throw any Exception so this is the way to know the configuration file you requested is not found, and that the fallback default configuration file is used instead). function mapToFile now prepends process.cwd() to the filename provided. Change: main.Config("config_file.js") now uses the current working directory to get the configuration file.
+* v 0.3.8: Continuing on setup script (post-install) - for now answer always option (3) - WIP
 * v 0.3.7: Integration tests on Raspberry pi for the new configuration mode (simpler) for setting up detectors and notifiers (Added to readme.md)
 * v 0.3.6: Started (WIP) creating setup initial script to setup t-motion-detector via console. Added pre-install script for installing only on permitted OS. Separated Change log from README file.
 * v 0.3.5: Created a Factory to dynamically instanciate classes (via dependency injection) in Entities.

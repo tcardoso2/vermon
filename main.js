@@ -161,9 +161,10 @@ class Config {
   {
     //config.js must always exist
     this.fallback = require('./config.js');
+    this.fileNotFound = false;
     if (!profile)
     {
-      this.mapToFile('./local.js');
+      this.mapToFile('local.js');
     } else {
       let myProfile = {};
       if (typeof profile == "string") {
@@ -197,17 +198,32 @@ class Config {
       }
     }
   }
+  /*
+   * For convenience this was added to be sure we can test what is the
+   * current working directory of the application
+   */
+  cwd()
+  {
+    return process.cwd() + '/';
+  }
 
-  mapToFile(file_name)
+  mapToFile(file_name, prepend_cwd = true)
   {
     try{
-      this.file = require(file_name);
+      this.file = require(prepend_cwd ? this.cwd() + file_name : file_name);
+      this.fileNotFound = false;
       log.info(`Loaded ${file_name}`);
     } catch (e)
     {
       console.log(`Warning:'${e.message}, will fallback to config file...`);
       this.file = this.fallback;
+      this.fileNotFound = true;
     }
+  }
+  
+  isFallback()
+  {
+    return this.fileNotFound;
   }
 
   profile(name){

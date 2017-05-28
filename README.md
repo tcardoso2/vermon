@@ -48,8 +48,7 @@ If you want to override the notification message do (example with SlackNotifier)
 NEW: From version 0.3.7 onwards there is a simpler way to call the API, using your own config file, which does a similar job as the one above:
 ````
 var md = require('t-motion-detector');
-console.log(__dirname); //To get the absolute path of your config file
-md.StartWithConfig(new md.Config(__dirname + "/config.js"));
+md.StartWithConfig(new md.Config("config.js")); //This is relative to your current workind durectory
 ````
 
 If called via "StartWithConfig", method, the program expects your config file as such (below). Note
