@@ -1,6 +1,15 @@
 # Change log:
 
 ***
+* v 0.3.10:Introduction of filters. Filters are entities which filter signals either:
+** Between individual Motion detectors and notifiers;
+** Apply to the environment and all its Motion detectors meaning will filter all signals even before the Motion detectors do.
+** In-Built filters:
+*** BaseFilter (does nothing, you should inherit from it to implement your own);
+*** BlockAllFilter: Filters all values;
+*** ValueFilter: Filters only for the specified value in the constructor;
+*** HighPassFilter: Filters only for values above the specified value in the constructor;
+*** LowPassFilter: Filters only for the values below the specified value in the contructor;
 * v 0.3.9: function Config.isFallback() now allows to know if the requested configuration file is not found (it does not throw any Exception so this is the way to know the configuration file you requested is not found, and that the fallback default configuration file is used instead). function mapToFile now prepends process.cwd() to the filename provided. Change: main.Config("config_file.js") now uses the current working directory to get the configuration file.
 * v 0.3.8: Continuing on setup script (post-install) - for now answer always option (3) - WIP
 * v 0.3.7: Integration tests on Raspberry pi for the new configuration mode (simpler) for setting up detectors and notifiers (Added to readme.md)

@@ -6,17 +6,17 @@
  * for tests which are NOT using the npm tarball pack
  * For all others, the test should obviously include
  * something like:
- * var md = require('t-motion-detector');
+ * let md = require('t-motion-detector');
  *****************************************************/
 
-var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
-var should = chai.should();
-var fs = require('fs');
-var ent = require('../Entities.js');
-var ext = require('../Extensions.js');
-var main = require('../main.js');
-var events = require('events');
+let chai = require('chai');
+let chaiAsPromised = require("chai-as-promised");
+let should = chai.should();
+let fs = require('fs');
+let ent = require('../Entities.js');
+let ext = require('../Extensions.js');
+let main = require('../main.js');
+let events = require('events');
 
 //Chai will use promises for async events
 chai.use(chaiAsPromised);
@@ -41,7 +41,7 @@ describe("When a new Slack Notifier is created, ", function() {
   it('should throw an Exception if no hook is provided', function() {
     //Assumes there is some local file with the key
     try{
-      var n = new ext.SlackNotifier();
+      let n = new ext.SlackNotifier();
     } catch(e){
       e.message.should.equal("'key' is a required argument, which should contain the Slack hook URL.");
     }
@@ -49,34 +49,34 @@ describe("When a new Slack Notifier is created, ", function() {
 
   it('should detect the slack config key property', function() {
     //Assumes there is some local file with the key
-    var key = new main.Config().slackHook();
-    var n = new ext.SlackNotifier("My Slack Notifier", key);
+    let key = new main.Config().slackHook();
+    let n = new ext.SlackNotifier("My Slack Notifier", key);
     n.key.should.equal(key);
   });
 
   it('should check if a local file exists', function () {
-    var local_config = new main.Config();
+    let local_config = new main.Config();
     local_config.should.not.equal(undefined);
   });
 
   it('should detect the slack config properties from the local config file (default profile)', function() {
     //Assumes there is some local file with the key
-    var key = new main.Config().slackHook();
-    var n = new ext.SlackNotifier("My slack notifier", key);
-    var local_config = new main.Config().profile();
+    let key = new main.Config().slackHook();
+    let n = new ext.SlackNotifier("My slack notifier", key);
+    let local_config = new main.Config().profile();
     n.key.should.equal(local_config.slack.hook);
   });
 
   it('should detect the slack config properties from the default profile equal the fallback', function () {
     //Assumes there is some local file with the key
-    var key = new main.Config().slackHook();
-    var key_default = new main.Config().slackHook("default");
+    let key = new main.Config().slackHook();
+    let key_default = new main.Config().slackHook("default");
     key.should.equal(key_default);
   });
 
   it('should raise an Error if no key is found for an inexisting profile', function () {
     try {
-      var key = new main.Config().slackHook("some_inexisting_profile");
+      let key = new main.Config().slackHook("some_inexisting_profile");
     } catch (e) {
       e.message.should.equal("'some_inexisting_profile' was not found in the local.js file.");
     }
@@ -84,8 +84,8 @@ describe("When a new Slack Notifier is created, ", function() {
 
   it('should be able to send a message successfully', function (done) {
     this.timeout(10000);
-    var key = new main.Config().slackHook();
-    var n = new ext.SlackNotifier("My Slack notifier", key);
+    let key = new main.Config().slackHook();
+    let n = new ext.SlackNotifier("My Slack notifier", key);
     n.on('pushedNotification', function(message, text){
       //console.log("A new notification was pushed!", message, text);
       chai.assert.isOk("Everything is ok");
@@ -100,11 +100,11 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
   it('should push a Slack notification', function(done) {
     //Assumes there is some local file with the key
     this.timeout(6000);
-    var env = new ent.Environment();
-    var detector = new ent.MotionDetector();
+    let env = new ent.Environment();
+    let detector = new ent.MotionDetector();
     detector.name = "Mock_detector";
-    var key = new main.Config().slackHook();
-    var notifier = new ext.SlackNotifier("My Slack Notifier", key);
+    let key = new main.Config().slackHook();
+    let notifier = new ext.SlackNotifier("My Slack Notifier", key);
 
     notifier.on("pushedNotification", function(name, text){
       chai.assert.isOk("notified");
@@ -162,7 +162,7 @@ describe("When importing local configuration, ", function() {
         fs.stat('./_local.js', function (err, stats) {
           if (err) throw err;
           console.log('stats: ' + JSON.stringify(stats));
-          var local_config = new main.Config().slackHook();
+          let local_config = new main.Config().slackHook();
           local_config.toString().should.equal('https://hooks.slack.com/services/<Your_Slack_URL_Should_Go_Here>');
           done();
         });
@@ -172,7 +172,7 @@ describe("When importing local configuration, ", function() {
     }
   });
   it('A function should be used instead of require("../local.js")', function() {
-    var local_config = new main.Config().slackHook();
+    let local_config = new main.Config().slackHook();
     local_config.should.not.equal(undefined);
   });
 });

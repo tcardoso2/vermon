@@ -6,7 +6,7 @@
  * for tests which are NOT using the npm tarball pack
  * For all others, the test should obviously include
  * something like:
- * var md = require('t-motion-detector');
+ * let md = require('t-motion-detector');
  *****************************************************/
 
 let chai = require('chai');
@@ -54,23 +54,24 @@ describe("When a notifier is added, ", function() {
 describe("When a new motion detector is created, ", function() {
   it('there should be a default environment associated', function () {
     //Prepare
+    main.Reset();
     main.Start();
     main.GetEnvironment().should.not.equal(undefined);
   });
 
   it('the BaseNotifier has no internal objects (only meant to be used by descendant classes)', function () {
     //Prepare
-    var n = new ent.BaseNotifier();
+    let n = new ent.BaseNotifier();
     n.hasInternalObj().should.equal(false);
   });
 
   it('all notifiers are binded with the motion Detectors', function (done) {
     //Prepare
 
-    var n = new ent.BaseNotifier();
-    var e = new ent.Environment();
-    var m = new ent.MotionDetector();
-    var detected = false;
+    let n = new ent.BaseNotifier();
+    let e = new ent.Environment();
+    let m = new ent.MotionDetector();
+    let detected = false;
     n.on('pushedNotification', function(message, text){
       //console.log("A new notification has arrived!", message, text);
       if ((text == "Started") && !detected)
@@ -80,7 +81,7 @@ describe("When a new motion detector is created, ", function() {
       }
     });
 
-    var result = false;
+    let result = false;
     main.Start({
       environment: e,
       initialNotifier: n,
@@ -93,11 +94,11 @@ describe("When a new motion detector is created, ", function() {
   it('the pushedNotification event should receive the source detector as parameter, and notifier name and notification text', function (done) {
     //Prepare
 
-    var n0 = new ent.BaseNotifier();
-    var e0 = new ent.Environment();
-    var m0 = new ent.MotionDetector();
+    let n0 = new ent.BaseNotifier();
+    let e0 = new ent.Environment();
+    let m0 = new ent.MotionDetector();
     m0.name = "My motion detector";
-    var detected = false;
+    let detected = false;
     n0.on('pushedNotification', function(notifierName, text, source){
       if ((text != "Started") && !detected)
       {
@@ -109,7 +110,7 @@ describe("When a new motion detector is created, ", function() {
       }
     });
 
-    var result = false;
+    let result = false;
     main.Start({
       environment: e0,
       initialMotionDetector: m0
@@ -123,10 +124,10 @@ describe("When a new motion detector is created, ", function() {
     //Prepare
     this.timeout(4000);
 
-    var n1 = new ent.BaseNotifier();
-    var e1 = new ent.Environment();
-    var m1 = new ent.MotionDetector("First Notifier");
-    var count = 0;
+    let n1 = new ent.BaseNotifier();
+    let e1 = new ent.Environment();
+    let m1 = new ent.MotionDetector("First Notifier");
+    let count = 0;
     n1.on('pushedNotification', function(message, text){
       count += 1;
       //console.log(">>>>>>>>>>>> Count:", count, message, text);
@@ -138,9 +139,9 @@ describe("When a new motion detector is created, ", function() {
         done();
       }
     })
-    var mLateMotionDetector = new ent.MotionDetector("Second Notifier");
+    let mLateMotionDetector = new ent.MotionDetector("Second Notifier");
 
-    var result = false;
+    let result = false;
     //TODO: Imported again as it seems the tests are affecting each other
     main.Start({
       environment: e1,

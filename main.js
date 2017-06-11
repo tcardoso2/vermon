@@ -7,6 +7,7 @@ let config;
 let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
+let filters = require("./Filters.js");
 
 //This function should stay internal to this module!
 function InternalAddEnvironment(env = new ent.Environment()){
@@ -274,6 +275,7 @@ exports.GetMotionDetectors = GetMotionDetectors;
 exports.Reset = Reset;
 exports.Entities = ent;
 exports.Extensions = ext;
+exports.Filters = filters;
 exports.Start = Start;
 exports.StartWithConfig = StartWithConfig;
 exports.Config = Config;

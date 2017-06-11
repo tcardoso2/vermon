@@ -68,15 +68,6 @@ describe("When a new PIR Motion Detector is added", function() {
   });
 });
 
-describe("When a new PIR Motion Detector is added via start with config", function() {
-  it('there should be a way to set its members which are not part of constructor, like name', function () {
-    //Prepare
-    let env = new ent.Environment();
-
-    should.fail();
-  });
-});
-
 describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the front of your RPi in the next 10 seconds)", function(done) {
 
   it('when the user waves in front of the sensor it should trigger a notification', function (done) {

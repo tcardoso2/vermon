@@ -215,6 +215,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
   });
 
   it('When starting with alternate config, the MotionDetector Objects contained in the config file are automatically instanced as MotionDetectors of main', function (done) {
+    main.Reset();
     let alternativeConfig = new main.Config("/test/config_test2.js");
     main.StartWithConfig(alternativeConfig);
 

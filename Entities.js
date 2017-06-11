@@ -1,6 +1,7 @@
 //A generic base class which creates a surrounding environment for motion detection
 //Collaborator: MotionDetector
-var events = require("events");
+let events = require("events");
+let filters = require("./Filters.js");
 
 class Environment{
 
@@ -8,6 +9,7 @@ class Environment{
     this.currentState = 0;
     this.motionDetectors = [];
     this.notifiers = [];
+    this.filters = [];
     this.name = "No name";
 
     if (params)
@@ -57,9 +59,31 @@ class Environment{
   //Emits a changedState event
   addChange(intensity)
   {
-  	var oldState = this.currentState;
+    //will filter if there are any filters
+    for (let i in this.filters)
+    {
+      intensity = this.filters[i].filter(intensity, this);
+      if(!intensity)
+      {
+        //No newState any longer, then the Motion treats this as something which should not be notified
+        return;
+      }
+    }
+    let oldState = this.currentState;
   	this.currentState += intensity;
     this.emit("changedState", oldState, this.currentState);
+  }
+
+  applyFilter(filter){
+    if (filter instanceof filters.BaseFilter)
+    {
+      //Do work
+      this.filters.push(filter);
+    }
+    else
+    {
+      throw new Error("Filter object not of type BaseFilter.");
+    }
   }
 
   //Abstract methods, should be overriden by extender classes, cannot be used directly
@@ -79,11 +103,12 @@ class Environment{
 //Collaborator: Environment
 class MotionDetector{
 
-  constructor(){
+  constructor(name){
     this._isActive = false;
     this.count;
     this.currentIntensity;
-    this.name = "unnamed detector."
+    this.name = name ? name : "unnamed detector."
+    this.filters = [];
     events.EventEmitter.call(this);
   }
 
@@ -98,6 +123,16 @@ class MotionDetector{
     //Does not do anything with the env. Maybe deprecate it?
     if(this._isActive){
       this.count++;
+      //will filter if there are any filters
+      for (let i in this.filters)
+      {
+        newState = this.filters[i].filter(newState, env, this);
+        if(!newState)
+        {
+          //No newState any longer, then the Motion treats this as something which should not be notified
+          return;
+        }
+      }
       this.emit("hasDetected", this.currentIntensity, newState, this);
       this.currentIntensity = newState;
     }
@@ -121,9 +156,26 @@ class MotionDetector{
     this.count = 0;
   }
 
+  applyFilter(filter){
+    if (filter instanceof filters.BaseFilter)
+    {
+      //Do work
+      this.filters.push(filter);
+    }
+    else
+    {
+      throw new Error("Filter object not of type BaseFilter.");
+    }
+  }
+
   //Resets the state to initial (StartMonitoring)
   reset(){
     this.startMonitoring();
+  }
+
+  exit()
+  {
+
   }
 }
 
@@ -183,6 +235,10 @@ class BaseNotifier{
     throw new Error("Needs to be implemented by sub-classes");
     //Start(_extension.BaseParameters());
     //Don't like the coupling here.
+  }
+
+  stop(){
+    //Not implemented
   }
 }
 

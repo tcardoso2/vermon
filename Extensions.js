@@ -12,7 +12,7 @@ const Raspistill = require('node-raspistill').Raspistill;
 class PIRMotionDetector extends MotionDetector{
   
   constructor(pin, callback){
-    super();
+    super("PIR Motion detector");
     this.log = require("./main.js").Log;
     var Gpio = undefined;
     this.pir = undefined;
@@ -55,6 +55,7 @@ class PIRMotionDetector extends MotionDetector{
 
   exit()
   {
+    super.exit();
     pir.unexport;
     process.exit();
   }
