@@ -61,7 +61,17 @@ e.addChange(5);   //Will not notify
 e.addChange(15);  //Will notify
 
 ````
-See full list of Filters on Change log. You can also extend your on Filter, by inheriting filters.BaseFilter class and override the filter() method like so:
+See full list of Filters on Change log. 
+You can also apply filters to individual Motion detectors instead of the Environment using the same function:
+````
+myMotionDetector.applyFilter(new LowPassFilter(5));
+````
+Differences with the previous approach are:
+* Obviously the filter applies to only specific Motion Detectors instead of all Motion Detectors inside the environment;
+* Important: The value passed to the filter is the currentState + change whereas on the previous case, the value passed to the filter is just the actual change;
+
+
+You can also extend your on Filter, by inheriting filters.BaseFilter class and override the filter() method like so:
 ````
 let filters = require('t-motion-detector').filters;
 

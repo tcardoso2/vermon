@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "chokidar": "^1.7.0",
     "extend": "latest",
     "log": "^1.4.0",
     "mock-stdin": "^0.3.1",
@@ -39,5 +40,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.3.10"
+  "version": "0.3.11"
 }

@@ -204,6 +204,48 @@ describe("When a new filter is applied to one motion detector,", function() {
   });
 });
 
+describe("When a Filter is declared in the Config file,", function() {
+  it('as parameter of the Environment constructor it should apply to the environments', function () {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test5.js");
+    main.StartWithConfig(alternativeConfig);
+    
+    let n = main.GetNotifiers();
+    n[0].on('pushedNotification', function(message, text, data){
+      data.newState.should.equal(20);
+    });
+
+    //Act
+    let e = main.GetEnvironment();    
+    e.addChange(20);
+    should.fail();
+  });
+  it('as parameter of the Motion Detector constructors it should apply to detectors individually', function () {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test3.js");
+    main.StartWithConfig(alternativeConfig);
+
+    let d = main.GetMotionDetectors();
+    d[0].applyFilter(new filters.BaseFilter());
+    
+    let n = main.GetNotifiers();
+    let _done = false;
+    n[0].on('pushedNotification', function(message, text, data){
+      if(!_done){
+        data.newState.should.equal(20);
+        _done = true;
+      }
+    });
+
+    //Act
+    let e = main.GetEnvironment();    
+    e.addChange(20);
+    should.fail();
+  });
+});
+
 describe("When a new filter is applied to the whole Environment,", function() {
   it('it should prevent any motion detector from processing signals.', function (done) {
     main.Reset();

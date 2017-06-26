@@ -17,7 +17,6 @@ let ent = require('../Entities.js');
 let ext = require('../Extensions.js');
 let main = require('../main.js');
 let events = require('events');
-
 //Chai will use promises for async events
 chai.use(chaiAsPromised);
 

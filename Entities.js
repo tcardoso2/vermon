@@ -133,7 +133,7 @@ class MotionDetector{
           return;
         }
       }
-      this.emit("hasDetected", this.currentIntensity, newState, this);
+      this.emit("hasDetected", this.currentIntensity, newState, env, this);
       this.currentIntensity = newState;
     }
   }
@@ -190,11 +190,12 @@ class BaseNotifier{
     this.internalObj;
   }
 
-  notify(text, oldState, newState, detector){
+  notify(text, oldState, newState, environment, detector){
     this.emit('pushedNotification', this.name, text, { 
       "oldState": oldState,
       "newState": newState,
-      "detector": detector
+      "detector": detector,
+      "environment": environment
     });
   }
 
@@ -211,8 +212,8 @@ class BaseNotifier{
     {
       template = `Notification received from: ${detector.name}`;      
     }
-    detector.on("hasDetected", function(currentIntensity, newState, detector){
-      n.notify(template, currentIntensity, newState, detector);
+    detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
+      n.notify(template, currentIntensity, newState, environment, detector);
     });
     this.detectors.push(detector);
   }

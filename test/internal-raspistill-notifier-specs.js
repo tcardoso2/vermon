@@ -12,14 +12,14 @@
  *     commented. 
  *****************************************************/
 
-var chai = require('chai');
-var chaiAsPromised = require("chai-as-promised");
-var should = chai.should();
-var fs = require('fs');
-var ent = require('../Entities.js');
-var ext = require('../Extensions.js');
-var main = require('../main.js');
-var events = require('events');
+let chai = require('chai');
+let chaiAsPromised = require("chai-as-promised");
+let should = chai.should();
+let fs = require('fs');
+let ent = require('../Entities.js');
+let ext = require('../Extensions.js');
+let main = require('../main.js');
+let events = require('events');
 const Raspistill = require('node-raspistill').Raspistill;
 
 //Chai will use promises for async events
@@ -86,8 +86,7 @@ describe("When a new Raspistill Notifier is created, ", function() {
   });
 
 });
-/*
-describe("When a new Environment with a Raspistill Notifier is created, ", function() {
+/*describe("When a new Environment with a Raspistill Notifier is created, ", function() {
   it('should save a picture', function(done) {
     this.timeout(6000);
     let env = new ent.Environment();
@@ -149,8 +148,42 @@ describe("When a new Environment with a Raspistill Notifier is created, ", funct
 
     e0.addChange(10);
   });
+});*/
+
+describe("When a file drops into a folder", function() {
+  it('It should detect it and trigger notifiers', function(done) {
+    //this.timeout(000);
+    var n0 = new ent.BaseNotifier();
+    var e0 = new ent.Environment();
+    var m0 = new ext.FileDetector("File Detector", "photos");
+    var detected = false;
+    n0.on('pushedNotification', function(notifierName, text, data){
+      if ((text != "Started") && !detected)
+      {
+        detected = true;
+        data.newState.should.equal("photos/test.txt");
+        text.should.equal("Notification received from: File Detector");
+        done();
+      }
+    });
+
+    var result = false;
+    main.Start({
+      environment: e0,
+      initialNotifier: n0,
+      initialMotionDetector: m0
+    });
+    fs.writeFile("photos/test.txt", "Hey there!", function(err) {
+      if(err) {
+        return console.log(err);
+      }
+    });
+  });
+
+  //it('It should detect it and trigger notifier', function(done) {
+  //});
 });
-*/
+
 describe("When importing local configuration, ", function() {
   //Note: this test fails but the code behaves properly. The issue is that once the node program starts,
   //      it seems to take a memory snapshot of all the files and does not recognize local has changed;

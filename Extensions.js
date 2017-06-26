@@ -1,11 +1,40 @@
 //Extensions which use the Base entities
 //Collaborator: MotionDetector
-var ent = require("./Entities.js");
-var MotionDetector = ent.MotionDetector;
-var BaseNotifier = ent.BaseNotifier;
+let ent = require("./Entities.js");
+let MotionDetector = ent.MotionDetector;
+let BaseNotifier = ent.BaseNotifier;
 var Slack = require('slack-node');
-os = require("os");
+let path = require('path');
+Slack.Upload = require('node-slack-upload');
+let fs = require('fs');
+let os = require("os");
 const Raspistill = require('node-raspistill').Raspistill;
+let chokidar = require('chokidar');
+
+//A concrete MotionDetector for detecting files in a folder
+class FileDetector extends MotionDetector{
+  
+  constructor(name, filePath){
+    super(name);
+    this.watcher = chokidar.watch(filePath, {
+      ignored: /[\/\\]\./, persistent: true
+    });
+    this.path = filePath;
+  }
+  startMonitoring(){
+    super.startMonitoring();
+    let m = this;
+    this.watcher
+      .on('add', function(path) {
+        console.log('>>>>>>> File', path, 'has been added'); 
+        m.send(path);
+      })
+      .on('change', function(path) {
+        console.log('>>>>>>> File', path, 'has been changed');
+        m.send(path);
+      });
+  }
+}
 
 //A concrete MotionDetector class which implements a Raspberry Pi PIR sensor detector
 //Collaborator: Environment
@@ -41,7 +70,7 @@ class PIRMotionDetector extends MotionDetector{
   startMonitoring(){
     super.startMonitoring();
     if(this.pir){
-      var m = this;
+      let m = this;
       this.pir.watch(function(err, value){
         if (err) this.exit();
         m.log.info('Intruder was detected.');
@@ -76,6 +105,9 @@ class SlackNotifier extends BaseNotifier{
     super(name);
     this.slack = new Slack();
     this.slack.setWebhook(key);
+    this.slackUpload = new Slack.Upload("xoxp-80925563714-80919307345-204304831958-d13fac927164f95d086255bd4bbb6499");
+    //LY02ZcIUovAuZcrqWANfNwmh");
+
     this.key = key;
   }
 
@@ -84,18 +116,22 @@ class SlackNotifier extends BaseNotifier{
     return this.slack !== undefined;
   }
 
-  notify(some_text, oldState, newState, detector){
+  notify(some_text, oldState, newState, environment, detector){
     this.lastMessage = some_text;
     this.data = {
           "oldState": oldState,
           "newState": newState,
-          "detector": detector
+          "detector": detector,
+          "environment": environment,
+          "notifier": this
         };
     let _this = this;
+
     this.slack.webhook({
       channel: '#general',
+      icon_emoji: ":ghost:",
       text: some_text,
-      username: this.name
+      username: this.name,
     }, function(err, response){
       if (!err)
       {
@@ -106,6 +142,21 @@ class SlackNotifier extends BaseNotifier{
         new Error(err);
       } 
     });
+    /*this.slackUpload.uploadFile({
+        file: fs.createReadStream(path.join(__dirname, '.', 'README.md')),
+        //content: 'My file contents!',
+        filetype: 'post',
+        title: 'README',
+        initialComment: 'my comment',
+        channels: '#general'
+    }, function(err, data) {
+        if (err) {
+            console.error(err);
+        }
+        else {
+            console.log('Uploaded file details: ', data);
+        }
+    });*/
   }
 }
 
@@ -117,12 +168,13 @@ class RaspistillNotifier extends BaseNotifier{
     this.internalObj = new Raspistill(this.options);
   }
 
-  notify(some_text, oldState, newState, detector){
+  notify(some_text, oldState, newState, environment, detector){
     this.lastMessage = some_text;
     this.data = {
           "oldState": oldState,
           "newState": newState,
-          "detector": detector
+          "detector": detector,
+          "environment": environment
         };
     let _this = this;
     this.internalObj.takePhoto()
@@ -143,6 +195,7 @@ const classes = { PIRMotionDetector, SlackNotifier, RaspistillNotifier};
 
 new ent.EntitiesFactory().extend(classes);
 
+exports.FileDetector = FileDetector;
 exports.PIRMotionDetector = PIRMotionDetector;
 exports.SlackNotifier = SlackNotifier;
 exports.RaspistillNotifier = RaspistillNotifier;
