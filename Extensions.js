@@ -182,9 +182,8 @@ class RaspistillNotifier extends BaseNotifier{
         console.log('took photo', photo);
         _this.data.photo = photo;
         _this.internalObj.stop();
-        try{
-          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
-        } finally {} 
+        //Will propagate to this if the pushNotification is not well handled.
+        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data); 
       })
       .catch((error) => {
         //It seems that sometimes errors are triggered but the component still takes the picture

@@ -44,29 +44,41 @@ after(function(done) {
 describe("When a new Environment with a Raspistill Notifier is created, ", function() {
   it('should save a picture', function(done) {
     main.Reset(); 
-    this.timeout(6000);
+    this.timeout(3000);
     let env = new ent.Environment();
     let detector = new ext.FileDetector("File Detector", "photos");
     let notifier = new ext.RaspistillNotifier("My Raspistill Notifier", "some_file", {});
+    let slackNotifier = new ext.SlackNotifier("My Slack notifier", new main.Config().slackHook());
     let _detected = false;
+    let _detectedSlack = false;
     notifier.on("pushedNotification", function(name, text, data){
-      if (data.newState.indexOf(".txt") > 0) return;
+      if (data.newState == 1) return;
+      if (data.newState.toString().indexOf(".txt") > 0) return;
       console.log(`Got a notification from ${name}: ${text}`);
       if (_detected) return;
       fs.existsSync('./photos/some_file.jpg').should.equal(true);
       data.newState.should.equal("photos/some_file.jpg");
+
       //clean up
       fs.unlinkSync('./photos/some_file.jpg');
       done();
       _detected = true;
+    });
+    slackNotifier.on("pushedNotification", function(name, text, data){
+      if (data.newState.toString().indexOf(".txt") > 0) return;
+      console.log(`Got a notification from ${name}: ${text}`);
+      if (_detectedSlack) return;
+      data.newState.should.equal("photos/some_file.jpg");
+      done();
+      _detectedSlack = true;
       main.Reset();
     });
-
     main.Start({
       environment: env,
       initialMotionDetector: detector,
     }, true);
     main.AddNotifier(notifier, `Received notification from: ${detector.name}`);
+    main.AddNotifier(slackNotifier, `Slack received notification from: ${detector.name}`)
     env.addChange(1);
   });
 });
