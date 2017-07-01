@@ -279,7 +279,7 @@ describe("After installing a new t-motion-detector, ", function() {
     //Prepare
 
     let pi = require('../scripts/postinstall.js');
-    let setup = pi.Setup();
+    let setup = new pi.Setup();
     setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
       done();
     });
@@ -289,7 +289,7 @@ describe("After installing a new t-motion-detector, ", function() {
     //Prepare
 
     let pi = require('../scripts/postinstall.js');
-    let setup = pi.Setup();
+    let setup = new pi.Setup();
     setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
       done();
     });
@@ -299,7 +299,7 @@ describe("After installing a new t-motion-detector, ", function() {
     //Prepare
 
     let pi = require('../scripts/postinstall.js');
-    let setup = pi.Setup();
+    let setup = new pi.Setup();
     setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
       done();
     });
@@ -309,7 +309,7 @@ describe("After installing a new t-motion-detector, ", function() {
     //Prepare
 
     let pi = require('../scripts/postinstall.js');
-    let setup = pi.Setup();
+    let setup = new pi.Setup();
     setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
       done();
     });
@@ -319,7 +319,7 @@ describe("After installing a new t-motion-detector, ", function() {
     //Prepare
 
     let pi = require('../scripts/postinstall.js');
-    let setup = pi.Setup();
+    let setup = new pi.Setup();
     setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
       done();
     });
@@ -329,7 +329,7 @@ describe("After installing a new t-motion-detector, ", function() {
     //Prepare
 
     let pi = require('../scripts/postinstall.js');
-    let setup = pi.Setup();
+    let setup = new pi.Setup();
     setup.deleteConfig(function(err, deleted){
       done();
     });

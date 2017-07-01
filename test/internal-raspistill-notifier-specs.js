@@ -41,76 +41,25 @@ after(function(done) {
   done();
 });
 
-describe("When a new Raspistill Notifier is created, ", function() {
-  it('its internalObj property should be a node-raspistill object', function() {
-    
-    var n = new ext.RaspistillNotifier();
-    n.hasInternalObj().should.not.equal(undefined);
-    (n.internalObj instanceof Raspistill).should.equal(true);
-  });
-
-  it('should allow a parameterless constructor', function() {
-
-    try{
-      var n = new ext.RaspistillNotifier();
-    } catch(e){
-      should.fail();
-    }
-  });
-
-  it('should detect the raspistill options properties', function() {
-    //Assumes there is some local file with the key
-    var options = new main.Config().raspistillOptions();
-    var n = new ext.RaspistillNotifier("My Slack Notifier", options);
-    n.options.should.equal(options);
-  });
-
-  it('should check if a local file exists', function () {
-    var local_config = new main.Config();
-    local_config.should.not.equal(undefined);
-  });
-
-  it('should detect the raspistill config properties from the local config file (default profile)', function() {
-    //Assumes there is some local file with the key
-    var options = new main.Config().raspistillOptions();
-    var n = new ext.RaspistillNotifier("My Raspistill notifier", options);
-    var local_config = new main.Config().profile();
-    n.options.should.equal(local_config.raspistill.options);
-  });
-
-  it('should detect the raspistill config properties from the default profile equal the fallback', function () {
-    //Assumes there is some local file with the key
-    var key = new main.Config().raspistillOptions();
-    var key_default = new main.Config().raspistillOptions("default");
-    key.should.equal(key_default);
-  });
-
-});
-/*describe("When a new Environment with a Raspistill Notifier is created, ", function() {
+describe("When a new Environment with a Raspistill Notifier is created, ", function() {
   it('should save a picture', function(done) {
+    main.Reset(); 
     this.timeout(6000);
     let env = new ent.Environment();
-    let detector = new ent.MotionDetector();
-    detector.name = "Mock_detector";
-    let notifier = new ext.RaspistillNotifier("My Raspistill Notifier", { fileName: "mock" });
-
-    notifier.on("pushedNotification", function(name, text, source){
+    let detector = new ext.FileDetector("File Detector", "photos");
+    let notifier = new ext.RaspistillNotifier("My Raspistill Notifier", "some_file", {});
+    let _detected = false;
+    notifier.on("pushedNotification", function(name, text, data){
+      if (data.newState.indexOf(".txt") > 0) return;
       console.log(`Got a notification from ${name}: ${text}`);
-      try{
-        if (fs.existsSync('./photos/mock.jpg')){
-          console.log('Detected picture!');
-          chai.assert.isOk("ok");
-          //clean up
-          fs.unlinkSync('./photos/mock.png');
-        } else {
-          console.log('Picture was not detected...');
-          chai.assert.fail();
-        }
-      } catch (e) {
-        console.log('Ops, some error happened: ', e); 
-      } finally {
-        done();
-      }
+      if (_detected) return;
+      fs.existsSync('./photos/some_file.jpg').should.equal(true);
+      data.newState.should.equal("photos/some_file.jpg");
+      //clean up
+      fs.unlinkSync('./photos/some_file.jpg');
+      done();
+      _detected = true;
+      main.Reset();
     });
 
     main.Start({
@@ -120,54 +69,77 @@ describe("When a new Raspistill Notifier is created, ", function() {
     main.AddNotifier(notifier, `Received notification from: ${detector.name}`);
     env.addChange(1);
   });
+});
 
-  it('the pushedNotification event should receive the source detector as parameter, file name', function (done) {
-    //Prepare
-    this.timeout(6000);
-    var n0 = new ext.RaspistillNotifier();
-    var e0 = new ent.Environment();
-    var m0 = new ent.MotionDetector();
-    var detected = false;
-    n0.on('pushedNotification', function(notifierName, text, source){
-      if ((text != "Started") && !detected)
-      {
-        detected = true;
-        notifierName.should.equal("Default Base Notifier");
-        text.should.equal("Notification received from: unnamed detector.");
-        source.detector.name.should.equal("unnamed detector.");
-        done();
-      }
-    });
-
-    var result = false;
-    main.Start({
-      environment: e0,
-      initialNotifier: n0,
-      initialMotionDetector: m0
-    });
-
-    e0.addChange(10);
+describe("When a new Raspistill Notifier is created, ", function() {
+  it('its internalObj property should be a node-raspistill object', function() {
+    
+    let n = new ext.RaspistillNotifier();
+    n.hasInternalObj().should.not.equal(undefined);
+    (n.internalObj instanceof Raspistill).should.equal(true);
   });
-});*/
+
+  it('should allow a parameterless constructor', function() {
+
+    try{
+      let n = new ext.RaspistillNotifier();
+    } catch(e){
+      should.fail();
+    }
+  });
+
+  it('should detect the raspistill options properties', function() {
+    //Assumes there is some local file with the key
+    main.Reset(); 
+    let options = new main.Config().raspistillOptions();
+    let n = new ext.RaspistillNotifier("My Slack Notifier", "filename", options);
+    n.options.should.equal(options);
+  });
+
+  it('should check if a local file exists', function () {
+    let local_config = new main.Config();
+    local_config.should.not.equal(undefined);
+  });
+
+  it('should detect the raspistill config properties from the local config file (default profile)', function() {
+    main.Reset(); 
+    //Assumes there is some local file with the key
+    let options = new main.Config().raspistillOptions();
+    let n = new ext.RaspistillNotifier("My Raspistill notifier", "filename", options);
+    let local_config = new main.Config().profile();
+    n.options.should.equal(local_config.raspistill.options);
+  });
+
+  it('should detect the raspistill config properties from the default profile equal the fallback', function () {
+    main.Reset(); 
+    //Assumes there is some local file with the key
+    let key = new main.Config().raspistillOptions();
+    let key_default = new main.Config().raspistillOptions("default");
+    key.should.equal(key_default);
+  });
+
+});
 
 describe("When a file drops into a folder", function() {
   it('It should detect it and trigger notifiers', function(done) {
-    //this.timeout(000);
-    var n0 = new ent.BaseNotifier();
-    var e0 = new ent.Environment();
-    var m0 = new ext.FileDetector("File Detector", "photos");
-    var detected = false;
+    main.Reset(); 
+    let n0 = new ent.BaseNotifier();
+    let e0 = new ent.Environment();
+    let m0 = new ext.FileDetector("File Detector", "photos");
+    let detected = false;
     n0.on('pushedNotification', function(notifierName, text, data){
       if ((text != "Started") && !detected)
       {
-        detected = true;
-        data.newState.should.equal("photos/test.txt");
-        text.should.equal("Notification received from: File Detector");
-        done();
+        if(data.newState.indexOf(".txt") > 0)
+        { 
+          detected = true;
+          data.newState.should.equal("photos/test.txt");
+          text.should.equal("Notification received from: File Detector");
+          done();
+        }
       }
     });
 
-    var result = false;
     main.Start({
       environment: e0,
       initialNotifier: n0,
@@ -179,9 +151,6 @@ describe("When a file drops into a folder", function() {
       }
     });
   });
-
-  //it('It should detect it and trigger notifier', function(done) {
-  //});
 });
 
 describe("When importing local configuration, ", function() {
@@ -204,6 +173,7 @@ describe("When importing local configuration, ", function() {
     }
   });
   it('A function should be used instead of require("../local.js")', function() {
+    main.Reset();
     var local_config = new main.Config().slackHook();
     local_config.should.not.equal(undefined);
   });

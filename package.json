@@ -5,6 +5,7 @@
     "log": "^1.4.0",
     "mock-stdin": "^0.3.1",
     "node-raspistill": "0.0.10",
+    "node-slack-upload": "^1.2.1",
     "onoff": "latest",
     "optimist": "^0.6.1",
     "prompt": "^1.0.0",
@@ -40,5 +41,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.3.11"
+  "version": "0.4.0"
 }

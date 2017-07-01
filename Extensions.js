@@ -105,8 +105,7 @@ class SlackNotifier extends BaseNotifier{
     super(name);
     this.slack = new Slack();
     this.slack.setWebhook(key);
-    this.slackUpload = new Slack.Upload("xoxp-80925563714-80919307345-204304831958-d13fac927164f95d086255bd4bbb6499");
-    //LY02ZcIUovAuZcrqWANfNwmh");
+    this.slackUpload = new Slack.Upload(key);
 
     this.key = key;
   }
@@ -162,9 +161,10 @@ class SlackNotifier extends BaseNotifier{
 
 class RaspistillNotifier extends BaseNotifier{
   
-  constructor(name, options){
+  constructor(name, fileName, options){
     super(name);
     this.options = options;
+    this.fileName = fileName === undefined ? "NoName" : fileName;
     this.internalObj = new Raspistill(this.options);
   }
 
@@ -177,14 +177,22 @@ class RaspistillNotifier extends BaseNotifier{
           "environment": environment
         };
     let _this = this;
-    this.internalObj.takePhoto()
-        .then((photo) => {
-            console.log('took photo', photo);
-            _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
-        })
-        .catch((error) => {
-            //_this.emit('pushedNotification', _this.name, 'something bad happened', error);
-      });
+    this.internalObj.takePhoto(this.fileName)
+      .then((photo) => {
+        console.log('took photo', photo);
+        _this.data.photo = photo;
+        _this.internalObj.stop();
+        try{
+          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
+        } finally {} 
+      })
+      .catch((error) => {
+        //It seems that sometimes errors are triggered but the component still takes the picture
+        //console.log('Some error happened while taking the photo', error);
+        _this.lastMessage = error.message;
+        _this.data.error = error;
+        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
+      }); 
   }
 }
 

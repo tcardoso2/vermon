@@ -1,6 +1,7 @@
 # Change log:
 
 ***
+* v 0.4.0 :Corrected some unit tests which were conflicting.
 * v 0.3.11:Adding capability of declaring filters via Config. WIP code for FileDetector for detecting new files in folder (from RaspistillNotifier)
 * v 0.3.10:Introduction of filters. Filters are entities which filter signals either: 
 ** Between individual Motion detectors and notifiers; 

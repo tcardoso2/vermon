@@ -154,11 +154,4 @@ describe("When a new motion detector is created, ", function() {
   });
 });
 
-describe("When a new camera (RaspiCam) is added as notifier, ", function() {
-  it('should take a picture and save it to photos folder when movement is detected.', function () {
-    //Prepare
-    should.fail();
-  });
-});
-
 //Create tests removing Detectors and notifiers.

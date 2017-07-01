@@ -33,6 +33,7 @@ after(function(done) {
 describe("When a detector is added, ", function() {
   it('should not be added if object is not of type MotionDetector', function () {
     //Prepare
+    main.Reset();
     let m = main.GetMotionDetectors().length;
     let result = main.AddDetector(3);
     main.GetMotionDetectors().length.should.equal(m);
@@ -41,6 +42,8 @@ describe("When a detector is added, ", function() {
 
   it('should be added if object is of type Detector', function () {
     //Prepare
+    main.Reset();
+    main.Start({environment: new ent.Environment()}, true); 
     let m = main.GetMotionDetectors().length;
     let result = main.AddDetector(new ext.PIRMotionDetector(12));
     main.GetMotionDetectors().length.should.equal(m + 1);
