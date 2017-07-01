@@ -98,14 +98,14 @@ class PIRMotionDetector extends MotionDetector{
 
 class SlackNotifier extends BaseNotifier{
   
-  constructor(name, key){
+  constructor(name, key, auth){
     if (!key){
       throw new Error("'key' is a required argument, which should contain the Slack hook URL.");
     }
     super(name);
     this.slack = new Slack();
     this.slack.setWebhook(key);
-    this.slackUpload = new Slack.Upload(key);
+    this.slackUpload = new Slack.Upload(auth);
 
     this.key = key;
   }
@@ -125,37 +125,49 @@ class SlackNotifier extends BaseNotifier{
           "notifier": this
         };
     let _this = this;
-
-    this.slack.webhook({
-      channel: '#general',
-      icon_emoji: ":ghost:",
-      text: some_text,
-      username: this.name,
-    }, function(err, response){
-      if (!err)
-      {
-        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
+    if (!(detector instanceof FileDetector))
+    {
+      this.slack.webhook({
+        channel: '#general',
+        icon_emoji: ":ghost:",
+        text: some_text,
+        username: this.name,
+      }, function(err, response){
+        if (!err)
+        {
+          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
+        }
+        else
+        {
+          new Error(err);
+        } 
+      });
+    } 
+    else
+    {
+      if((typeof newState) != "string"){
+        console.log(`'${newState}' not a valid path, ignoring slack upload.`);
+        return;
       }
-      else
-      {
-        new Error(err);
-      } 
-    });
-    /*this.slackUpload.uploadFile({
-        file: fs.createReadStream(path.join(__dirname, '.', 'README.md')),
+      console.log("Uploading ", newState);
+      this.slackUpload.uploadFile({
+        file: fs.createReadStream(path.join(__dirname, '.', newState)),
         //content: 'My file contents!',
-        filetype: 'post',
-        title: 'README',
+        filetype: path.extname(newState), 
+        title: 'FILE',
         initialComment: 'my comment',
         channels: '#general'
-    }, function(err, data) {
+      }, function(err, data) {
         if (err) {
             console.error(err);
         }
         else {
-            console.log('Uploaded file details: ', data);
+          _this.data.file = data; 
+          console.log('Uploaded file details: ', data);
+          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);;
         }
-    });*/
+      });
+    }
   }
 }
 
@@ -181,7 +193,6 @@ class RaspistillNotifier extends BaseNotifier{
       .then((photo) => {
         console.log('took photo', photo);
         _this.data.photo = photo;
-        _this.internalObj.stop();
         //Will propagate to this if the pushNotification is not well handled.
         _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data); 
       })

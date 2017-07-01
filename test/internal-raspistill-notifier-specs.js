@@ -44,15 +44,15 @@ after(function(done) {
 describe("When a new Environment with a Raspistill Notifier is created, ", function() {
   it('should save a picture', function(done) {
     main.Reset(); 
-    this.timeout(3000);
+    this.timeout(8000);
     let env = new ent.Environment();
     let detector = new ext.FileDetector("File Detector", "photos");
     let notifier = new ext.RaspistillNotifier("My Raspistill Notifier", "some_file", {});
-    let slackNotifier = new ext.SlackNotifier("My Slack notifier", new main.Config().slackHook());
+    let sConfig = new main.Config();
+    let slackNotifier = new ext.SlackNotifier("My Slack notifier", sConfig.slackHook(), sConfig.slackAuth());
     let _detected = false;
     let _detectedSlack = false;
     notifier.on("pushedNotification", function(name, text, data){
-      if (data.newState == 1) return;
       if (data.newState.toString().indexOf(".txt") > 0) return;
       console.log(`Got a notification from ${name}: ${text}`);
       if (_detected) return;
@@ -61,17 +61,24 @@ describe("When a new Environment with a Raspistill Notifier is created, ", funct
 
       //clean up
       fs.unlinkSync('./photos/some_file.jpg');
-      done();
+      if (_detectedSlack){
+        main.Reset();
+        done();
+      } 
       _detected = true;
     });
     slackNotifier.on("pushedNotification", function(name, text, data){
-      if (data.newState.toString().indexOf(".txt") > 0) return;
-      console.log(`Got a notification from ${name}: ${text}`);
-      if (_detectedSlack) return;
-      data.newState.should.equal("photos/some_file.jpg");
-      done();
-      _detectedSlack = true;
-      main.Reset();
+        console.log(`Got a notification from ${name}: ${text}`); 
+        if (data.newState.toString().indexOf(".txt") > 0) return;
+        if (_detectedSlack) return;
+        data.detector.name.should.equal("File Detector");
+        data.file.should.not.equal(undefined); 
+        data.newState.should.equal("photos/some_file.jpg");
+        if (_detected) {
+          main.Reset();
+          done();
+        } 
+        _detectedSlack = true;
     });
     main.Start({
       environment: env,

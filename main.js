@@ -254,6 +254,10 @@ class Config {
     return this.profile(profile_name).slack.hook;
   }
   
+  slackAuth(profile_name){
+    return this.profile(profile_name).slack.auth;
+  }
+  
   //TODO: Needs a better design, if keep adding extensions, I should not 
   //have to add additional methods here for each of the new extensions?
   raspistillOptions(profile_name){
