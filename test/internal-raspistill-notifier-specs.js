@@ -47,7 +47,7 @@ describe("When a new Environment with a Raspistill Notifier is created, ", funct
     this.timeout(8000);
     let env = new ent.Environment();
     let detector = new ext.FileDetector("File Detector", "photos");
-    let notifier = new ext.RaspistillNotifier("My Raspistill Notifier", "some_file", {});
+    let notifier = new ext.RaspistillNotifier("My Raspistill Notifier", 'some_file', {});
     let sConfig = new main.Config();
     let slackNotifier = new ext.SlackNotifier("My Slack notifier", sConfig.slackHook(), sConfig.slackAuth());
     let _detected = false;

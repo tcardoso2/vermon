@@ -151,7 +151,7 @@ class SlackNotifier extends BaseNotifier{
       }
       console.log("Uploading ", newState);
       this.slackUpload.uploadFile({
-        file: fs.createReadStream(path.join(__dirname, '.', newState)),
+        file: fs.createReadStream(newState), //path.join(__dirname, '.', newState)),
         //content: 'My file contents!',
         filetype: path.extname(newState), 
         title: 'FILE',
