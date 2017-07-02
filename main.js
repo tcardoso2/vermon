@@ -21,8 +21,8 @@ function InternalAddEnvironment(env = new ent.Environment()){
   return false;
 }
 
-function AddNotifier(notifier, template){
-  if (notifier instanceof ent.BaseNotifier)
+function AddNotifier(notifier, template, force = false){
+  if (force || (notifier instanceof ent.BaseNotifier))
   {
     notifier.bindToDetectors(motionDetectors, template);
     notifiers.push(notifier);
@@ -34,8 +34,8 @@ function AddNotifier(notifier, template){
 }
 
 //Adds a detector and binds it to the environment
-function AddDetector(detector){
-  if (detector instanceof ent.MotionDetector)
+function AddDetector(detector, force = false){
+  if (force || (detector instanceof ent.MotionDetector))
   {
     motionDetectors.push(detector);
     if (environment)
