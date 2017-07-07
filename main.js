@@ -95,6 +95,10 @@ function Start(params, silent = false){
     if (params.environment){
       environment = params.environment;
     }
+    else
+    {
+      InternalAddEnvironment();
+    }
   	if (params.initialMotionDetector){
       AddDetector(params.initialMotionDetector);
   	}

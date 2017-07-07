@@ -8,7 +8,6 @@ class Environment{
   constructor(params){
     this.currentState = 0;
     this.motionDetectors = [];
-    this.notifiers = [];
     this.filters = [];
     this.name = "No name";
 
@@ -210,8 +209,9 @@ class BaseNotifier{
     var n = this;
     if (!template)
     {
-      template = `Notification received from: ${detector.name}`;      
+      template = `'${this.name}' received Notification received from: '${detector.name}'`;    
     }
+    console.log("Binding Notifier to detector:", this.name, detector.name);
     detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
       n.notify(template, currentIntensity, newState, environment, detector);
     });

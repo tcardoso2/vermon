@@ -134,7 +134,7 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
       {
         detected = true;
         notifierName.should.equal("Default Base Notifier");
-        text.should.equal("Notification received from: unnamed detector.");
+        text.should.equal("'Default Base Notifier' received Notification received from: 'unnamed detector.'");
         source.detector.name.should.equal("unnamed detector.");
         done();
       }

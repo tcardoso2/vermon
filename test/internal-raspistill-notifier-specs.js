@@ -153,7 +153,7 @@ describe("When a file drops into a folder", function() {
         { 
           detected = true;
           data.newState.should.equal("photos/test.txt");
-          text.should.equal("Notification received from: File Detector");
+          text.should.equal("'Default Base Notifier' received Notification received from: 'File Detector'");
           done();
         }
       }

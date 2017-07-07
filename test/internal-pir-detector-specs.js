@@ -78,16 +78,17 @@ describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the f
     }
     //Prepare - This test is similar to the code that resides in the RPI deployments (May 2017)
     this.timeout(10000);
-    var env = new main.Entities.Environment();
+    let env = new main.Entities.Environment();
     initialMD = new main.Extensions.PIRMotionDetector(17);
     initialMD.name = "test PIR";
     main.Start({
       environment: env,
       initialMotionDetector: initialMD
     });
-    initialNotifier = new main.Extensions.SlackNotifier("My Slack", "https://hooks.slack.com/services/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")
+
+    initialNotifier = new main.Extensions.SlackNotifier("My Slack", new main.Config().slackHook("default"));
     main.AddNotifier(initialNotifier, `Notification: ${initialMD.name}`);
-    var _detected = false;
+    let _detected = false;
     camNotifier = new main.Extensions.RaspistillNotifier();
     main.AddNotifier(camNotifier);
     initialNotifier.on("pushedNotification", function(name, text){
@@ -103,8 +104,6 @@ describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the f
       chai.assert.isOk("detected");
       //console.log(`Detector detected signal from ${current} to: ${newState}`);
     });
-    //var m433 = new mdr.Entities.R433Detector("My 433 Detector", 2);
-    //md.AddDetector(m433);
     //env.addChange(1);
   });
 });
