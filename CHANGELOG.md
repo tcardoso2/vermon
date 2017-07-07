@@ -1,6 +1,7 @@
 # Change log:
 
 ***
+* v 0.4.2 :Added small test for macking sure the Environment mocking works
 * v 0.4.1 :Added flag force = true to allow adding Detectors and/or Notifiers even if application does not recognize as being of the same instance. This is to workaround the fact of other detectors (like 433 detector) which is built in another package, but node still does not acknowledge is of the same instance. Use at your own risk
 * v 0.4.0 :Corrected some unit tests which were conflicting. It's now possible to send Raspistill images to Slack, making the application now possible to detect movement and send a picture of the intruder!
 * v 0.3.11:Adding capability of declaring filters via Config. WIP code for FileDetector for detecting new files in folder (from RaspistillNotifier)

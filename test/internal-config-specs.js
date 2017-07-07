@@ -206,10 +206,20 @@ describe("When a new t-motion-detector instance is started from main, ", functio
   it('When starting with alternate config, the Environment Objects contained in the config file are automatically instanced as Environments of main', function (done) {
     //Main needs to be reset explicitely because it keeps objects from previous test
     main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test2.js");
+    let alternativeConfig = new main.Config("/test/config_test5.js");
+
+    class TestEnvironment extends ent.Environment {
+      constructor(params)
+      {
+        super(params);
+      }
+    }
+
+    new ent.EntitiesFactory().extend({ TestEnvironment });
     main.StartWithConfig(alternativeConfig);
 
-    main.GetNotifiers().length.should.equal(1);
+    let env = main.GetEnvironment();
+    env.name.should.equal("My Test Environment");
 
     done();
   });
