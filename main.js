@@ -1,4 +1,9 @@
+/**
+ * @overview: To fill-in
+ * @author: Tiago Cardoso
+ */
 let ent = require("./Entities.js");
+let filters = ent.Filters;
 let ext = require("./Extensions.js");
 let notifiers = [];
 let environment;
@@ -7,10 +12,33 @@ let config;
 let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
-let filters = require("./Filters.js");
 
 //This function should stay internal to this module!
-function InternalAddEnvironment(env = new ent.Environment()){
+function _InternalAddFilter(filter = new filters.BaseFilter()){
+  if (filter instanceof filters.BaseFilter)
+  {
+    //if the applyTo attibute of the filter is a string, it should apply to whichever names match
+    for (let i in motionDetectors)
+    {
+      if(filter.applyToName)
+      {
+        console.log(`Filter to be applied to items of name: "${filter.applyToName}". Searching current motion detectors...`);
+        if (motionDetectors[i].name == filter.applyToName)
+        {
+          console.log("Found. Applying filter.")
+          motionDetectors[i].applyFilter(filter);
+        }
+      }
+    }
+    return true;
+  } else {
+    log.warning("'filter' object is not of type BaseFilter");
+  }
+  return false;
+}
+
+//This function should stay internal to this module!
+function _InternalAddEnvironment(env = new ent.Environment()){
   if (env instanceof ent.Environment)
   {
     environment = env;
@@ -97,7 +125,7 @@ function Start(params, silent = false){
     }
     else
     {
-      InternalAddEnvironment();
+      _InternalAddEnvironment();
     }
   	if (params.initialMotionDetector){
       AddDetector(params.initialMotionDetector);
@@ -109,7 +137,7 @@ function Start(params, silent = false){
 
   //Will set a default Environment if does not exist;
   if(!environment){
-    InternalAddEnvironment();
+    _InternalAddEnvironment();
   	//environment = new ent.Environment();
   }
 
@@ -125,7 +153,7 @@ function Start(params, silent = false){
 }
 
 //Will start the motion detector based on the existing configuration
-function StartWithConfig(configParams){
+function StartWithConfig(configParams, callback){
   log.info("Starting t-motion-detector with config parameters...");
   //Sets the parameters first if they exist
   if (!configParams 
@@ -147,17 +175,20 @@ function StartWithConfig(configParams){
         log.info(`Creating entity "${p}"...`);
         let o = f.instanciate(p, profileObj[p]);
         //The way this is written, forces the environment to be created first
-        if(!InternalAddEnvironment(o)){
+        if(!_InternalAddEnvironment(o)){
           if (!AddNotifier(o)){
             if(!AddDetector(o)){
-              console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+              if(!_InternalAddFilter(o)){
+                console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+              }
             }
           }
         }
       }
     }
   }
-  log.info("ready.");
+  log.info("ready. returning to callback...");
+  if (callback) callback();
 } 
 
 class Config {

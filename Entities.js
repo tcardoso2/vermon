@@ -1,12 +1,24 @@
 //A generic base class which creates a surrounding environment for motion detection
 //Collaborator: MotionDetector
+//import { readonly } from 'core-decorators';
+//import { mixin } from 'core-decorators';
 let events = require("events");
 let filters = require("./Filters.js");
 
+/**
+ * @class: Entities.Environment
+ * @classDesc: Defines the environment to be monitored
+ * @public
+ */
 class Environment{
 
   constructor(params){
     this.currentState = 0;
+    /**
+    * @type: Entities.MotionDetector
+    * @desc: Contains the motion detectors attached to the current environment.
+    * @public
+    */
     this.motionDetectors = [];
     this.filters = [];
     this.name = "No name";
@@ -306,10 +318,16 @@ class EntitiesFactory
   }
 }
 
+
+//Extending Factory methods
+
+new EntitiesFactory().extend(filters.classes);
+
 Environment.prototype.__proto__ = events.EventEmitter.prototype;
 MotionDetector.prototype.__proto__ = events.EventEmitter.prototype;
 BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
 
+exports.Filters = filters;
 exports.EntitiesFactory = EntitiesFactory;
 exports.Environment = Environment;
 exports.MotionDetector = MotionDetector;

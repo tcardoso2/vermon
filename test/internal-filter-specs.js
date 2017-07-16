@@ -97,7 +97,7 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    d[0].applyFilter(new filters.ValueFilter(10));
+    new filters.ValueFilter(10, d[0]);
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -120,7 +120,7 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    d[0].applyFilter(new filters.NameFilter("unnamed detector."));
+    new filters.NameFilter("unnamed detector.", d[0]);
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -140,7 +140,7 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    d[0].applyFilter(new filters.HighPassFilter(10));
+    new filters.HighPassFilter(10, d[0]);
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -163,7 +163,7 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    d[0].applyFilter(new filters.LowPassFilter(10));
+    new filters.LowPassFilter(10, d[0]);
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -187,8 +187,8 @@ describe("When a new filter is applied to one motion detector,", function() {
 
     let d = main.GetMotionDetectors();
 
-    d[0].applyFilter(new filters.HighPassFilter(10));
-    d[0].applyFilter(new filters.LowPassFilter(40));
+    new filters.HighPassFilter(10, d[0]);
+    new filters.LowPassFilter(40, d[0]);
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -205,44 +205,49 @@ describe("When a new filter is applied to one motion detector,", function() {
 });
 
 describe("When a Filter is declared in the Config file,", function() {
-  it('as parameter of the Environment constructor it should apply to the environments', function () {
+  it('as parameter of the Environment constructor (no name) it should apply to all the motion detectors', function (done) {
     //Prepare
     main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test5.js");
-    main.StartWithConfig(alternativeConfig);
-    
-    let n = main.GetNotifiers();
-    n[0].on('pushedNotification', function(message, text, data){
-      data.newState.should.equal(20);
+    let alternativeConfig = new main.Config("/test/config_test7.js");
+    main.StartWithConfig(alternativeConfig, ()=>{
+      let n = main.GetNotifiers();
+      let count = 0;
+      n[0].on('pushedNotification', function(message, text, data){
+        console.log(`Notification from: "${data.detector.name}" with value: "${data.newState}"`);
+        count++;
+        data.newState.should.equal(10);
+        if(count==2)
+        {
+          done();
+        }
+      });
+
+      //Act
+      let e = main.GetEnvironment();    
+      e.addChange(10);      
     });
-
-    //Act
-    let e = main.GetEnvironment();    
-    e.addChange(20);
-    should.fail();
+    
   });
-  it('as parameter of the Motion Detector constructors it should apply to detectors individually', function () {
+  it('as parameter of the Motion Detector constructor it should apply to detectors individually', function (done) {
     //Prepare
     main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test3.js");
+    let alternativeConfig = new main.Config("/test/config_test6.js");
     main.StartWithConfig(alternativeConfig);
-
-    let d = main.GetMotionDetectors();
-    d[0].applyFilter(new filters.BaseFilter());
     
     let n = main.GetNotifiers();
     let _done = false;
     n[0].on('pushedNotification', function(message, text, data){
       if(!_done){
-        data.newState.should.equal(20);
         _done = true;
+        data.newState.should.equal(15);
+        done();
       }
     });
 
     //Act
     let e = main.GetEnvironment();    
-    e.addChange(20);
-    should.fail();
+    e.addChange(5);
+    e.addChange(10);
   });
 });
 

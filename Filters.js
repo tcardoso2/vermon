@@ -1,15 +1,31 @@
 //Filter classes used to filter incoming signals
 //Collaborator: Environment, MotionDetector
-
 //Base filter
 //This should be inherited but you can in practice still use it,
 //But by defult it does nothing (pass-all), override the method
 //"filter" to change behaviour
+
+/**
+ * @class: Filters.BaseFilter
+ * @classDesc: Creates a base filter to be applicable to a Motion Detector and attaches a value to it
+ * @public
+ */
 class BaseFilter{
 
-  constructor(val){
+  constructor(val, applyTo){
     //Despite populating this, will do nothing with it
     this.valueToFilter = val;
+    if (applyTo)
+    {
+      if (typeof applyTo == "string")
+      {
+        this.applyToName = applyTo;
+      }
+      else
+      {
+        applyTo.applyFilter(this);
+      }
+    }
   }
 
   //Simply returns the state which is given (no changes)
@@ -24,8 +40,8 @@ class BaseFilter{
 //Note: If you create your own filters make sure you are calling the parent filter class
 class BlockAllFilter extends BaseFilter{
 
-  constructor(val){
-    super(val);
+  constructor(val, applyTo){
+    super(val, applyTo);
   }
 
   //Simply returns nothing (opposite of it's base class)
@@ -36,8 +52,8 @@ class BlockAllFilter extends BaseFilter{
 
 class NameFilter extends BaseFilter{
 
-  constructor(val){
-    super(val);
+  constructor(val, applyTo){
+    super(val, applyTo);
   }
 
   //Simply returns nothing (opposite of it's base class)
@@ -48,8 +64,8 @@ class NameFilter extends BaseFilter{
 
 class ValueFilter extends BaseFilter{
 
-  constructor(val){
-    super(val);
+  constructor(val, applyTo){
+    super(val, applyTo);
   }
 
   //Simply returns nothing (opposite of it's base class)
@@ -60,8 +76,8 @@ class ValueFilter extends BaseFilter{
 
 class HighPassFilter extends BaseFilter{
 
-  constructor(val){
-    super(val);
+  constructor(val, applyTo){
+    super(val, applyTo);
   }
 
   //Simply returns nothing (opposite of it's base class)
@@ -72,8 +88,8 @@ class HighPassFilter extends BaseFilter{
 
 class LowPassFilter extends BaseFilter{
 
-  constructor(val){
-    super(val);
+  constructor(val, applyTo){
+    super(val, applyTo);
   }
 
   //Simply returns nothing (opposite of it's base class)
@@ -81,6 +97,8 @@ class LowPassFilter extends BaseFilter{
     return newState > this.valueToFilter ? false : newState;
   }
 }
+
+exports.classes = { BaseFilter, BlockAllFilter, ValueFilter, NameFilter, LowPassFilter, HighPassFilter }
 
 exports.BaseFilter = BaseFilter;
 exports.BlockAllFilter = BlockAllFilter;
