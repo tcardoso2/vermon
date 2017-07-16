@@ -17,14 +17,7 @@ class BaseFilter{
     this.valueToFilter = val;
     if (applyTo)
     {
-      if (typeof applyTo == "string")
-      {
-        this.applyToName = applyTo;
-      }
-      else
-      {
-        applyTo.applyFilter(this);
-      }
+      this.applyToName = applyTo;
     }
   }
 
@@ -32,6 +25,41 @@ class BaseFilter{
   filter(newState, env, detector){
     //will pass all;
     return newState;
+  }
+
+  bindToDetectors(motionDetectors){
+    switch(typeof this.applyToName)
+    {
+      case "undefined":
+        console.log(">>>>> applying to all motion detectors:");
+        // applies to all motion detectors
+        for (let i in motionDetectors)
+        {
+          //applies to all Motion detectors
+          motionDetectors[i].applyFilter(this);
+        }
+        break;
+      case "string":
+        // applies all motion detectors matching name
+        console.log(`>>>>> applying to motion detectors with name: ${this.applyToName}`);
+        for (let i in motionDetectors)
+        {
+          console.log(`Filter to be applied to items of name: "${this.applyToName}". Searching current motion detectors...`);
+          if (motionDetectors[i].name == this.applyToName)
+          {
+            console.log("Found. Applying filter.")
+            motionDetectors[i].applyFilter(this);
+          }
+        }
+        break;
+      case "object":
+        //Assumes it is a motion detector, or at least an object which implements the applyFilter method
+        console.log(">>>>> applying to motion detector:");
+        this.applyToName.applyFilter(this);
+        break;
+      default:
+        break;
+    }
   }
 }
 

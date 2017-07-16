@@ -17,19 +17,7 @@ let fs = require('fs')
 function _InternalAddFilter(filter = new filters.BaseFilter()){
   if (filter instanceof filters.BaseFilter)
   {
-    //if the applyTo attibute of the filter is a string, it should apply to whichever names match
-    for (let i in motionDetectors)
-    {
-      if(filter.applyToName)
-      {
-        console.log(`Filter to be applied to items of name: "${filter.applyToName}". Searching current motion detectors...`);
-        if (motionDetectors[i].name == filter.applyToName)
-        {
-          console.log("Found. Applying filter.")
-          motionDetectors[i].applyFilter(filter);
-        }
-      }
-    }
+    filter.bindToDetectors(motionDetectors);
     return true;
   } else {
     log.warning("'filter' object is not of type BaseFilter");

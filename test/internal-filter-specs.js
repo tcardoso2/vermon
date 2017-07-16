@@ -97,7 +97,8 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    new filters.ValueFilter(10, d[0]);
+    let f = new filters.ValueFilter(10, d[0]);
+    f.bindToDetectors();
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -120,7 +121,8 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    new filters.NameFilter("unnamed detector.", d[0]);
+    let f = new filters.NameFilter("unnamed detector.", d[0]);
+    f.bindToDetectors();
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -140,7 +142,8 @@ describe("When a new filter is applied to one motion detector,", function() {
     main.StartWithConfig(alternativeConfig);
 
     let d = main.GetMotionDetectors();
-    new filters.HighPassFilter(10, d[0]);
+    let f = new filters.HighPassFilter(10, d[0]);
+    f.bindToDetectors();
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -187,8 +190,10 @@ describe("When a new filter is applied to one motion detector,", function() {
 
     let d = main.GetMotionDetectors();
 
-    new filters.HighPassFilter(10, d[0]);
-    new filters.LowPassFilter(40, d[0]);
+    let f1 = new filters.HighPassFilter(10, d[0]);
+    let f2 = new filters.LowPassFilter(40, d[0]);
+    f1.bindToDetectors();
+    f2.bindToDetectors();
 
     let n = main.GetNotifiers();
     n[0].on('pushedNotification', function(message, text, data){
@@ -215,7 +220,7 @@ describe("When a Filter is declared in the Config file,", function() {
       n[0].on('pushedNotification', function(message, text, data){
         console.log(`Notification from: "${data.detector.name}" with value: "${data.newState}"`);
         count++;
-        data.newState.should.equal(10);
+        data.newState.should.equal(12);
         if(count==2)
         {
           done();
@@ -223,8 +228,9 @@ describe("When a Filter is declared in the Config file,", function() {
       });
 
       //Act
-      let e = main.GetEnvironment();    
-      e.addChange(10);      
+      let e = main.GetEnvironment();
+      e.addChange(2);      
+      e.addChange(10);
     });
     
   });
