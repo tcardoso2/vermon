@@ -110,8 +110,13 @@ class Environment{
   }
 }
 
-//A generic base class which creates a motion detector for surrounding environments
-//Collaborator: Environment
+/**
+ * @class: Entities.MotionDetector
+ * @classDesc: A generic base class which creates a motion detector for surrounding environments \n
+ * Collaborator: Environment
+ * @desc: Test
+ * @public
+ */
 class MotionDetector{
 
   constructor(name){
@@ -163,8 +168,18 @@ class MotionDetector{
 
   //Starts monitoring any movement
   startMonitoring(){
-    this._isActive = true;
+    this.activate();
     this.count = 0;
+  }
+
+  deactivate()
+  {
+    this._isActive = false;
+  }
+
+  activate()
+  {
+    this._isActive = true;
   }
 
   applyFilter(filter){

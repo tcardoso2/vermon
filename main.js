@@ -2,6 +2,7 @@
  * @overview: To fill-in
  * @author: Tiago Cardoso
  */
+
 let ent = require("./Entities.js");
 let filters = ent.Filters;
 let ext = require("./Extensions.js");
@@ -12,6 +13,7 @@ let config;
 let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
+var _ = require('lodash/core');
 
 //This function should stay internal to this module!
 function _InternalAddFilter(filter = new filters.BaseFilter()){
@@ -37,6 +39,11 @@ function _InternalAddEnvironment(env = new ent.Environment()){
   return false;
 }
 
+/**
+ * @function: Boolean
+ * @summary: Adds a Notifier to the current Environment
+ * @example: Funcionas ou nao?
+ */
 function AddNotifier(notifier, template, force = false){
   if (force || (notifier instanceof ent.BaseNotifier))
   {
@@ -49,7 +56,11 @@ function AddNotifier(notifier, template, force = false){
   return false;
 }
 
-//Adds a detector and binds it to the environment
+/**
+ * @function: Boolean
+ * @summary: Adds a detector and binds it to the environment
+ * @example: Funcionas ou nao?
+ */
 function AddDetector(detector, force = false){
   if (force || (detector instanceof ent.MotionDetector))
   {
@@ -68,6 +79,35 @@ function AddDetector(detector, force = false){
   return false;
 }
 
+/**
+ * @function: Boolean
+ * @summary: Deactivates an existing Detector.
+ * @example: Funcionas ou nao?
+ */
+function DeactivateDetector(name)
+{
+  let d = GetMotionDetector(name);
+  if (d) d.deactivate();
+  else throw new Error(`'${name}' does not exist.`);
+}
+
+/**
+ * @function: Boolean
+ * @summary: Activates an existing Detector.
+ * @example: Funcionas ou nao?
+ */
+function ActivateDetector(name)
+{
+  let d = GetMotionDetector(name);
+  if (d) d.activate();
+  else throw new Error(`'${name}' does not exist.`);
+}
+
+/**
+ * @function: Boolean
+ * @summary: Removes a notifier
+ * @example: Funcionas ou nao?
+ */
 function RemoveNotifier(notifier){
   var index = notifiers.indexOf(notifier);
   if (index > -1) {
@@ -94,6 +134,13 @@ function GetNotifiers()
 function GetMotionDetectors()
 {
   return motionDetectors;
+}
+
+function GetMotionDetector(name)
+{
+  //It's assumed the number of motion detectors will be sufficiently small to be ok to iterate without major loss of efficiency
+  return _.filter(motionDetectors, x => x.name === name)[0];
+  //lodash.filter(arr, { 'city': 'Amsterdam' } );
 }
 
 function Reset()
@@ -295,10 +342,13 @@ class Config {
 
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
+exports.ActivateDetector = ActivateDetector;
+exports.DeactivateDetector = DeactivateDetector;
 exports.RemoveNotifier = RemoveNotifier;
 exports.GetEnvironment = GetEnvironment;
 exports.GetNotifiers = GetNotifiers;
 exports.GetMotionDetectors = GetMotionDetectors;
+exports.GetMotionDetector = GetMotionDetector;
 exports.Reset = Reset;
 exports.Entities = ent;
 exports.Extensions = ext;

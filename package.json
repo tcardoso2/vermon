@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "chokidar": "^1.7.0",
-    "core-decorators": "^0.19.0",
     "extend": "latest",
+    "lodash": "^4.17.4",
     "log": "^1.4.0",
     "mock-stdin": "^0.3.1",
     "node-raspistill": "0.0.10",
@@ -42,5 +42,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.4.3"
+  "version": "0.4.4"
 }

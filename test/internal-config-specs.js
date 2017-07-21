@@ -404,4 +404,50 @@ describe("When using the EntitiesFactory function, ", function() {
     should.fail();
   });
 });
+
+describe("To be able to disable temporarily a Motion Detector..., ", function() {
+  let fail_helper = true;
+  it('I should be able to deactivate an existing active MD by name', function () {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test6.js");
+    main.StartWithConfig(alternativeConfig, ()=>{
+      let n = main.GetNotifiers();
+      let d = main.GetMotionDetectors();
+      n[0].on('pushedNotification', function(message, text, data){
+        fail_helper.should.equal(false);
+      });
+      main.DeactivateDetector("MD 1");
+      //Act
+      let e = main.GetEnvironment();
+      e.addChange(12);      
+    });
+  });
+  it('I should fail if the MD name Being deactivated does not exist', function () {
+    //Prepare
+    try{
+      main.DeactivateDetector("MD unexisting");
+    } catch(e){
+      e.message.should.equal("'MD unexisting' does not exist.")
+      return;
+    }
+    should.fail();
+  });
+  it('I should be able to reactivate a previously deactivated MD by name', function () {
+    //Prepare
+    main.ActivateDetector("MD 1");
+    fail_helper = false;
+    main.GetEnvironment().addChange(12);
+  });
+  it('I should fail if the MD name Being activated does not exist', function () {
+    //Prepare
+    try{
+      main.ActivateDetector("MD unexisting");
+    } catch(e){
+      e.message.should.equal("'MD unexisting' does not exist.")
+      return;
+    }
+    should.fail();
+  });
+});
 //Create tests removing Detectors and notifiers.

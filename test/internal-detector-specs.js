@@ -49,6 +49,15 @@ describe("When a detector is added, ", function() {
     main.GetMotionDetectors().length.should.equal(m + 1);
     result.should.equal(true);
   });
+
+  it('should be able to be accessed directly via name', function () {
+    //Prepare
+    d2 = new ext.PIRMotionDetector(12);
+    main.AddDetector(d2);
+    d2.name = "PIR";
+    let d3 = main.AddDetector(new ent.MotionDetector("some name"));
+    main.GetMotionDetector("PIR").should.be.eql(d2);
+  });
 });
 
 describe("When there is a surroundings change relative to an object, ", function() {

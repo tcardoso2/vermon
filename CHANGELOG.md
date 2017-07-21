@@ -1,6 +1,8 @@
 # Change log:
 
 ***
+* v 0.4.4 :WIP on documentation (need to add details on config for Filters). Added ActivateMotionDetector and
+DeactivateMotionDetector functions (by MD name);
 * v 0.4.3 :Working on Filter configuration, to be able to add filters to either MotionDetectors or the whole
 Environment via the Configuration file (Dependency Injection). Created a callback after the StartWithConfig
 function, to make sure configuration is properly initialized. Although older tests do not use it, future tests
