@@ -2,6 +2,7 @@ profiles = {
   default: {
     Environment: {},
     MotionDetector: {
+      
     },
     BaseNotifier: {
     }

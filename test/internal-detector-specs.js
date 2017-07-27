@@ -58,6 +58,16 @@ describe("When a detector is added, ", function() {
     let d3 = main.AddDetector(new ent.MotionDetector("some name"));
     main.GetMotionDetector("PIR").should.be.eql(d2);
   });
+
+  it('should throw an exception if the first argument is not a string (name)', function () {
+    //Prepare
+    try{
+      let d3 = new ent.MotionDetector(12);
+      should.fail();
+    } catch (e) {
+      e.message.should.equal("Motion detector first argument (name) is not of type string. Provided value was 12");
+    }
+  });
 });
 
 describe("When there is a surroundings change relative to an object, ", function() {

@@ -40,9 +40,9 @@ function _InternalAddEnvironment(env = new ent.Environment()){
 }
 
 /**
- * @function: Boolean
+ * @function: Add descrition
  * @summary: Adds a Notifier to the current Environment
- * @example: Funcionas ou nao?
+ * @public
  */
 function AddNotifier(notifier, template, force = false){
   if (force || (notifier instanceof ent.BaseNotifier))
@@ -57,10 +57,10 @@ function AddNotifier(notifier, template, force = false){
 }
 
 /**
- * @function: Boolean
- * @summary: Adds a detector and binds it to the environment
- * @example: Funcionas ou nao?
- */
+ * @func: Adds a detector or detectors (in form of array) to the environment
+ * @example:
+ * @public
+*/
 function AddDetector(detector, force = false){
   if (force || (detector instanceof ent.MotionDetector))
   {
@@ -80,10 +80,10 @@ function AddDetector(detector, force = false){
 }
 
 /**
- * @function: Boolean
- * @summary: Deactivates an existing Detector.
- * @example: Funcionas ou nao?
- */
+ * @func:
+ * @example:
+ * @public
+*/
 function DeactivateDetector(name)
 {
   let d = GetMotionDetector(name);
@@ -92,10 +92,10 @@ function DeactivateDetector(name)
 }
 
 /**
- * @function: Boolean
- * @summary: Activates an existing Detector.
- * @example: Funcionas ou nao?
- */
+ * @func:
+ * @example:
+ * @public
+*/
 function ActivateDetector(name)
 {
   let d = GetMotionDetector(name);
@@ -104,10 +104,10 @@ function ActivateDetector(name)
 }
 
 /**
- * @function: Boolean
- * @summary: Removes a notifier
- * @example: Funcionas ou nao?
- */
+ * @func:
+ * @example:
+ * @public
+*/
 function RemoveNotifier(notifier){
   var index = notifiers.indexOf(notifier);
   if (index > -1) {
@@ -117,6 +117,11 @@ function RemoveNotifier(notifier){
 }
 
 //Getters, setters
+/**
+ * @func:
+ * @example:
+ * @public
+*/
 function GetEnvironment()
 {
   if (environment == undefined) {
@@ -126,16 +131,31 @@ function GetEnvironment()
   return environment;	
 }
 
+/**
+ * @func:
+ * @example:
+ * @public
+*/
 function GetNotifiers()
 {
   return notifiers;
 }
 
+/**
+ * @func:
+ * @example:
+ * @public
+*/
 function GetMotionDetectors()
 {
   return motionDetectors;
 }
 
+/**
+ * @func:
+ * @example:
+ * @public
+*/
 function GetMotionDetector(name)
 {
   //It's assumed the number of motion detectors will be sufficiently small to be ok to iterate without major loss of efficiency
@@ -143,6 +163,26 @@ function GetMotionDetector(name)
   //lodash.filter(arr, { 'city': 'Amsterdam' } );
 }
 
+/**
+ * @func:
+ * @example:
+ * @public
+*/
+function GetFilters()
+{
+  let result = [];
+  for (let i in motionDetectors)
+  {
+    result = result.concat(motionDetectors[i].filters);
+  }
+  return result;
+}
+
+/**
+ * @func:
+ * @example:
+ * @public
+*/
 function Reset()
 {
   notifiers = [];
@@ -150,7 +190,11 @@ function Reset()
   motionDetectors = [];
 }
 
-//Will start the motion detector
+/**
+ * @func: Will start the motion detector
+ * @example:
+ * @public
+*/
 function Start(params, silent = false){
   log.info("Starting t-motion-detector with parameters...");
   //Sets the parameters first if they exist
@@ -187,7 +231,11 @@ function Start(params, silent = false){
   log.info("ready.");
 }
 
-//Will start the motion detector based on the existing configuration
+/**
+ * @func: Will start the motion detector based on the existing configuration
+ * @example:
+ * @public
+*/
 function StartWithConfig(configParams, callback){
   log.info("Starting t-motion-detector with config parameters...");
   //Sets the parameters first if they exist
@@ -200,32 +248,57 @@ function StartWithConfig(configParams, callback){
   config = configParams;
   let profileObj = config.profile();
 
+  //Iterates all items given in the config file
+  //It is only supposed to add if the object is of the expected type
+  let factory = new ent.EntitiesFactory();
   for(let p in profileObj)
   {
     if (profileObj.hasOwnProperty(p)) {
-      //It is only supposed to add if the object is of the expected type
-      let f = new ent.EntitiesFactory();
-      if (!f.isReserved(p))
+
+      if (!factory.isReserved(p))
       {
-        log.info(`Creating entity "${p}"...`);
-        let o = f.instanciate(p, profileObj[p]);
-        //The way this is written, forces the environment to be created first
-        if(!_InternalAddEnvironment(o)){
-          if (!AddNotifier(o)){
-            if(!AddDetector(o)){
-              if(!_InternalAddFilter(o)){
-                console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
-              }
-            }
+        //We always assume that if the object found is an array then it is an array of objects instead
+        if (Array.isArray(profileObj[p])){
+          console.log("Object provided in config is an array, instanciating each object...");
+          for (let i in profileObj[p])
+          {
+            //instanciates each object
+            _AddInstance(factory, p, profileObj[p][i]);
           }
+        }
+        else{
+          //Single instance (not an array), ok instanciate directly
+          _AddInstance(factory, p, profileObj[p]);
         }
       }
     }
   }
   log.info("ready. returning to callback...");
   if (callback) callback();
-} 
+}
 
+//Internal function, given a factory, class name and arguments, instanciates it
+function _AddInstance(f, p, args){
+  console.log(`Creating entity "${p}" with args ${args}...`);
+  let o = f.instanciate(p, args);
+  //The way this is written, forces the environment to be created first
+  if(!_InternalAddEnvironment(o)){
+    if (!AddNotifier(o)){
+      if(!AddDetector(o)){
+        if(!_InternalAddFilter(o)){
+          console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+        }
+      }
+    }
+  }  
+}
+/**
+ * @class: Entities.MotionDetector
+ * @classDesc: A generic base class which creates a motion detector for surrounding environments \n
+ * Collaborator: Environment
+ * @desc: Test
+ * @public
+ */
 class Config {
 
   constructor(profile)
@@ -346,6 +419,7 @@ exports.ActivateDetector = ActivateDetector;
 exports.DeactivateDetector = DeactivateDetector;
 exports.RemoveNotifier = RemoveNotifier;
 exports.GetEnvironment = GetEnvironment;
+exports.GetFilters = GetFilters;
 exports.GetNotifiers = GetNotifiers;
 exports.GetMotionDetectors = GetMotionDetectors;
 exports.GetMotionDetector = GetMotionDetector;

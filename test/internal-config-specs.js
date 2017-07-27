@@ -263,90 +263,6 @@ describe("When a new t-motion-detector instance is started from main, ", functio
   });
 });
 
-describe("After installing a new t-motion-detector, ", function() {
-  /*it('a setup executable should run/exist (postinstall)', function (done) {
-    //Disabled as this seems to always timeout
-    this.timeout(5000);
-    //let pi = require('../scripts/postinstall.js');
-    var exec = require('child_process').exec;
- 
-    //var cmd = exec("Y");
-    var cmd = exec("npm run-script postinstall", function (error, stdout, stderr) {
-      // ...
-      console.log("stdout, "E:", stderr, error);
-      pi.count.should.equal(1);
-      done();
-    });
-  });*/
-  it('if file is imported with the "require" keyword the setup should not run', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    pi.count.should.equal(0);
-    done();
-  });
-  it('When choosing option 1 the program should add an Environment', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    let setup = new pi.Setup();
-    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
-      done();
-    });
-    should.fail();
-  });
-  it('When choosing option 2 the program should add an Environment', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    let setup = new pi.Setup();
-    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
-      done();
-    });
-    should.fail();
-  });
-  it('When choosing option 3 the program should add a PIR Motion Detector', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    let setup = new pi.Setup();
-    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
-      done();
-    });
-    should.fail();
-  });
-  it('When choosing option 4 the program should add an Slack Notifier', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    let setup = new pi.Setup();
-    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
-      done();
-    });
-    should.fail();
-  });
-  it('When choosing option 5 the program should add an Raspistill Notifier', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    let setup = new pi.Setup();
-    setup.addEnvironmentConfig(new ent.Environment(), function(err, output){
-      done();
-    });
-    should.fail();
-  });
-  it('When choosing option 6 the program should delete the config file', function (done) {
-    //Prepare
-
-    let pi = require('../scripts/postinstall.js');
-    let setup = new pi.Setup();
-    setup.deleteConfig(function(err, deleted){
-      done();
-    });
-    should.fail();
-  });
-});
-
 describe("When using the EntitiesFactory function, ", function() {
   it('should create an Environment', function () {
     //Prepare
@@ -413,7 +329,6 @@ describe("To be able to disable temporarily a Motion Detector..., ", function() 
     let alternativeConfig = new main.Config("/test/config_test6.js");
     main.StartWithConfig(alternativeConfig, ()=>{
       let n = main.GetNotifiers();
-      let d = main.GetMotionDetectors();
       n[0].on('pushedNotification', function(message, text, data){
         fail_helper.should.equal(false);
       });
@@ -450,4 +365,53 @@ describe("To be able to disable temporarily a Motion Detector..., ", function() 
     should.fail();
   });
 });
+
+describe("When creating a config file of several components of same type, ", function() {
+  it('I should be able to add 2 detectors of the same type programatically', function (done) {
+    //Main needs to be reset explicitely because it keeps objects from previous test
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test8.js");
+
+    main.StartWithConfig(alternativeConfig);
+
+    let md = main.GetMotionDetectors();
+    md.length.should.equal(2);
+    md[0].name.should.equal("MD 2");
+    md[1].name.should.equal("MD 1");
+
+    done();
+  });
+  it('I should be able to add 2 detectors of the same type in an array-type structure', function (done) {
+    //Main needs to be reset explicitely because it keeps objects from previous test
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test8.js");
+
+    main.StartWithConfig(alternativeConfig);
+
+    let md = main.GetMotionDetectors();
+    md[0].name.should.equal("MD 2");
+    md[1].name.should.equal("MD 1");
+
+    done();
+  });
+  it('I should be able to add 2 filters of the same type in an array-type structure', function (done) {
+    //Main needs to be reset explicitely because it keeps objects from previous test
+    main.GetFilters().length.should.equal(2);
+    done();
+  });
+  it('Signal with intensity 5 should be reflected on the respective Detector only', function (done) {
+    //Main needs to be reset explicitely because it keeps objects from previous test
+
+    let n = main.GetNotifiers();
+    n.length.should.equal(1);
+    n[0].on('pushedNotification', function(message, text, data){
+      data.detector.name.should.equal("MD 2");
+    });
+
+    main.GetEnvironment().addChange(5);
+
+    done();
+  });
+});
+
 //Create tests removing Detectors and notifiers.

@@ -124,6 +124,9 @@ class MotionDetector{
     this.count;
     this.currentIntensity;
     this.name = name ? name : "unnamed detector."
+    if ((typeof this.name) != "string"){
+      throw new Error(`Motion detector first argument (name) is not of type string. Provided value was ${JSON.stringify(name)}`);
+    }
     this.filters = [];
     events.EventEmitter.call(this);
   }
@@ -233,12 +236,16 @@ class BaseNotifier{
   //It's the notifier who has the responsibility to bind to existing detectors
   bindToDetector(detector, template){
     //Find a better way since it is not possible to unbind?
-    var n = this;
+    if (!(detector instanceof MotionDetector)){
+      throw new Error("detector is not of MotionDetector type.");
+    }
+
+    let n = this;
     if (!template)
     {
       template = `'${this.name}' received Notification received from: '${detector.name}'`;    
     }
-    console.log("Binding Notifier to detector:", this.name, detector.name);
+    console.log(`Binding Notifier '${this.name}' to detector '${detector.name}'...`);
     detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
       n.notify(template, currentIntensity, newState, environment, detector);
     });
@@ -247,7 +254,7 @@ class BaseNotifier{
 
   bindToDetectors(detectors, template){
     //Find a better way since it is not possible to unbind?
-    for (var d in detectors)
+    for (let d in detectors)
     {
       this.bindToDetector(detectors[d], template);
     }
