@@ -1,14 +1,17 @@
 # Change log:
 
 ***
+* v 0.4.7 :TO-CONTINUE: Worked on saving config to disk
+* v 0.4.6 :Added new unit tests for saving new config file into disk, with force option.  
+* v 0.4.5 :Possible to now add on config more items of the same instance in the form of Filters  
 * v 0.4.4 :WIP on documentation (need to add details on config for Filters). Added ActivateMotionDetector and
-DeactivateMotionDetector functions (by MD name);
+DeactivateMotionDetector functions (by MD name);  
 * v 0.4.3 :Working on Filter configuration, to be able to add filters to either MotionDetectors or the whole
 Environment via the Configuration file (Dependency Injection). Created a callback after the StartWithConfig
 function, to make sure configuration is properly initialized. Although older tests do not use it, future tests
-should be build using it.
-* v 0.4.2 :Added small test for macking sure the Environment mocking works
-* v 0.4.1 :Added flag force = true to allow adding Detectors and/or Notifiers even if application does not recognize as being of the same instance. This is to workaround the fact of other detectors (like 433 detector) which is built in another package, but node still does not acknowledge is of the same instance. Use at your own risk
+should be build using it.  
+* v 0.4.2 :Added small test for macking sure the Environment mocking works  
+* v 0.4.1 :Added flag force = true to allow adding Detectors and/or Notifiers even if application does not recognize as being of the same instance. This is to workaround the fact of other detectors (like 433 detector) which is built in another package, but node still does not acknowledge is of the same instance. Use at your own risk  
 * v 0.4.0 :Corrected some unit tests which were conflicting. It's now possible to send Raspistill images to Slack, making the application now possible to detect movement and send a picture of the intruder!
 * v 0.3.11:Adding capability of declaring filters via Config. WIP code for FileDetector for detecting new files in folder (from RaspistillNotifier)
 * v 0.3.10:Introduction of filters. Filters are entities which filter signals either: 

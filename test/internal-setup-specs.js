@@ -29,6 +29,42 @@ after(function(done) {
   done();
 });
 
+describe("When using t-modion-detector, ", function() {
+
+  it('I should be able to save the current Environment, Detectors and Notifiers into disk as a configuration file', function (done) {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test6.js");
+    main.StartWithConfig(alternativeConfig, ()=>{
+      main.saveAllToConfig("/test/config_test_my_saved_config.js", (status, message)=>{
+        //Check file exists
+        if (fs.existsSync('./test/config_test_my_saved_config.js')){
+          status.should.equal(0);
+          message.should.equal("Success");
+        } else {
+          should.fail();
+        }
+      })
+    });
+  });
+  it('if file exists should return an error', function (done) {
+    //Prepare
+    main.saveAllToConfig("/test/config_test_my_saved_config.js", (status, message)=>{
+      //Check file exists
+      status.should.equal(1);
+      message.should.equal("Error, file exists, if you want to overwrite it, use the force attribute");
+    })
+  });
+  it('when saving with force attribute if file exists should overwrite it', function (done) {
+    //Prepare
+    main.saveAllToConfig("/test/config_test_my_saved_config.js", (status, message)=>{
+      //Check file exists
+      status.should.equal(0);
+      message.should.equal("File exists, overwriting with new version");
+    }, true); //Force attribute
+  });
+});
+
 describe("After installing a new t-motion-detector, ", function() {
   /*it('a setup executable should run/exist (postinstall)', function (done) {
     //Disabled as this seems to always timeout

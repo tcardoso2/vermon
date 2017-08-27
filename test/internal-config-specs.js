@@ -338,7 +338,7 @@ describe("To be able to disable temporarily a Motion Detector..., ", function() 
       e.addChange(12);      
     });
   });
-  it('I should fail if the MD name Being deactivated does not exist', function () {
+  it('I should fail if the MD name being deactivated does not exist', function () {
     //Prepare
     try{
       main.DeactivateDetector("MD unexisting");

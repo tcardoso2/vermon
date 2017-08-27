@@ -88,7 +88,7 @@ function DeactivateDetector(name)
 {
   let d = GetMotionDetector(name);
   if (d) d.deactivate();
-  else throw new Error(`'${name}' does not exist.`);
+  else throw new Error(`Error: cannot find Detector with name '${name}'.`);
 }
 
 /**
@@ -160,7 +160,7 @@ function GetMotionDetector(name)
 {
   //It's assumed the number of motion detectors will be sufficiently small to be ok to iterate without major loss of efficiency
   return _.filter(motionDetectors, x => x.name === name)[0];
-  //lodash.filter(arr, { 'city': 'Amsterdam' } );
+  //Another alternative way: lodash.filter(motionDetectors, { 'name': 'Something' } );
 }
 
 /**
@@ -286,18 +286,19 @@ function _AddInstance(f, p, args){
     if (!AddNotifier(o)){
       if(!AddDetector(o)){
         if(!_InternalAddFilter(o)){
-          console.warn(`Object/class '${p}'' could not be added. Proceeding.`)
+          console.warn(`Object/class '${p}' could not be added. Proceeding.`)
         }
       }
     }
   }  
 }
+
 /**
- * @class: Entities.MotionDetector
- * @classDesc: A generic base class which creates a motion detector for surrounding environments \n
+ * A generic base class which creates a motion detector for surrounding environments \n
  * Collaborator: Environment
- * @desc: Test
- * @public
+ * @param {String} profile is the path of the config file to use
+ * @example     let alternativeConfig = new main.Config("config_test1.js");
+ * @returns {Object} the config object itself
  */
 class Config {
 
@@ -359,7 +360,7 @@ class Config {
       log.info(`Loaded ${file_name}`);
     } catch (e)
     {
-      console.log(`Warning:'${e.message}, will fallback to config file...`);
+      console.log(`Warning:'${e.message}', will fallback to config file...`);
       this.file = this.fallback;
       this.fileNotFound = true;
     }

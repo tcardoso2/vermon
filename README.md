@@ -105,16 +105,33 @@ profiles = {
     PIRMotionDetector: {
       pin: 17
     },
+    MotionDetector: [{
+      name: "MD 1"
+    },
+    {
+      name: "MD 2"
+    }],
     SlackNotifier: {
       name: "My Slack channel",
       key: "https://hooks.slack.com/services/<MySlackURL>"
-    }
+    },
+    HighPassFilter: [{
+      val : 8,
+      applyTo: "MD 1"
+    },
+    {
+      val : 5,
+      applyTo: "MD 2"
+    }]    
   }
 }
 
 exports.profiles = profiles;
 exports.default = profiles.default;
 ````
+In the example above Notice a Filters applicable to "MD 1" and "MD2" was also configured. It is possible
+to add MotionDetectors and Filters of the same instance by passing an array.  
+
 To access your Motion Detectors and Notifiers, use:
 ````
 var md = require('t-motion-detector');
