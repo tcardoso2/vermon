@@ -206,10 +206,10 @@ function GetMotionDetector(name)
 }
 
 /**
- * @func:
- * @example:
+ * Gets all the existing Filters present in the current context.
+ * @returns {object} an Array of Filter objects.
  * @public
-*/
+ */
 function GetFilters()
 {
   let result = [];
@@ -221,10 +221,9 @@ function GetFilters()
 }
 
 /**
- * @func:
- * @example:
+ * Resets the current context environment, notifiers and motion detectors.
  * @public
-*/
+ */
 function Reset()
 {
   notifiers = [];
@@ -233,10 +232,15 @@ function Reset()
 }
 
 /**
- * @func: Will start the motion detector
- * @example:
+ * Starts the current environment given a set of parameters (Old way of starting - it is preferrable)
+ * to use {StartWithConfig} instead.
+ * @param {object} params is a parameters object, any object which contains the following attributes: \n
+ * (1) an "environment" attribute with the {Environment} object to set; \n
+ * (2) an "initialMotionDetector" attribute with one {MotionDetector} object to set (does not allow several motion detectors); \n
+ * (3) an "initialNotifier" attribute with the {Notifier} object to set (does not allow several notifiers); \n
+ * @param {string} silent if set to true will not send an initial notification to notifiers when starting up (by default is set to false).
  * @public
-*/
+ */
 function Start(params, silent = false){
   log.info("Starting t-motion-detector with parameters...");
   //Sets the parameters first if they exist
@@ -274,10 +278,20 @@ function Start(params, silent = false){
 }
 
 /**
- * @func: Will start the motion detector based on the existing configuration
- * @example:
+ * Starts the current environment based on existing configuration. Use this method instead of {Start}
+ * @param {Config} configParams a parameter object of the {Config} instance.
+ * @param {Function} callback is a function which will be called after all initialization is done.
+ * The correct way of initializing the program is by puting the main code inside that callback.
+ * @examplelet myConfig = new main.Config("/test/config_test6.js");
+    main.StartWithConfig(myConfig, ()=>{
+      let n = main.GetNotifiers();
+      n[0].on('pushedNotification', function(message, text, data){
+        console.log("Some Notification happened!");
+      });
+      e.addChange(9); //Some change introduced      
+    });
  * @public
-*/
+ */
 function StartWithConfig(configParams, callback){
   log.info("Starting t-motion-detector with config parameters...");
   //Sets the parameters first if they exist
@@ -320,6 +334,15 @@ function StartWithConfig(configParams, callback){
 }
 
 //Internal function, given a factory, class name and arguments, instanciates it
+/**
+ * Internal function. Given a factory and an entity name (One of {Environment}, 
+ * {MotionDetector}, {Notifier}, or {Filter}) and arguments adds this instance
+ * to the current context
+ * @param {object} f is the factory instance.
+ * @param {object} p is an object name to instanciate.
+ * @param {Array} args is an array of arguments for the constructor invoke..
+ * @internal
+ */
 function _AddInstance(f, p, args){
   console.log(`Creating entity "${p}" with args ${args}...`);
   let o = f.instanciate(p, args);
@@ -393,7 +416,9 @@ class Config {
   {
     return process.cwd() + '/';
   }
-
+/**
+ * TODO:
+ */
   mapToFile(file_name, prepend_cwd = true)
   {
     try{
@@ -407,12 +432,16 @@ class Config {
       this.fileNotFound = true;
     }
   }
-  
+/**
+ * TODO:
+ */  
   isFallback()
   {
     return this.fileNotFound;
   }
-
+/**
+ * TODO:
+ */
   profile(name){
     if (name)
     {
@@ -428,28 +457,39 @@ class Config {
       return this.file.profiles["default"];
     }    
   }
-
+/**
+ * TODO:
+ */
   getProperty(profile_name, prop){
     //searches first in the file
     let file_val = this.profile(profile_name)[prop];
     let fallback_val = this.fallback.profiles[profile_name] ? this.fallback.profiles[profile_name][prop] : this.fallback.default[prop];
     return file_val ? file_val : fallback_val; 
   }
-
+/**
+ * TODO:
+ */
   slackHook(profile_name){
     return this.profile(profile_name).slack.hook;
   }
-  
+/**
+ * TODO:
+ */  
   slackAuth(profile_name){
     return this.profile(profile_name).slack.auth;
   }
   
   //TODO: Needs a better design, if keep adding extensions, I should not 
   //have to add additional methods here for each of the new extensions?
+/**
+ * TODO:
+ */
   raspistillOptions(profile_name){
     return this.getProperty(profile_name, "raspistill").options;
   }
-
+/**
+ * TODO:
+ */
   toString()
   {
     return this.file;
