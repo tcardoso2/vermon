@@ -17,7 +17,16 @@
 -   [Reset](#reset)
 -   [Start](#start)
 -   [StartWithConfig](#startwithconfig)
+-   [\_AddInstance](#_addinstance)
 -   [Config](#config)
+    -   [mapToFile](#maptofile)
+    -   [isFallback](#isfallback)
+    -   [profile](#profile)
+    -   [getProperty](#getproperty)
+    -   [slackHook](#slackhook)
+    -   [slackAuth](#slackauth)
+    -   [raspistillOptions](#raspistilloptions)
+    -   [toString](#tostring)
 -   [Entities](#entities)
 -   [Extensions](#extensions)
 -   [Filters](#filters)
@@ -140,45 +149,48 @@ Returns **any** a MotionDetector objects.
 
 ## GetFilters
 
-**Examples**
+Gets all the existing Filters present in the current context.
 
-```javascript
-:
-```
+Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** an Array of Filter objects.
 
 ## Reset
 
-**Examples**
-
-```javascript
-:
-```
+Resets the current context environment, notifiers and motion detectors.
 
 ## Start
 
+Starts the current environment given a set of parameters (Old way of starting - it is preferrable)
+to use {StartWithConfig} instead.
+
 **Parameters**
 
--   `params`  
--   `silent`   (optional, default `false`)
-
-**Examples**
-
-```javascript
-:
-```
+-   `params` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is a parameters object, any object which contains the following attributes: \\n
+    (1) an "environment" attribute with the {Environment} object to set; \\n
+    (2) an "initialMotionDetector" attribute with one {MotionDetector} object to set (does not allow several motion detectors); \\n
+    (3) an "initialNotifier" attribute with the {Notifier} object to set (does not allow several notifiers); \\n
+-   `silent` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** if set to true will not send an initial notification to notifiers when starting up (by default is set to false). (optional, default `false`)
 
 ## StartWithConfig
 
+Starts the current environment based on existing configuration. Use this method instead of {Start}
+
 **Parameters**
 
--   `configParams`  
--   `callback`  
+-   `configParams` **[Config](#config)** a parameter object of the {Config} instance.
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is a function which will be called after all initialization is done.
+    The correct way of initializing the program is by puting the main code inside that callback.
 
-**Examples**
+## \_AddInstance
 
-```javascript
-:
-```
+Internal function. Given a factory and an entity name (One of {Environment}, 
+{MotionDetector}, {Notifier}, or {Filter}) and arguments adds this instance
+to the current context
+
+**Parameters**
+
+-   `f` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the factory instance.
+-   `p` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is an object name to instanciate.
+-   `args` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** is an array of arguments for the constructor invoke..
 
 ## Config
 
@@ -196,6 +208,64 @@ let alternativeConfig = new main.Config("config_test1.js");
 ```
 
 Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the config object itself
+
+### mapToFile
+
+TODO:
+
+**Parameters**
+
+-   `file_name`  
+-   `prepend_cwd`   (optional, default `true`)
+
+### isFallback
+
+TODO:
+
+### profile
+
+TODO:
+
+**Parameters**
+
+-   `name`  
+
+### getProperty
+
+TODO:
+
+**Parameters**
+
+-   `profile_name`  
+-   `prop`  
+
+### slackHook
+
+TODO:
+
+**Parameters**
+
+-   `profile_name`  
+
+### slackAuth
+
+TODO:
+
+**Parameters**
+
+-   `profile_name`  
+
+### raspistillOptions
+
+TODO:
+
+**Parameters**
+
+-   `profile_name`  
+
+### toString
+
+TODO:
 
 ## Entities
 
