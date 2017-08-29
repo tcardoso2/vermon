@@ -1,7 +1,7 @@
 # Change log:
 
 ***
-* v 0.4.7 :TO-CONTINUE: Worked on saving config to disk
+* v 0.4.7 :TO-CONTINUE: Worked on saving config to disk. Adding documentation.
 * v 0.4.6 :Added new unit tests for saving new config file into disk, with force option.  
 * v 0.4.5 :Possible to now add on config more items of the same instance in the form of Filters  
 * v 0.4.4 :WIP on documentation (need to add details on config for Filters). Added ActivateMotionDetector and

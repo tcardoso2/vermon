@@ -15,7 +15,14 @@ let fs = require('fs')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
 var _ = require('lodash/core');
 
-//This function should stay internal to this module!
+/**
+ * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
+ * it fails silently (logs a warning message into the logger) and returns false. If there are no Detectors still
+ * returns true.
+ * @param {object} filter object to add. This function is internal
+ * @internal
+ * @returns {Boolean} true if the filters were binded to the existing detectors. 
+ */
 function _InternalAddFilter(filter = new filters.BaseFilter()){
   if (filter instanceof filters.BaseFilter)
   {
@@ -27,7 +34,13 @@ function _InternalAddFilter(filter = new filters.BaseFilter()){
   return false;
 }
 
-//This function should stay internal to this module!
+/**
+ * Adds an Environment into the current context. The environment needs to be if instance Environment, if not
+ * if fails silently, logs the error in the logger and returns false.
+ * @param {object} env is the Environment object to add. This function is internal
+ * @internal
+ * @returns {Boolean} true if the environment is successfully created.. 
+ */
 function _InternalAddEnvironment(env = new ent.Environment()){
   if (env instanceof ent.Environment)
   {
@@ -40,8 +53,12 @@ function _InternalAddEnvironment(env = new ent.Environment()){
 }
 
 /**
- * @function: Add descrition
- * @summary: Adds a Notifier to the current Environment
+ * Adds a Notifier to the current environment (binds to existing Detectors in {motionDetectors} variable).
+ * Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
+ * of the correct type, by setting force = true
+ * @param {object} notifier is the Notifier object to add.
+ * @param {object} template is the template message for the notifier, in case it triggers.
+ * @param {boolean} force can be set to true to push the notifier even if not of {BaseNotifier} instance
  * @public
  */
 function AddNotifier(notifier, template, force = false){
@@ -425,8 +442,17 @@ exports.GetNotifiers = GetNotifiers;
 exports.GetMotionDetectors = GetMotionDetectors;
 exports.GetMotionDetector = GetMotionDetector;
 exports.Reset = Reset;
+/**
+ * Exposes the Entities accessible
+ */
 exports.Entities = ent;
+/**
+ * Exposes the Extensions accessible
+ */
 exports.Extensions = ext;
+/**
+ * Exposes the Filters accessible
+ */
 exports.Filters = filters;
 exports.Start = Start;
 exports.StartWithConfig = StartWithConfig;
