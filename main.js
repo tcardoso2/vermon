@@ -1,7 +1,17 @@
-/**
- * @overview: To fill-in
- * @author: Tiago Cardoso
- */
+//
+// T-Motion-Detector:
+// Main module, containing the functions exposed by the API (See footer exports.xxx definitions).
+// Allows configuring, starting, adding/Removing an Environment, Motion Detectors and Notifiers
+// to the context.
+// @Collaborators:
+// - Entities.js: Defines all the Environment, Detectors and Notifier base classes;
+// - Extensions.js Extends the Entities classes into specialized ones, for instance, FileDetector;
+// - Filters.js: Defines the Detector Filters which can be used in the API (e.g. LowPassFilter, etc.)
+// - config.js: Strictly a static configuration (mostly JSON) file. Meant to keep static configuration,
+//              used mostly for initialization of the main program.
+// For more details see the documentation on those files
+// @author: Tiago Cardoso
+//
 
 let ent = require("./Entities.js");
 let filters = ent.Filters;
@@ -39,7 +49,7 @@ function _InternalAddFilter(filter = new filters.BaseFilter()){
  * if fails silently, logs the error in the logger and returns false.
  * @param {object} env is the Environment object to add. This function is internal
  * @internal
- * @returns {Boolean} true if the environment is successfully created.. 
+ * @returns {Boolean} true if the environment is successfully created.
  */
 function _InternalAddEnvironment(env = new ent.Environment()){
   if (env instanceof ent.Environment)
@@ -59,6 +69,7 @@ function _InternalAddEnvironment(env = new ent.Environment()){
  * @param {object} notifier is the Notifier object to add.
  * @param {object} template is the template message for the notifier, in case it triggers.
  * @param {boolean} force can be set to true to push the notifier even if not of {BaseNotifier} instance
+ * @returns {Boolean} true if the notifier is successfully created.
  * @public
  */
 function AddNotifier(notifier, template, force = false){
@@ -74,10 +85,17 @@ function AddNotifier(notifier, template, force = false){
 }
 
 /**
- * @func: Adds a detector or detectors (in form of array) to the environment
- * @example:
+ * Adds a detector or detectors (in form of array) to the {Environment} in the {motionDetectors} 
+ * internal variable.
+ * Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
+ * of the correct type, by setting force = true.
+ * Fails silently (returns false) if the detector is not of {MotionDetector} type, and logs the occurence.
+ * Fails hard (throws an Error) if there is no existing {Environment} set in the context at the runtime.
+ * @param {object} detector is the MotionDetector object to add.
+ * @param {boolean} force can be set to true to push the detector even if not of {MotionDetector} instance
+ * @returns {Boolean} true if the detector is successfully created.
  * @public
-*/
+ */
 function AddDetector(detector, force = false){
   if (force || (detector instanceof ent.MotionDetector))
   {
@@ -97,10 +115,11 @@ function AddDetector(detector, force = false){
 }
 
 /**
- * @func:
- * @example:
+ * Deactivates an existing detector by name.
+ * Fails hard (throws an Error) if a {MotionDetector} with that name is not found at the runtime.
+ * @param {string} name is the name of the {MotionDetector} to deactivate.
  * @public
-*/
+ */
 function DeactivateDetector(name)
 {
   let d = GetMotionDetector(name);
@@ -109,10 +128,11 @@ function DeactivateDetector(name)
 }
 
 /**
- * @func:
- * @example:
+ * Activates an existing detector by name.
+ * Fails hard (throws an Error) if a {MotionDetector} with that name is not found at the runtime.
+ * @param {string} name is the name of the {MotionDetector} to deactivate.
  * @public
-*/
+ */
 function ActivateDetector(name)
 {
   let d = GetMotionDetector(name);
@@ -121,58 +141,63 @@ function ActivateDetector(name)
 }
 
 /**
- * @func:
- * @example:
+ * Removes an existing notifier from the context.
+ * Does not fail if the notifier is not found.
+ * @param {object} notifier is the notifier instance to remove.
+ * @returns true if the notifier was found (and subsequently removed).
  * @public
-*/
+ */
 function RemoveNotifier(notifier){
-  var index = notifiers.indexOf(notifier);
+  let index = notifiers.indexOf(notifier);
   if (index > -1) {
   	notifiers[index].notify("Removing Notifier...");
-  	notifiers.splice(index, 1)
+  	notifiers.splice(index, 1);
+    return true;
   }
+  return false;
 }
 
-//Getters, setters
 /**
- * @func:
- * @example:
+ * Gets the object which represents the current Environment of the context.
+ * throws an Error if an environment does not exist in the context.
+ * @returns a Environment object.
  * @public
-*/
+ */
 function GetEnvironment()
 {
   if (environment == undefined) {
   	throw new Error('Environment does not exist. Please run the Start() function first or one of its overrides.');
   }
-
   return environment;	
 }
 
 /**
- * @func:
- * @example:
+ * Gets the notifiers array present in the context.
+ * @returns an Array of Notifier objects.
  * @public
-*/
+ */
 function GetNotifiers()
 {
   return notifiers;
 }
 
 /**
- * @func:
- * @example:
+ * Gets the Motion Detectors array present in the context.
+ * @returns an Array of MotionDetector objects.
  * @public
-*/
+ */
 function GetMotionDetectors()
 {
   return motionDetectors;
 }
 
 /**
- * @func:
- * @example:
+ * Gets the Motion Detectors with the given name.
+ * Will throw an exception if there is no Motion detector with such name.
+ * @param {string} name is the name of the MotionDetector instance to get.
+ * @returns a MotionDetector objects.
  * @public
-*/
+ */
 function GetMotionDetector(name)
 {
   //It's assumed the number of motion detectors will be sufficiently small to be ok to iterate without major loss of efficiency

@@ -2,7 +2,6 @@
 
 ### Table of Contents
 
--   [ent](#ent)
 -   [\_InternalAddFilter](#_internaladdfilter)
 -   [\_InternalAddEnvironment](#_internaladdenvironment)
 -   [AddNotifier](#addnotifier)
@@ -27,14 +26,6 @@
 -   [MotionDetector](#motiondetector)
 -   [BaseFilter](#basefilter)
 
-## ent
-
-: To fill-in
-
-**Meta**
-
--   **author**: : Tiago Cardoso
-
 ## \_InternalAddFilter
 
 Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
@@ -56,7 +47,7 @@ if fails silently, logs the error in the logger and returns false.
 
 -   `env` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the Environment object to add. This function is internal (optional, default `new ent.Environment()`)
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the environment is successfully created..
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the environment is successfully created.
 
 ## AddNotifier
 
@@ -70,90 +61,82 @@ of the correct type, by setting force = true
 -   `template` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the template message for the notifier, in case it triggers.
 -   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
 
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the notifier is successfully created.
+
 ## AddDetector
+
+Adds a detector or detectors (in form of array) to the {Environment} in the {motionDetectors} 
+internal variable.
+Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
+of the correct type, by setting force = true.
+Fails silently (returns false) if the detector is not of {MotionDetector} type, and logs the occurence.
+Fails hard (throws an Error) if there is no existing {Environment} set in the context at the runtime.
 
 **Parameters**
 
--   `detector`  
--   `force`   (optional, default `false`)
+-   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector object to add.
+-   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
 
-**Examples**
-
-```javascript
-:
-```
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the detector is successfully created.
 
 ## DeactivateDetector
 
+Deactivates an existing detector by name.
+Fails hard (throws an Error) if a {MotionDetector} with that name is not found at the runtime.
+
 **Parameters**
 
--   `name`  
-
-**Examples**
-
-```javascript
-:
-```
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the name of the {MotionDetector} to deactivate.
 
 ## ActivateDetector
 
+Activates an existing detector by name.
+Fails hard (throws an Error) if a {MotionDetector} with that name is not found at the runtime.
+
 **Parameters**
 
--   `name`  
-
-**Examples**
-
-```javascript
-:
-```
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the name of the {MotionDetector} to deactivate.
 
 ## RemoveNotifier
 
+Removes an existing notifier from the context.
+Does not fail if the notifier is not found.
+
 **Parameters**
 
--   `notifier`  
+-   `notifier` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the notifier instance to remove.
 
-**Examples**
-
-```javascript
-:
-```
+Returns **any** true if the notifier was found (and subsequently removed).
 
 ## GetEnvironment
 
-**Examples**
+Gets the object which represents the current Environment of the context.
+throws an Error if an environment does not exist in the context.
 
-```javascript
-:
-```
+Returns **any** a Environment object.
 
 ## GetNotifiers
 
-**Examples**
+Gets the notifiers array present in the context.
 
-```javascript
-:
-```
+Returns **any** an Array of Notifier objects.
 
 ## GetMotionDetectors
 
-**Examples**
+Gets the Motion Detectors array present in the context.
 
-```javascript
-:
-```
+Returns **any** an Array of MotionDetector objects.
 
 ## GetMotionDetector
 
+Gets the Motion Detectors with the given name.
+Will throw an exception if there is no Motion detector with such name.
+
 **Parameters**
 
--   `name`  
+-   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the name of the MotionDetector instance to get.
 
-**Examples**
-
-```javascript
-:
-```
+Returns **any** a MotionDetector objects.
 
 ## GetFilters
 
