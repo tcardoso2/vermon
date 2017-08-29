@@ -235,7 +235,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     done();
   });
 
-  it('TODO', function (done) {
+  it('should have a callback sending as arguments, the entity, motion detectors and notifier objects', function (done) {
     //Prepare
 
     var n = new ent.BaseNotifier();
