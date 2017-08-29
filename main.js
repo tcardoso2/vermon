@@ -282,7 +282,7 @@ function Start(params, silent = false){
  * @param {Config} configParams a parameter object of the {Config} instance.
  * @param {Function} callback is a function which will be called after all initialization is done.
  * The correct way of initializing the program is by puting the main code inside that callback.
- * @examplelet myConfig = new main.Config("/test/config_test6.js");
+ * @example let myConfig = new main.Config("/test/config_test6.js");
     main.StartWithConfig(myConfig, ()=>{
       let n = main.GetNotifiers();
       n[0].on('pushedNotification', function(message, text, data){

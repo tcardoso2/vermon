@@ -180,6 +180,19 @@ Starts the current environment based on existing configuration. Use this method 
 -   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is a function which will be called after all initialization is done.
     The correct way of initializing the program is by puting the main code inside that callback.
 
+**Examples**
+
+```javascript
+let myConfig = new main.Config("/test/config_test6.js");
+main.StartWithConfig(myConfig, ()=>{
+let n = main.GetNotifiers();
+n[0].on('pushedNotification', function(message, text, data){
+console.log("Some Notification happened!");
+});
+e.addChange(9); //Some change introduced      
+});
+```
+
 ## \_AddInstance
 
 Internal function. Given a factory and an entity name (One of {Environment}, 
