@@ -496,6 +496,32 @@ class Config {
   }
 }
 
+/**
+ * Saves all the Environment, Detector, Notifiers and Filters information into a config file
+ * @param {String} src is the path of the config file to use
+ * @param {Function} callback is the callback function to call once the Save is all done, it passes
+ * status and message as arguments to the function.
+ * @param {Boolean} force true if the user wants to overwrite an already existing file.
+ */
+function SaveAllToConfig(src, callback, force = false){
+  let status = 1;
+  let message;
+
+  if(fs.existsSync(src)){
+    message = "Error, file exists, if you want to overwrite it, use the force attribute";
+  }
+
+  fs.writeFile(src, "", function(err) {
+    if(err) {
+      return console.log(`ERROR: ${err}`);
+    } else {
+      status = 0;
+      message = "Success";
+    }
+    callback(status, message);
+  });
+}
+
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
 exports.ActivateDetector = ActivateDetector;
@@ -521,5 +547,6 @@ exports.Extensions = ext;
 exports.Filters = filters;
 exports.Start = Start;
 exports.StartWithConfig = StartWithConfig;
+exports.SaveAllToConfig = SaveAllToConfig;
 exports.Config = Config;
 exports.Log = log;

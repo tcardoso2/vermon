@@ -1,7 +1,8 @@
 # Change log:
 
 ***
-* v 0.4.7 :TO-CONTINUE: Worked on saving config to disk. Adding documentation. Added one more test to assert that a callback is called after starting main program, sending as args the Environment, Motion Detectors and Notifiers.
+* v 0.4.8 :Continuing SaveAlltoConfig Unit tests. 
+* v 0.4.7 :Worked on saving config to disk. Adding documentation. Added one more test to assert that a callback is called after starting main program, sending as args the Environment, Motion Detectors and Notifiers. Attached code of conduct. Passed first tests on Save Config function (WIP);
 * v 0.4.6 :Added new unit tests for saving new config file into disk, with force option.  
 * v 0.4.5 :Possible to now add on config more items of the same instance in the form of Filters  
 * v 0.4.4 :WIP on documentation (need to add details on config for Filters). Added ActivateMotionDetector and

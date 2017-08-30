@@ -29,38 +29,48 @@ after(function(done) {
   done();
 });
 
-describe("When using t-modion-detector, ", function() {
+describe("When using t-motion-detector, ", function() {
 
   it('I should be able to save the current Environment, Detectors and Notifiers into disk as a configuration file', function (done) {
     //Prepare
     main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test6.js");
+    let alternativeConfig = new main.Config("/test/config_test4.js");
+    //Make sure the temporary file is deleted
+    fs.unlink('./test/config_test_my_saved_config.js');
     main.StartWithConfig(alternativeConfig, ()=>{
-      main.saveAllToConfig("/test/config_test_my_saved_config.js", (status, message)=>{
+      main.SaveAllToConfig("./test/config_test_my_saved_config.js", (status, message)=>{
         //Check file exists
         if (fs.existsSync('./test/config_test_my_saved_config.js')){
-          status.should.equal(0);
-          message.should.equal("Success");
         } else {
           should.fail();
         }
+        status.should.equal(0);
+        message.should.equal("Success");
+        done();
       })
     });
   });
+  it('The file should equal the contents of the initially loaded config file', function (done) {
+    let data1 = fs.readFileSync('./test/config_test4.js');
+    let data2 = fs.readFileSync('./test/config_test_my_saved_config.js');
+    data1.toString().should.equal(data2.toString());
+  });
   it('if file exists should return an error', function (done) {
     //Prepare
-    main.saveAllToConfig("/test/config_test_my_saved_config.js", (status, message)=>{
+    main.SaveAllToConfig("./test/config_test_my_saved_config.js", (status, message)=>{
       //Check file exists
       status.should.equal(1);
       message.should.equal("Error, file exists, if you want to overwrite it, use the force attribute");
+      done();
     })
   });
   it('when saving with force attribute if file exists should overwrite it', function (done) {
     //Prepare
-    main.saveAllToConfig("/test/config_test_my_saved_config.js", (status, message)=>{
+    main.SaveAllToConfig("./test/config_test_my_saved_config.js", (status, message)=>{
       //Check file exists
       status.should.equal(0);
       message.should.equal("File exists, overwriting with new version");
+      done();
     }, true); //Force attribute
   });
 });

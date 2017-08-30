@@ -27,6 +27,7 @@
     -   [slackAuth](#slackauth)
     -   [raspistillOptions](#raspistilloptions)
     -   [toString](#tostring)
+-   [SaveAllToConfig](#savealltoconfig)
 -   [Entities](#entities)
 -   [Extensions](#extensions)
 -   [Filters](#filters)
@@ -279,6 +280,17 @@ TODO:
 ### toString
 
 TODO:
+
+## SaveAllToConfig
+
+Saves all the Environment, Detector, Notifiers and Filters information into a config file
+
+**Parameters**
+
+-   `src` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the path of the config file to use
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is the callback function to call once the Save is all done, it passes
+    status and message as arguments to the function.
+-   `force` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the user wants to overwrite an already existing file. (optional, default `false`)
 
 ## Entities
 

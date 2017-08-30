@@ -343,7 +343,7 @@ describe("To be able to disable temporarily a Motion Detector..., ", function() 
     try{
       main.DeactivateDetector("MD unexisting");
     } catch(e){
-      e.message.should.equal("'MD unexisting' does not exist.")
+      e.message.should.equal("Error: cannot find Detector with name 'MD unexisting'.")
       return;
     }
     should.fail();
