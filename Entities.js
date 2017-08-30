@@ -4,6 +4,7 @@
 //import { mixin } from 'core-decorators';
 let events = require("events");
 let filters = require("./Filters.js");
+let ko = require("knockout");
 
 /**
  * @class: Entities.Environment
@@ -109,6 +110,21 @@ class Environment{
     throw new Error("Not Implemented.");    
   }
 }
+
+/*TODO: Control the JSON output?*/
+Environment.prototype.toJSON = function() {
+  let copy = ko.toJS(this); //easy way to get a clean copy
+  let props = Object.getOwnPropertyNames(copy);
+  for (let i in props){
+    if (props[i].startsWith("_"))
+    {
+      delete copy[props[i]];
+    }
+  }
+  delete copy.motionDetectors; //remove an extra property
+  delete copy.filters; //remove an extra property
+  return copy; //return the copy to be serialized
+};
 
 /**
  * @class: Entities.MotionDetector
