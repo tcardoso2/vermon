@@ -43,4 +43,4 @@ photos
 out
 docs
 *sublime-*
-test/*_test_my_saved_config.js
+test/*_test_my_saved_config*.js
