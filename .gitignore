@@ -32,6 +32,7 @@ jspm_packages
 
 # Optional npm cache directory
 .npm
+.npmrc
 
 # Optional REPL history
 .node_repl_history
@@ -43,4 +44,7 @@ photos
 out
 docs
 *sublime-*
-test/*_test_my_saved_config*.js
+test/*_test_my_saved_config*
+
+# Packages
+*.tgz

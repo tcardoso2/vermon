@@ -106,6 +106,19 @@ describe("When creating an extension, ", function() {
       done();
     });
   });
+  it('From the plugin object, it should be able to access the t-motion-detector Entities via the "$" accessor.', function (done) {
+     //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test9.js");
+
+    let pluginObj = { name: "My Plugin" }
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      main.AddPlugin(pluginObj);
+      main.Plugins["My Plugin"].$.should.be.eql(main);
+    });
+    done();
+  });
   it('The plugin object must implement a PreAddPlugin function.', function (done) {
      //Prepare
     main.Reset();
