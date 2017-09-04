@@ -534,6 +534,7 @@ function SaveAllToConfig(src, callback, force = false){
   } else {
     if (force){
       return resultWarning("File exists, overwriting with new version");
+
     }
     else {
       let contents = addConfigDefinitions(_InternalSerializeCurrentContext());
