@@ -25,6 +25,7 @@ let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
 var _ = require('lodash/core');
+let plugins = {};
 
 /**
  * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
@@ -227,9 +228,12 @@ function GetFilters()
  */
 function Reset()
 {
+  console.log("Reseting environment...");
   notifiers = [];
   environment = undefined;
   motionDetectors = [];
+  plugins = {};
+  console.log("Done Reseting environment.");
 }
 
 /**
@@ -600,6 +604,86 @@ function _InternalSerializeCurrentContext(){
   return JSON.stringify(profile);
 }
 
+/**
+ * Adds an Extention plugin to the library
+ * @param {Object} ext_module is the actual module we are extending.
+ * @return {boolean} True the plugin was successfully added.
+ */
+function AddPlugin(ext_module){
+
+  let runPreWorkflowFunctions = function(){
+    if(!ext_module.exports.PreAddPlugin) throw new Error("Error: PreAddPlugin function must be implemented.");
+    ext_module.exports.PreAddPlugin();
+  }
+
+  let runPostWorkflowFunctions = function(){
+    if(!plugins[ext_module.id].PostAddPlugin) throw new Error("Error: PostAddPlugin function must be implemented.");
+    plugins[ext_module.id].PostAddPlugin();
+  }
+
+  //Checks the extension module is not null
+  if(!ext_module) throw new Error("Error: AddPlugin requires a Plugin module as first argument.");
+  //Checks that the extension module has an id
+  if(!ext_module.id) throw new Error("Error: The plugin object does not have a valid 'id' property.");
+  //Cheks that there is no existing extension module with the same name
+  if(plugins[ext_module.id]) throw new Error(`Error: A plugin object with id '${ext_module.id}' already exists.`);
+
+  //Checks if the module exports functions
+  if(!ext_module.exports)
+  {
+    throw new Error(`Error: Does not seem to be a valid module.`);    
+  }
+  else {
+
+    runPreWorkflowFunctions();
+    //Adds the module
+    plugins[ext_module.id] = ext_module.exports;
+
+    //stores a reference of the exported functions of the main library in the object
+    plugins[ext_module.id].$ = module.exports;
+    console.log("Added Plugin", plugins);
+    runPostWorkflowFunctions();
+
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Removes an existing Extention plugin from the library
+ * @param {string} ext_module_id is the id of the module to remove.
+ * @return {boolean} True the plugin was successfully removed.
+ */
+function RemovePlugin(ext_module_id){
+
+  let copy = plugins[ext_module_id];
+
+  let runPreWorkflowFunctions = function(){
+    if(!plugins[ext_module_id].PreRemovePlugin) throw new Error("Error: PreRemovePlugin function must be implemented.");
+    plugins[ext_module_id].PreRemovePlugin();
+  }
+
+  let runPostWorkflowFunctions = function(){
+    if(!copy.PostRemovePlugin) throw new Error("Error: PostRemovePlugin function must be implemented.");
+    copy.PostRemovePlugin();
+  }
+
+  runPreWorkflowFunctions();
+  delete plugins[ext_module_id];
+  console.log("Removed Plugin", ext_module_id);
+  runPostWorkflowFunctions();
+
+  return true;
+}
+
+/**
+ * Gets the existing extension plugins added to the library
+ * @return {object} the plugins object; 
+ */
+function GetPlugins(){
+  return plugins;
+}
+
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
 exports.ActivateDetector = ActivateDetector;
@@ -628,3 +712,7 @@ exports.StartWithConfig = StartWithConfig;
 exports.SaveAllToConfig = SaveAllToConfig;
 exports.Config = Config;
 exports.Log = log;
+//Plugin management functions
+exports.AddPlugin = AddPlugin;
+exports.RemovePlugin = RemovePlugin;
+exports.GetPlugins = GetPlugins;

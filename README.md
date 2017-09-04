@@ -181,13 +181,8 @@ Extend your own motion detector:
 More info coming soon!
 
 ***
-Events: 
-More info coming soon!
-
-***
 Unit tests: 
 t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go.
-
 
 ## Links
   - [ChangeLog](https://github.com/tcardoso2/t-motion-detector/blob/master/CHANGELOG.md)  

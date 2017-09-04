@@ -1,8 +1,8 @@
 # Change log:
 
 ***
-* v 0.4.9 :Starting to create support for extending the t-motion-detector library. Till now the extension points are not well defined. The intention is to have clear steps for extending (e.g. will affect other
-existing packages t-motion-detector-433 and t-motion-detector-cli)
+* v 0.4.9 :Created basic support for extending the t-motion-detector library. Till now the extension points are not well defined. The intention is to have clear steps for extending (e.g. will affect other
+existing packages t-motion-detector-433 and t-motion-detector-cli). Added documentation on it (WIP). See t-motion-detector-cli package to see how that plugin is created.
 * v 0.4.8 :Function SaveAllToConfig now allows saving configuration to disk, added unit tests and documentation.
 * v 0.4.7 :Worked on saving config to disk. Adding documentation. Added one more test to assert that a callback is called after starting main program, sending as args the Environment, Motion Detectors and Notifiers. Attached code of conduct. Passed first tests on Save Config function (WIP);
 * v 0.4.6 :Added new unit tests for saving new config file into disk, with force option.  
