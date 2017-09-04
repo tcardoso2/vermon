@@ -29,7 +29,7 @@ after(function(done) {
   done();
 });
 
-describe("When creating an extention, ", function() {
+describe("When creating an extension, ", function() {
   it('The developer should link both libraries using the AddPlugin function.', function (done) {
      //Prepare
     main.Reset();
@@ -104,6 +104,79 @@ describe("When creating an extention, ", function() {
       main.RemovePlugin("My Plugin");
       main.Plugins["My Plugin"].should.equal(undefined);
       done();
+    });
+  });
+  it('The plugin object must implement a PreAddPlugin function.', function (done) {
+     //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test9.js");
+
+    let pluginObj = { name: "My Plugin" };
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      try{
+        main.AddPlugin(pluginObj);
+      } catch(e){
+        e.message.should.equal("Error: PreAddPlugin function must be implemented.");
+        done();
+        return;
+      }
+      should.fail();
+    });
+  });
+  it('The plugin object must implement a PostAddPlugin function.', function (done) {
+     //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test9.js");
+
+    let pluginObj = { name: "My Plugin", PreAddPlugin: function(){} };
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      try{
+        main.AddPlugin(pluginObj);
+      } catch(e){
+        e.message.should.equal("Error: PostAddPlugin function must be implemented.");
+        done();
+        return;
+      }
+      should.fail();
+    });
+  });
+  it('The plugin object must implement a PreRemovePlugin function.', function (done) {
+     //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test9.js");
+
+    let pluginObj = { name: "My Plugin", PreAddPlugin: function(){}, PostAddPlugin: function(){} };
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      try{
+        main.AddPlugin(pluginObj);
+      } catch(e){
+        e.message.should.equal("Error: PreRemovePlugin function must be implemented.");
+        done();
+        return;
+      }
+      should.fail();
+    });
+  });
+  it('The plugin object must implement a PostRemovePlugin function.', function (done) {
+     //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test9.js");
+
+    let pluginObj = { name: "My Plugin", PreAddPlugin: function(){}, PostAddPlugin: function(){}, PreRemovePlugin: function(){} };
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      try{
+        main.AddPlugin(pluginObj);
+        main.RemovePlugin("My Plugin");
+      } catch(e){
+        e.message.should.equal("Error: PostRemovePlugin function must be implemented.");
+        done();
+        return;
+      }
+      should.fail();
     });
   });
 });
