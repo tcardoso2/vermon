@@ -461,6 +461,7 @@ class Config {
   }
 /**
  * TODO:
+ * @returns {String} the 
  */
   getProperty(profile_name, prop){
     //searches first in the file
@@ -469,13 +470,17 @@ class Config {
     return file_val ? file_val : fallback_val; 
   }
 /**
- * TODO:
+ * Direct assessor to the slackHook ({SlackMotionDetector}), if that exists on the config file
+ * @param {String} profile_name, the name of the profile to lookup into (default is "default")
+ * @returns {String} the slackhook string
  */
   slackHook(profile_name){
     return this.profile(profile_name).slack.hook;
   }
 /**
- * TODO:
+ * Direct assessor to the slackAuth ({SlackMotionDetector}), if that exists on the config file
+ * @param {String} profile_name, the name of the profile to lookup into (default is "default")
+ * @returns {String} profile_name, the slackhook string
  */  
   slackAuth(profile_name){
     return this.profile(profile_name).slack.auth;
@@ -490,7 +495,8 @@ class Config {
     return this.getProperty(profile_name, "raspistill").options;
   }
 /**
- * TODO:
+ * Returns the string path of the Config file the current object points to.
+ * @returns {String} the string representation, in this case the file record pointing to
  */
   toString()
   {
@@ -535,7 +541,6 @@ function SaveAllToConfig(src, callback, force = false){
   } else {
     if (force){
       return resultWarning("File exists, overwriting with new version");
-
     }
     else {
       let contents = addConfigDefinitions(_InternalSerializeCurrentContext());
@@ -554,8 +559,10 @@ function SaveAllToConfig(src, callback, force = false){
 }
 
 /**
- * Serializes the current Context into the format matching the "profile" object of the config file
+ * Internal function which serializes the current Context into the format matching the "profile" object 
+ * of the config file.
  * @returns {object} Returns a "profile" object in JSON.stringify format
+ * @internal
  */
 function _InternalSerializeCurrentContext(){
   let profile = { default: {} };
@@ -586,7 +593,6 @@ function _InternalSerializeCurrentContext(){
   }
 
   serializeEntity(GetEnvironment());
-  //Continue from here, array should be serialized properly, it is serializing as "Array"
   serializeArray(GetMotionDetectors());
   serializeArray(GetNotifiers());
   serializeArray(GetFilters()); 

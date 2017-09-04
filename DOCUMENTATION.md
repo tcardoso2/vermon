@@ -28,6 +28,7 @@
     -   [raspistillOptions](#raspistilloptions)
     -   [toString](#tostring)
 -   [SaveAllToConfig](#savealltoconfig)
+-   [\_InternalSerializeCurrentContext](#_internalserializecurrentcontext)
 -   [Entities](#entities)
 -   [Extensions](#extensions)
 -   [Filters](#filters)
@@ -178,15 +179,15 @@ Starts the current environment based on existing configuration. Use this method 
 **Parameters**
 
 -   `configParams` **[Config](#config)** a parameter object of the {Config} instance.
--   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is a function which will be called after all initialization is done.
+-   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is a function which will be called after all initialization is done.\\n
+    args passed to that callback function, are: Environment, MotionDetectors, Notifiers and Filters objects.
     The correct way of initializing the program is by puting the main code inside that callback.
 
 **Examples**
 
 ```javascript
 let myConfig = new main.Config("/test/config_test6.js");
-main.StartWithConfig(myConfig, ()=>{
-let n = main.GetNotifiers();
+main.StartWithConfig(myConfig, (e,d,n,f)=>{
 n[0].on('pushedNotification', function(message, text, data){
 console.log("Some Notification happened!");
 });
@@ -289,8 +290,16 @@ Saves all the Environment, Detector, Notifiers and Filters information into a co
 
 -   `src` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the path of the config file to use
 -   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is the callback function to call once the Save is all done, it passes
-    status and message as arguments to the function.
+    status and message as arguments to the function: \\m
+    status = 0: Successfully has performed the action.
+    status = 1: Error: File exists already.
 -   `force` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the user wants to overwrite an already existing file. (optional, default `false`)
+
+## \_InternalSerializeCurrentContext
+
+Serializes the current Context into the format matching the "profile" object of the config file
+
+Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Returns a "profile" object in JSON.stringify format
 
 ## Entities
 
