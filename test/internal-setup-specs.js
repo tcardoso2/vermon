@@ -29,49 +29,98 @@ after(function(done) {
   done();
 });
 
+var src_template = './test/config_test_my_saved_config.js';
 describe("When using t-motion-detector, ", function() {
 
   it('I should be able to save the current Environment, Detectors and Notifiers into disk as a configuration file', function (done) {
     //Prepare
     main.Reset();
+    let src_save = src_template.replace("config", "1");
     let alternativeConfig = new main.Config("/test/config_test4.js");
     //Make sure the temporary file is deleted
-    fs.unlink('./test/config_test_my_saved_config.js');
+    if (fs.existsSync(src_save)) fs.unlink(src_save);
     main.StartWithConfig(alternativeConfig, ()=>{
-      main.SaveAllToConfig("./test/config_test_my_saved_config.js", (status, message)=>{
+      main.SaveAllToConfig(src_save, (status, message)=>{
         //Check file exists
-        if (fs.existsSync('./test/config_test_my_saved_config.js')){
+        if (fs.existsSync(src_save)){
         } else {
           should.fail();
         }
         status.should.equal(0);
         message.should.equal("Success");
         done();
-      })
+      });
     });
-  });
-  it('The file should equal the contents of the initially loaded config file', function (done) {
-    let data1 = fs.readFileSync('./test/config_test4.js');
-    let data2 = fs.readFileSync('./test/config_test_my_saved_config.js');
-    data1.toString().should.equal(data2.toString());
   });
   it('if file exists should return an error', function (done) {
     //Prepare
-    main.SaveAllToConfig("./test/config_test_my_saved_config.js", (status, message)=>{
-      //Check file exists
-      status.should.equal(1);
-      message.should.equal("Error, file exists, if you want to overwrite it, use the force attribute");
-      done();
-    })
+    main.Reset();
+    let src_save = src_template.replace("config", "2");
+    let alternativeConfig = new main.Config("/test/config_test4.js");
+    //Make sure the temporary file is deleted
+    if (fs.existsSync(src_save.replace("_", "2"))) fs.unlink(src_save);
+    main.StartWithConfig(alternativeConfig, ()=>{
+      main.SaveAllToConfig(src_save, (status, message)=>{
+        //Saving second time
+        main.SaveAllToConfig(src_save, (status, message)=>{
+          status.should.equal(1);
+          message.should.equal("Error: File exists, if you want to overwrite it, use the force attribute");
+          done();
+        });
+      });
+    });
   });
   it('when saving with force attribute if file exists should overwrite it', function (done) {
     //Prepare
-    main.SaveAllToConfig("./test/config_test_my_saved_config.js", (status, message)=>{
-      //Check file exists
-      status.should.equal(0);
-      message.should.equal("File exists, overwriting with new version");
-      done();
-    }, true); //Force attribute
+    main.Reset();
+    let src_save = src_template.replace("config", "3");
+    let alternativeConfig = new main.Config("/test/config_test4.js");
+    //Make sure the temporary file is deleted
+    if (fs.existsSync(src_save)) fs.unlink(src_save);
+    main.StartWithConfig(alternativeConfig, ()=>{
+      main.SaveAllToConfig(src_save, (status, message)=>{
+        //Saving second time
+        main.SaveAllToConfig(src_save, (status, message)=>{
+          message.should.equal("Warn: File exists, overwriting with new version");
+          status.should.equal(0);
+          done();
+        }, true); //Force attribute
+      });
+    });
+  });
+  it('The file should equal the contents of the initially loaded config file', function (done) {
+    this.timeout(4000);
+    main.Reset();
+    let src_save = src_template.replace("config", "4");
+    let alternativeConfig = new main.Config("/test/config_test4.js");
+    //Make sure the temporary file is deleted
+    if (fs.existsSync(src_save)) fs.unlink(src_save);
+    let data1, data2;
+    let ctx = { e: {}, d: {}, n: {}, f: {}};
+    main.StartWithConfig(alternativeConfig, ()=>{
+      ctx.e = main.GetEnvironment();
+      ctx.d = main.GetMotionDetectors();
+      ctx.n = main.GetNotifiers();
+      ctx.f = main.GetFilters();
+      main.SaveAllToConfig(src_save, (status, message)=>{
+        data1 = fs.readFileSync(src_save);
+        main.Reset();
+        main.StartWithConfig(new main.Config(src_save.replace(".","")), ()=>{
+          console.log(ctx.e);
+          console.log(main.GetEnvironment());
+          ctx.e.name.should.equal(main.GetEnvironment().name);
+          ctx.d.length.should.equal(main.GetMotionDetectors().length);
+          ctx.n[0].name.should.equal(main.GetNotifiers()[0].name);
+          ctx.f.length.should.eql(main.GetFilters().length);
+
+          main.SaveAllToConfig(src_save.replace("config", "config2"), (status, message)=>{
+            let data2 = fs.readFileSync(src_save.replace("config", "config2"));
+            data1.toString().should.equal(data2.toString());
+            done();
+          });
+        });
+      });
+    });
   });
 });
 

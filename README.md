@@ -191,5 +191,6 @@ t-motion-detector uses mocha unit tests to test the detector, notifier and envir
 
 ## Links
   - [ChangeLog](https://github.com/tcardoso2/t-motion-detector/blob/master/CHANGELOG.md)  
-  - [Documentation](https://github.com/tcardoso2/t-motion-detector/blob/master/DOCUMENTATION.md)  
+  - [Documentation](https://github.com/tcardoso2/t-motion-detector/blob/master/DOCUMENTATION.md) 
+  - [Code of Conduct](https://github.com/tcardoso2/t-motion-detector/blob/master/CODE_OF_CONDUCT.md)   
   - [Related Packages](https://www.npmjs.com/package/t-motion-detector-433)  

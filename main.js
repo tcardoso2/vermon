@@ -20,6 +20,7 @@ let notifiers = [];
 let environment;
 let motionDetectors = [];
 let config;
+let ko = require("knockout");
 let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
@@ -500,26 +501,74 @@ class Config {
  * Saves all the Environment, Detector, Notifiers and Filters information into a config file
  * @param {String} src is the path of the config file to use
  * @param {Function} callback is the callback function to call once the Save is all done, it passes
- * status and message as arguments to the function.
+ * status and message as arguments to the function: \m
+ * status = 0: Successfully has performed the action.
+ * status = 1: Error: File exists already.
  * @param {Boolean} force true if the user wants to overwrite an already existing file.
  */
 function SaveAllToConfig(src, callback, force = false){
   let status = 1;
   let message;
 
-  if(fs.existsSync(src)){
-    message = "Error, file exists, if you want to overwrite it, use the force attribute";
+  resultError = function(message){
+    message = `Error: ${message}`
+    log.error(message);
+    callback(1, message);
   }
 
-  fs.writeFile(src, "", function(err) {
-    if(err) {
-      return console.log(`ERROR: ${err}`);
-    } else {
-      status = 0;
-      message = "Success";
+  resultWarning = function(message){
+    message = `Warn: ${message}`;
+    log.warning(message);
+    callback(0, message);
+  }
+
+  addConfigDefinitions = function(jsonContent){
+    return jsonContent = "profiles = " +
+      jsonContent +
+      "\nexports.profiles = profiles;" +
+      "\nexports.default = profiles.default;";
+  }
+
+  if(fs.existsSync(src) && !force){
+    return resultError("File exists, if you want to overwrite it, use the force attribute")
+  } else {
+    if (force){
+      return resultWarning("File exists, overwriting with new version");
     }
-    callback(status, message);
-  });
+    else {
+      let contents = addConfigDefinitions(_InternalSerializeCurrentContext());
+      fs.writeFile(src, contents, function(err) {
+        if(err) {
+          return resultError(err);
+        } else {
+          status = 0;
+          message = "Success";
+        }
+        callback(status, message);
+      });
+      return;
+    }
+  }
+}
+
+/**
+ * Serializes the current Context into the format matching the "profile" object of the config file
+ * @returns {object} Returns a "profile" object in JSON.stringify format
+ */
+function _InternalSerializeCurrentContext(){
+  let profile = { default: {} };
+
+  serializeEntity = function (ent) {
+    profile.default[ent.constructor.name] = ent;   
+  }
+
+  serializeEntity(GetEnvironment());
+  //Continue from here, array should be serialized properly, it is serializing as "Array"
+  serializeEntity(GetNotifiers());
+  serializeEntity(GetMotionDetectors());
+  serializeEntity(GetFilters()); 
+    
+  return JSON.stringify(profile);
 }
 
 exports.AddNotifier = AddNotifier;
