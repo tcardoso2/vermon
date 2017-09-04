@@ -558,15 +558,25 @@ function SaveAllToConfig(src, callback, force = false){
 function _InternalSerializeCurrentContext(){
   let profile = { default: {} };
 
+  //Separate this function into another utils library.
   serializeEntity = function (ent) {
-    profile.default[ent.constructor.name] = ent;   
+    if (ent.constructor.name == "Array"){
+      serializeArray();
+    }
+    else{
+      profile.default[ent.constructor.name] = ent;  
+    } 
+  }
+
+  serializeArray = function (ent){
+    //
   }
 
   serializeEntity(GetEnvironment());
   //Continue from here, array should be serialized properly, it is serializing as "Array"
-  serializeEntity(GetNotifiers());
-  serializeEntity(GetMotionDetectors());
-  serializeEntity(GetFilters()); 
+  serializeArray(GetNotifiers());
+  serializeArray(GetMotionDetectors());
+  serializeArray(GetFilters()); 
     
   return JSON.stringify(profile);
 }
