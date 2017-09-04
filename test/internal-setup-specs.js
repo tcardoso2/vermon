@@ -72,7 +72,7 @@ describe("When using t-motion-detector, ", function() {
     let src_save = src_template.replace("config", "2");
     let alternativeConfig = new main.Config("/test/config_test4.js");
     //Make sure the temporary file is deleted
-    if (fs.existsSync(src_save.replace("_", "2"))) fs.unlink(src_save);
+    if (fs.existsSync(src_save)) fs.unlink(src_save);
     main.StartWithConfig(alternativeConfig, ()=>{
       main.SaveAllToConfig(src_save, (status, message)=>{
         //Saving second time
@@ -106,26 +106,22 @@ describe("When using t-motion-detector, ", function() {
     this.timeout(4000);
     main.Reset();
     let src_save = src_template.replace("config", "4");
-    let alternativeConfig = new main.Config("/test/config_test4.js");
+    let alternativeConfig = new main.Config("/test/config_test9.js");
     //Make sure the temporary file is deleted
     if (fs.existsSync(src_save)) fs.unlink(src_save);
     let data1, data2;
-    let ctx = { e: {}, d: {}, n: {}, f: {}};
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-      ctx.e = e;
-      ctx.d = d;
-      ctx.n = n;
-      ctx.f = f;
+
       main.SaveAllToConfig(src_save, (status, message)=>{
         data1 = fs.readFileSync(src_save);
         main.Reset();
-        main.StartWithConfig(new main.Config(src_save.replace(".","")), ()=>{
-          console.log(ctx.e);
-          console.log(main.GetEnvironment());
-          ctx.e.name.should.equal(main.GetEnvironment().name);
-          ctx.d.length.should.equal(main.GetMotionDetectors().length);
-          ctx.n[0].name.should.equal(main.GetNotifiers()[0].name);
-          ctx.f.length.should.eql(main.GetFilters().length);
+        main.StartWithConfig(new main.Config(src_save.replace(".","")), (e1, d1, n1, f1)=>{
+          console.log(d);
+          console.log(d1);
+          e.name.should.equal(e1.name);
+          d.length.should.equal(d1.length);
+          n[0].name.should.equal(n1[0].name);
+          f.length.should.eql(f1.length);
 
           main.SaveAllToConfig(src_save.replace("config", "config2"), (status, message)=>{
             let data2 = fs.readFileSync(src_save.replace("config", "config2"));

@@ -27,6 +27,8 @@ class Environment{
     if (params)
     {
       this.name = params.name;
+      //This is kept for serialization purpose, TODO: improve
+      this.params = params;
     }
   
     events.EventEmitter.call(this);
@@ -111,7 +113,8 @@ class Environment{
   }
 }
 
-/*TODO: Control the JSON output?*/
+//This controls the Json output of the Environment class, not printing
+//unecessary members
 Environment.prototype.toJSON = function() {
   let copy = ko.toJS(this); //easy way to get a clean copy
   let props = Object.getOwnPropertyNames(copy);
@@ -123,6 +126,9 @@ Environment.prototype.toJSON = function() {
   }
   delete copy.motionDetectors; //remove an extra property
   delete copy.filters; //remove an extra property
+  delete copy.domain;
+  delete copy.currentState; 
+  delete copy.name; 
   return copy; //return the copy to be serialized
 };
 
@@ -224,6 +230,22 @@ class MotionDetector{
   }
 }
 
+//This controls the Json output of the MotionDetector class, not printing
+//unecessary members
+MotionDetector.prototype.toJSON = function() {
+  let copy = ko.toJS(this); //easy way to get a clean copy
+  let props = Object.getOwnPropertyNames(copy);
+  for (let i in props){
+    if (props[i].startsWith("_"))
+    {
+      delete copy[props[i]];
+    }
+  }
+  delete copy.filters; //remove an extra property
+  delete copy.domain; //remove an extra property
+  return copy; //return the copy to be serialized
+};
+
 //A Base Notifier object for sending notifications
 class BaseNotifier{
 
@@ -299,6 +321,22 @@ function BaseParameters(){
   this.initialMotionDetector;
 }
 
+//This controls the Json output of the BaseNotifier class, not printing
+//unecessary members
+BaseNotifier.prototype.toJSON = function() {
+  let copy = ko.toJS(this); //easy way to get a clean copy
+  let props = Object.getOwnPropertyNames(copy);
+  for (let i in props){
+    if (props[i].startsWith("_"))
+    {
+      delete copy[props[i]];
+    }
+  }
+  delete copy.detectors; //remove an extra property
+  delete copy.domain; //remove an extra property
+  return copy; //return the copy to be serialized
+};
+
 //Entities Factory
 const classes = { Environment, MotionDetector, BaseNotifier};
 //Keys 
@@ -335,11 +373,13 @@ class EntitiesFactory
     return result;    
   }
 
+  //Takes a key and value pair, key is the object name and value are the params
   instanciate(name, params)
   {
     let _p = [];
     let o = this.create(name);
-    //converts params object to a list of it's values
+    //converts params object to an array of it's values
+    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(params)}.`);
     for (let p in params) {
       _p.push(params[p])
     }

@@ -281,11 +281,11 @@ function Start(params, silent = false){
 /**
  * Starts the current environment based on existing configuration. Use this method instead of {Start}
  * @param {Config} configParams a parameter object of the {Config} instance.
- * @param {Function} callback is a function which will be called after all initialization is done.
+ * @param {Function} callback is a function which will be called after all initialization is done.\n
+ * args passed to that callback function, are: Environment, MotionDetectors, Notifiers and Filters objects.
  * The correct way of initializing the program is by puting the main code inside that callback.
  * @example let myConfig = new main.Config("/test/config_test6.js");
-    main.StartWithConfig(myConfig, ()=>{
-      let n = main.GetNotifiers();
+    main.StartWithConfig(myConfig, (e,d,n,f)=>{
       n[0].on('pushedNotification', function(message, text, data){
         console.log("Some Notification happened!");
       });
@@ -312,6 +312,7 @@ function StartWithConfig(configParams, callback){
   {
     if (profileObj.hasOwnProperty(p)) {
 
+      //Will ignore reserved keywords
       if (!factory.isReserved(p))
       {
         //We always assume that if the object found is an array then it is an array of objects instead
@@ -563,20 +564,31 @@ function _InternalSerializeCurrentContext(){
   serializeEntity = function (ent) {
     if (ent.constructor.name == "Array"){
       serializeArray();
-    }
-    else{
+    }else{
       profile.default[ent.constructor.name] = ent;  
-    } 
+    }
   }
 
   serializeArray = function (ent){
-    //
+    let entityName;
+    for (let ei in ent){
+      //First, it creates as many entries of the same object as existing and initializes as empty arrays
+      if (ent[ei].constructor.name != entityName)
+      {
+        entityName = ent[ei].constructor.name;
+        profile.default[entityName] = [];
+      }
+    }
+    for (let ei in ent){
+      //Then it reiterates again, this time pushing the contents to the correct array record
+      profile.default[ent[ei].constructor.name].push(ent[ei]);
+    }    
   }
 
   serializeEntity(GetEnvironment());
   //Continue from here, array should be serialized properly, it is serializing as "Array"
-  serializeArray(GetNotifiers());
   serializeArray(GetMotionDetectors());
+  serializeArray(GetNotifiers());
   serializeArray(GetFilters()); 
     
   return JSON.stringify(profile);
