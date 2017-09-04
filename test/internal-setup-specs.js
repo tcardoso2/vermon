@@ -32,6 +32,20 @@ after(function(done) {
 var src_template = './test/config_test_my_saved_config.js';
 describe("When using t-motion-detector, ", function() {
 
+  it('The start function callback should send the environment, detector, notifiers, and filters as args.', function (done) {
+    main.Reset();
+
+    let alternativeConfig = new main.Config("/test/config_test4.js");
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      e.name.should.equal("No name");
+      d.length.should.equal(1);
+      n.length.should.equal(1);
+      f.length.should.equal(0);
+      done();
+    });
+  });
+
   it('I should be able to save the current Environment, Detectors and Notifiers into disk as a configuration file', function (done) {
     //Prepare
     main.Reset();
@@ -46,8 +60,8 @@ describe("When using t-motion-detector, ", function() {
         } else {
           should.fail();
         }
-        status.should.equal(0);
         message.should.equal("Success");
+        status.should.equal(0);
         done();
       });
     });
@@ -97,11 +111,11 @@ describe("When using t-motion-detector, ", function() {
     if (fs.existsSync(src_save)) fs.unlink(src_save);
     let data1, data2;
     let ctx = { e: {}, d: {}, n: {}, f: {}};
-    main.StartWithConfig(alternativeConfig, ()=>{
-      ctx.e = main.GetEnvironment();
-      ctx.d = main.GetMotionDetectors();
-      ctx.n = main.GetNotifiers();
-      ctx.f = main.GetFilters();
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      ctx.e = e;
+      ctx.d = d;
+      ctx.n = n;
+      ctx.f = f;
       main.SaveAllToConfig(src_save, (status, message)=>{
         data1 = fs.readFileSync(src_save);
         main.Reset();

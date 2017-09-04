@@ -331,7 +331,7 @@ function StartWithConfig(configParams, callback){
     }
   }
   log.info("ready. returning to callback...");
-  if (callback) callback(/*TODO: Add the environment, Motion Detectors and notifiers*/);
+  if (callback) callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());
 }
 
 //Internal function, given a factory, class name and arguments, instanciates it
