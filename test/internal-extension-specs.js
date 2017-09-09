@@ -158,7 +158,7 @@ describe("When creating an extension, ", function() {
       should.fail();
     });
   });
-  it('The plugin object must implement a PreAddPlugin function.', function (done) {
+  it('The plugin object must implement a PreAddPlugin function, where the main object is received as first parameter, of a callback function.', function (done) {
      //Prepare
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test9.js");
@@ -213,7 +213,7 @@ describe("When creating an extension, ", function() {
       should.fail();
     });
   });
-  it('The plugin object must implement a PostRemovePlugin function.', function (done) {
+  it('The plugin object must implement a PostRemovePlugin function where the main object is passed as argument.', function (done) {
      //Prepare
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test9.js");

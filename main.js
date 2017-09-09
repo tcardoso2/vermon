@@ -373,7 +373,7 @@ function _AddInstance(f, p, args){
  */
 class Config {
 
-  constructor(profile)
+  constructor(profile, prepend_cwd = true)
   {
     //config.js must always exist
     this.fallback = require('./config.js');
@@ -384,7 +384,7 @@ class Config {
     } else {
       let myProfile = {};
       if (typeof profile == "string") {
-        this.mapToFile(profile);
+        this.mapToFile(profile, prepend_cwd);
       }
       else {
         if (profile.hasOwnProperty('default')){
@@ -613,7 +613,7 @@ function AddPlugin(ext_module){
 
   let runPreWorkflowFunctions = function(){
     if(!ext_module.exports.PreAddPlugin) throw new Error("Error: PreAddPlugin function must be implemented.");
-    ext_module.exports.PreAddPlugin();
+    ext_module.exports.PreAddPlugin(module.exports);
   }
 
   let runPostWorkflowFunctions = function(){
@@ -665,7 +665,7 @@ function RemovePlugin(ext_module_id){
 
   let runPostWorkflowFunctions = function(){
     if(!copy.PostRemovePlugin) throw new Error("Error: PostRemovePlugin function must be implemented.");
-    copy.PostRemovePlugin();
+    copy.PostRemovePlugin(module.exports);
   }
 
   runPreWorkflowFunctions();

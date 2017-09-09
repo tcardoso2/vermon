@@ -1,6 +1,7 @@
 # Change log:
 
 ***
+* v 0.4.10: Very minor change, allowing to define if the Config constructor should prepend cwd to the file name or not. Adding modules.exports to PreAddPlugin and PostRemovePlugin functions
 * v 0.4.9 :Created basic support for extending the t-motion-detector library. Till now the extension points are not well defined. The intention is to have clear steps for extending (e.g. will affect other
 existing packages t-motion-detector-433 and t-motion-detector-cli). Added documentation on it (WIP). See t-motion-detector-cli package to see how that plugin is created.
 * v 0.4.8 :Function SaveAllToConfig now allows saving configuration to disk, added unit tests and documentation.
