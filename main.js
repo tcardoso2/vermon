@@ -111,7 +111,7 @@ function AddDetector(detector, force = false){
       throw new Error("No environment was detected, please add one first.");
     }
   } else {
-    log.warning("'detector' object is not of type MotionDetector");
+    log.warning(`${detector} object is not of type MotionDetector`);
   }
   return false;
 }
@@ -355,7 +355,7 @@ function _AddInstance(f, p, args){
   //The way this is written, forces the environment to be created first
   if(!_InternalAddEnvironment(o)){
     if (!AddNotifier(o)){
-      if(!AddDetector(o)){
+      if(!AddDetector(o, config.forceAdds)){
         if(!_InternalAddFilter(o)){
           console.warn(`Object/class '${p}' could not be added. Proceeding.`)
         }
@@ -368,16 +368,19 @@ function _AddInstance(f, p, args){
  * A generic base class which creates a motion detector for surrounding environments \n
  * Collaborator: Environment
  * @param {String} profile is the path of the config file to use
+ * @param {boolean} prepend_cwd tells if the config class should prepend CWD to the profile path or not
+ * @param {boolean} forceAdds if true means that all Entities in config should be added forcibly independent of being of the correct type.
  * @example     let alternativeConfig = new main.Config("config_test1.js");
  * @returns {Object} the config object itself
  */
 class Config {
 
-  constructor(profile, prepend_cwd = true)
+  constructor(profile, prepend_cwd = true, forceAdds = false)
   {
     //config.js must always exist
     this.fallback = require('./config.js');
     this.fileNotFound = false;
+    this.forceAdds = forceAdds;
     if (!profile)
     {
       this.mapToFile('local.js');
