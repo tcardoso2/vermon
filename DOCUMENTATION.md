@@ -2,6 +2,11 @@
 
 ### Table of Contents
 
+-   [Environment](#environment)
+    -   [motionDetectors](#motiondetectors)
+-   [MotionDetector](#motiondetector)
+-   [SystemEnvironment](#systemenvironment)
+-   [BaseFilter](#basefilter)
 -   [\_InternalAddFilter](#_internaladdfilter)
 -   [\_InternalAddEnvironment](#_internaladdenvironment)
 -   [AddNotifier](#addnotifier)
@@ -29,13 +34,51 @@
     -   [toString](#tostring)
 -   [SaveAllToConfig](#savealltoconfig)
 -   [\_InternalSerializeCurrentContext](#_internalserializecurrentcontext)
+-   [AddPlugin](#addplugin)
+-   [RemovePlugin](#removeplugin)
+-   [GetPlugins](#getplugins)
 -   [Entities](#entities)
 -   [Extensions](#extensions)
 -   [Filters](#filters)
--   [Environment](#environment)
-    -   [motionDetectors](#motiondetectors)
--   [MotionDetector](#motiondetector)
--   [BaseFilter](#basefilter)
+
+## Environment
+
+**Parameters**
+
+-   `params`  
+
+### motionDetectors
+
+: Contains the motion detectors attached to the current environment.
+
+## MotionDetector
+
+: Test
+
+**Parameters**
+
+-   `name`  
+
+## SystemEnvironment
+
+**Extends ent.Environment**
+
+A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
+and propagates the stdout result to the notifier. It uses node-cmd under the hood. Also provides
+System additional info such as memory used, free memory and cpu usage
+
+**Parameters**
+
+-   `command` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is a command to execute
+-   `interval`   (optional, default `0`)
+-   `an` **int** interval in seconds to execute the commands
+
+## BaseFilter
+
+**Parameters**
+
+-   `val`  
+-   `applyTo`  
 
 ## \_InternalAddFilter
 
@@ -215,6 +258,8 @@ Collaborator: Environment
 **Parameters**
 
 -   `profile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the path of the config file to use
+-   `prepend_cwd` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** tells if the config class should prepend CWD to the profile path or not (optional, default `true`)
+-   `forceAdds` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** if true means that all Entities in config should be added forcibly independent of being of the correct type. (optional, default `false`)
 
 **Examples**
 
@@ -254,21 +299,27 @@ TODO:
 -   `profile_name`  
 -   `prop`  
 
+Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the
+
 ### slackHook
 
-TODO:
+Direct assessor to the slackHook ({SlackMotionDetector}), if that exists on the config file
 
 **Parameters**
 
--   `profile_name`  
+-   `profile_name` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** , the name of the profile to lookup into (default is "default")
+
+Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the slackhook string
 
 ### slackAuth
 
-TODO:
+Direct assessor to the slackAuth ({SlackMotionDetector}), if that exists on the config file
 
 **Parameters**
 
--   `profile_name`  
+-   `profile_name` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** , the name of the profile to lookup into (default is "default")
+
+Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** profile_name, the slackhook string
 
 ### raspistillOptions
 
@@ -280,7 +331,9 @@ TODO:
 
 ### toString
 
-TODO:
+Returns the string path of the Config file the current object points to.
+
+Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the string representation, in this case the file record pointing to
 
 ## SaveAllToConfig
 
@@ -297,9 +350,36 @@ Saves all the Environment, Detector, Notifiers and Filters information into a co
 
 ## \_InternalSerializeCurrentContext
 
-Serializes the current Context into the format matching the "profile" object of the config file
+Internal function which serializes the current Context into the format matching the "profile" object 
+of the config file.
 
 Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Returns a "profile" object in JSON.stringify format
+
+## AddPlugin
+
+Adds an Extention plugin to the library
+
+**Parameters**
+
+-   `ext_module` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the actual module we are extending.
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True the plugin was successfully added.
+
+## RemovePlugin
+
+Removes an existing Extention plugin from the library
+
+**Parameters**
+
+-   `ext_module_id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the id of the module to remove.
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True the plugin was successfully removed.
+
+## GetPlugins
+
+Gets the existing extension plugins added to the library
+
+Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the plugins object;
 
 ## Entities
 
@@ -312,28 +392,3 @@ Exposes the Extensions accessible
 ## Filters
 
 Exposes the Filters accessible
-
-## Environment
-
-**Parameters**
-
--   `params`  
-
-### motionDetectors
-
-: Contains the motion detectors attached to the current environment.
-
-## MotionDetector
-
-: Test
-
-**Parameters**
-
--   `name`  
-
-## BaseFilter
-
-**Parameters**
-
--   `val`  
--   `applyTo`  

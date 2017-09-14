@@ -19,6 +19,15 @@ let filters = require('../Filters.js');
 let main = require('../main.js');
 let events = require('events');
 
+class TestEnvironment extends ent.Environment {
+  constructor(params)
+  {
+    super(params);
+  }
+}
+//Extending the current entities with this dummy class
+new ent.EntitiesFactory().extend({ TestEnvironment });
+
 before(function(done) {
   done();
 });
@@ -261,19 +270,33 @@ describe("When a new filter is applied to the whole Environment,", function() {
   it('it should prevent any motion detector from processing signals.', function (done) {
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test4.js");
-    main.StartWithConfig(alternativeConfig);
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
 
-    let n = main.GetNotifiers();
-    n[0].on('pushedNotification', function(message, text, data){
-      //Contrary to Motion Detector Filters, Environment filters prevent state to change
-      data.newState.should.equal(15);
-      done();
+      n[0].on('pushedNotification', function(message, text, data){
+        //Contrary to Motion Detector Filters, Environment filters prevent state to change
+        data.newState.should.equal(15);
+        done();
+      });
+      //Act
+      e.applyFilter(new filters.HighPassFilter(10));
+      e.addChange(15);
     });
-    //Act
-    let e = main.GetEnvironment(); 
-    e.applyFilter(new filters.HighPassFilter(10));
-    e.addChange(5);
-    e.addChange(15);
+  });
+  it('it should prevent any motion detector from processing signals as well if specified also from the config file.', function (done) {
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test10.js");
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+
+      n[0].on('pushedNotification', function(message, text, data){
+        //Contrary to Motion Detector Filters, Environment filters prevent state to change
+        data.newState.should.equal(20);
+        done();
+      });
+      //Act
+      //e.applyFilter(new filters.HighPassFilter(10));
+      e.addChange(5);
+      e.addChange(15);
+    });
   });
 });
 

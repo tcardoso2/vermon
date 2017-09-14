@@ -10,6 +10,43 @@ let fs = require('fs');
 let os = require("os");
 const Raspistill = require('node-raspistill').Raspistill;
 let chokidar = require('chokidar');
+let node_cmd = require('node-cmd');
+
+/**
+ * A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
+ * and propagates the stdout result to the notifier. It uses node-cmd under the hood. Also provides
+ * System additional info such as memory used, free memory and cpu usage
+ * @param {String} command is a command to execute
+ * @param {int} an interval in seconds to execute the commands
+ */
+class SystemEnvironment extends ent.Environment {
+  constructor(command, interval = 0){
+    super();
+    if (!command){
+      throw new Error("ERROR: You must provide a command as the first argument.");
+    }
+    this.command = command;
+    this.interval = interval;
+    let m = this;
+    this.i = setInterval(() => {
+      // This is executed after about x milliseconds.
+      node_cmd.get(
+        m.command,
+        function(err, data, stderr){
+          m.addChange({
+            stdout: {"err": err, "data" : data, "stderr": stderr},
+            cpus: os.cpus(),
+            totalmem: os.totalmem(),
+            freemem: os.freemem()
+          });
+        }
+      );
+      if (m.interval == 0) {
+        clearInterval(m.i);
+      }
+    }, this.interval);
+  }
+}
 
 //A concrete MotionDetector for detecting files in a folder
 class FileDetector extends MotionDetector{
@@ -48,7 +85,7 @@ class PIRMotionDetector extends MotionDetector{
 
     if (!pin)
     {
-      throw new Error('FATAL: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.');
+      throw new Error('ERROR: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.');
     }
     if (this._isRPi()){
       Gpio = require('onoff').Gpio;
@@ -150,6 +187,7 @@ class SlackNotifier extends BaseNotifier{
         return;
       }
       console.log("Uploading ", newState);
+      //The slack API token needs to be there: https://api.slack.com/web
       this.slackUpload.uploadFile({
         file: fs.createReadStream(newState), //path.join(__dirname, '.', newState)),
         //content: 'My file contents!',
@@ -209,7 +247,7 @@ class RaspistillNotifier extends BaseNotifier{
 //Extending Factory methods
 
 //Extending Entities Factory
-const classes = { FileDetector, PIRMotionDetector, SlackNotifier, RaspistillNotifier }
+const classes = { FileDetector, PIRMotionDetector, SystemEnvironment, SlackNotifier, RaspistillNotifier }
 
 new ent.EntitiesFactory().extend(classes);
 
@@ -217,3 +255,4 @@ exports.FileDetector = FileDetector;
 exports.PIRMotionDetector = PIRMotionDetector;
 exports.SlackNotifier = SlackNotifier;
 exports.RaspistillNotifier = RaspistillNotifier;
+exports.SystemEnvironment = SystemEnvironment;

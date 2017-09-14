@@ -84,7 +84,7 @@ class Environment{
       }
     }
     let oldState = this.currentState;
-  	this.currentState += intensity;
+  	this.currentState = typeof(intensity) === "object" ? intensity : this.currentState + intensity;
     this.emit("changedState", oldState, this.currentState);
   }
 

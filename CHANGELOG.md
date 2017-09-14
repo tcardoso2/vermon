@@ -1,6 +1,7 @@
 # Change log:
 
-***
+***  
+* v 0.4.12:  Adding new unit tests for a new environment, SystemEnvironment which allows specifying simple commands and add change if there are differences in state.  
 * v 0.4.11: Minor change, allowing to define if Detector Entities in config should forcibly be added even if not of the correct instance of the Entity required, where possible. This was done because it seems the system does not recognize the type as being the same of the t-motion-detector Entities used by the Plugins.
 * v 0.4.10: Very minor change, allowing to define if the Config constructor should prepend cwd to the file name or not. Adding modules.exports to PreAddPlugin and PostRemovePlugin functions
 * v 0.4.9 :Created basic support for extending the t-motion-detector library. Till now the extension points are not well defined. The intention is to have clear steps for extending (e.g. will affect other

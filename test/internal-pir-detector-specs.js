@@ -38,7 +38,7 @@ describe("When a new PIR Motion Detector is added", function() {
       let pir = new ext.PIRMotionDetector();
     } catch(e)
     {
-      e.message.should.equal('FATAL: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.');
+      e.message.should.equal('ERROR: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.');
       return;
     }
     should.fail();
