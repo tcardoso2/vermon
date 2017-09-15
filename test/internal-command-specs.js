@@ -12,6 +12,7 @@
 let chai = require('chai');
 let chaiAsPromised = require("chai-as-promised");
 let should = chai.should();
+let expect = chai.expect();
 let fs = require('fs');
 let ent = require('../Entities.js');
 let ext = require('../Extensions.js');
@@ -90,41 +91,28 @@ describe("When a new Simple Command is created for an environment,", function() 
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test13.js");
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-
+    let _done = false;
       n[0].on('pushedNotification', function(message, text, data){
-        //Contrary to Motion Detector Filters, Environment filters prevent state to change
-        data.newState.stdout.data.should.equal(process.cwd()+'\n');
-        should.fail();
-        done();
+        if (!_done){
+          //Contrary to Motion Detector Filters, Environment filters prevent state to change
+          console.log("MEMORY:", data.newState.freemem);
+          (data.newState.freemem < 3000000000).should.equal(true);
+          done();
+          _done = true;
+        }
       });
       //Should send a signal right away
     });
   });
-  it('should notify if cannot reach a certain server', function (done) {
+  it('should notify if cannot reach a certain server (via Regex Expression match)', function (done) {
     //Prepare
     main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test13.js");
+    let alternativeConfig = new main.Config("/test/config_test14.js");
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
 
       n[0].on('pushedNotification', function(message, text, data){
         //Contrary to Motion Detector Filters, Environment filters prevent state to change
-        data.newState.stdout.data.should.equal(process.cwd()+'\n');
-        should.fail();
-        done();
-      });
-      //Should send a signal right away
-    });
-  });
-  it('should notify if a server is up', function (done) {
-    //Prepare
-    main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test13.js");
-    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-
-      n[0].on('pushedNotification', function(message, text, data){
-        //Contrary to Motion Detector Filters, Environment filters prevent state to change
-        data.newState.stdout.data.should.equal(process.cwd()+'\n');
-        should.fail();
+        data.newState.stdout.data.should.include("1 packets transmitted, 1 packets received, 0.0% packet loss");
         done();
       });
       //Should send a signal right away

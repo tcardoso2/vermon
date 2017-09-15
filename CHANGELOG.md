@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.4.15: Implemented SystemEnvironmentFilter propagating changes in case memory falls below certain values or when a command matches a certain regex (must be a simple command, meaning requiring no user input after issued).  
 * v 0.4.14: Removed post-install script  
 * v 0.4.13: Creating SystemEnvironmentFilter entity for only trigering notifications if a certain Environment value changes (WIP), eliminating post script question, plan is to instead use basic cli options. 
 * v 0.4.12: Adding new unit tests for a new environment, SystemEnvironment which allows specifying simple commands and add change if there are differences in state.  

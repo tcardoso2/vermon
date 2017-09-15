@@ -1,8 +1,8 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "pwd",
-      interval: 500
+      command: "ping -c 1 localhost",
+      interval: 0
     },
     MotionDetector: {
       name: "MD 1",
@@ -11,8 +11,9 @@ profiles = {
     },
     SystemEnvironmentFilter: [
     {
-      freeMemBelow: 300000000,
+      freeMemBelow: 0,
       applyTo: "MD 1",
+      stdoutMatchesRegex: "1 packets transmitted, 1 packets received, 0.0% packet loss"
     }]
   }
 }

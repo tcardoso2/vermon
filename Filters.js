@@ -1,3 +1,4 @@
+"use strict"
 //Filter classes used to filter incoming signals
 //Collaborator: Environment, MotionDetector
 //Base filter
@@ -126,7 +127,27 @@ class LowPassFilter extends BaseFilter{
   }
 }
 
-exports.classes = { BaseFilter, BlockAllFilter, ValueFilter, NameFilter, LowPassFilter, HighPassFilter }
+class SystemEnvironmentFilter extends BaseFilter{
+
+  constructor(freeMemBelow, applyTo, stdoutMatchesRegex){
+    super(freeMemBelow, applyTo);
+    this.stdoutMatchesRegex = stdoutMatchesRegex;
+  }
+
+  filter(newState, env, detector){
+    //Tests first if it is below memory
+    if ((newState.freemem < this.valueToFilter) ||
+      (this.stdoutMatchesRegex && newState.stdout.data.match(this.stdoutMatchesRegex))) {
+      return newState;
+    }
+
+    return false;
+  }
+}
+
+exports.classes = { 
+  BaseFilter, BlockAllFilter, ValueFilter, NameFilter, LowPassFilter, HighPassFilter, SystemEnvironmentFilter 
+}  
 
 exports.BaseFilter = BaseFilter;
 exports.BlockAllFilter = BlockAllFilter;
@@ -134,3 +155,4 @@ exports.HighPassFilter = HighPassFilter;
 exports.LowPassFilter = LowPassFilter;
 exports.NameFilter = NameFilter;
 exports.ValueFilter = ValueFilter;
+exports.SystemEnvironmentFilter = SystemEnvironmentFilter;
