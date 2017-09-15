@@ -26,9 +26,6 @@
     "preinstall": "node scripts/preinstall.js",
     "test": "node scripts/test.js"
   },
-  "bin": {
-    "setup": "bin/setup"
-  },
   "contributors": [
     {
       "name": "Tiago Cardoso",
