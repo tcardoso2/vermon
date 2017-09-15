@@ -24,7 +24,6 @@
   "config": {},
   "scripts": {
     "preinstall": "node scripts/preinstall.js",
-    "postinstall": "node scripts/postinstall.js",
     "test": "node scripts/test.js"
   },
   "bin": {
@@ -45,5 +44,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.4.13"
+  "version": "0.4.14"
 }

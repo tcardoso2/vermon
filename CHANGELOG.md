@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.4.14: Removed post-install script  
 * v 0.4.13: Creating SystemEnvironmentFilter entity for only trigering notifications if a certain Environment value changes (WIP), eliminating post script question, plan is to instead use basic cli options. 
 * v 0.4.12: Adding new unit tests for a new environment, SystemEnvironment which allows specifying simple commands and add change if there are differences in state.  
 * v 0.4.11: Minor change, allowing to define if Detector Entities in config should forcibly be added even if not of the correct instance of the Entity required, where possible. This was done because it seems the system does not recognize the type as being the same of the t-motion-detector Entities used by the Plugins.
