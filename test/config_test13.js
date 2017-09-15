@@ -11,7 +11,7 @@ profiles = {
     },
     SystemEnvironmentFilter: [
     {
-      freeMemBelow: 300000000,
+      freeMemBelow: 99000000000,
       applyTo: "MD 1",
     }]
   }
