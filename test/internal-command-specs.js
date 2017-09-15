@@ -104,39 +104,4 @@ describe("When a new Simple Command is created for an environment,", function() 
       //Should send a signal right away
     });
   });
-  it('should notify if cannot reach a certain server (via Regex Expression match)', function (done) {
-    //Prepare
-    main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test14.js");
-    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-
-      n[0].on('pushedNotification', function(message, text, data){
-        //Contrary to Motion Detector Filters, Environment filters prevent state to change
-        console.log("CONSOLE:", data.newState.stdout.data);
-        data.newState.stdout.data.should.include("1 packets transmitted, 1 packets received, 0.0% packet loss");
-        done();
-      });
-      //Should send a signal right away
-    });
-  });
 });
-
-/*describe("When a new LoginDetector,", function() {
-  it('It should detect if a user has failed to login via ssh', function (done) {
-    //Prepare
-    main.Reset();
-    let alternativeConfig = new main.Config("/test/config_test13.js");
-    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-
-      n[0].on('pushedNotification', function(message, text, data){
-        //Contrary to Motion Detector Filters, Environment filters prevent state to change
-        data.newState.stdout.data.should.equal(process.cwd()+'\n');
-        data.newState.should.eql({});
-        done();
-      });
-    });
-    //Will not test if successfully logged in
-  });
-});*/
-
-//Create tests removing Detectors and notifiers.
