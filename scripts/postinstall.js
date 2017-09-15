@@ -28,7 +28,7 @@ class Setup
   	if (this.option) { this.doOption(this.option) }
   	else
   	{
-      rl.question("Please Choose an option:\n"
+      /*rl.question("Please Choose an option:\n"
         + "1) Option 1: Add an Entity\n"
         + "2) Option 2: Delete an Entity\n"
         + "3) Exit\n"
@@ -48,7 +48,7 @@ class Setup
                     console.log("No such option. Please enter another: ");
             }
             this.recursiveAsyncReadLine(); //Calling this function again to ask new question
-      });
+      });*/
     }
   }
 

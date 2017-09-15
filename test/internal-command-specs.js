@@ -133,7 +133,7 @@ describe("When a new Simple Command is created for an environment,", function() 
 });
 
 describe("When a new LoginDetector,", function() {
-  it('It should detect if a user has failed to login', function (done) {
+  it('It should detect if a user has failed to login via ssh', function (done) {
     //Prepare
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test13.js");

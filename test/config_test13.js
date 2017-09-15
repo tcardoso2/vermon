@@ -8,7 +8,13 @@ profiles = {
       name: "MD 1",
     },
     BaseNotifier: {
-    }
+    },
+    SystemEnvironmentFilter: [
+    {
+      applyTo: "MD 1",
+      freeMemBelow: 300000,
+      stdoutMatchesRegex: ""
+    }]
   }
 }
 
