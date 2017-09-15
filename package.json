@@ -24,7 +24,7 @@
   "config": {},
   "scripts": {
     "preinstall": "node scripts/preinstall.js",
-    "test": "mocha"
+    "test": "scripts/test_all.sh"
   },
   "contributors": [
     {

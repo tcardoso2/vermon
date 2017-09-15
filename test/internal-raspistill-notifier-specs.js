@@ -197,3 +197,29 @@ describe("When importing local configuration, ", function() {
     local_config.should.not.equal(undefined);
   });
 });
+
+describe("When importing local configuration, ", function() {
+  //Note: this test fails but the code behaves properly. The issue is that once the node program starts,
+  //      it seems to take a memory snapshot of all the files and does not recognize local has changed;
+  it('If no local.js file is present, then fallsback to config.js', function(done) {
+    if (fs.existsSync('./local.js')){
+      fs.rename('./local.js', './_local.js', function (err) {
+        if (err) throw err;
+        fs.stat('./_local.js', function (err, stats) {
+          if (err) throw err;
+          console.log('stats: ' + JSON.stringify(stats));
+          main.Reset();
+          let local_config = new main.Config().slackHook();
+          local_config.toString().should.equal('https://hooks.slack.com/services/<Your_Slack_URL_Should_Go_Here>');
+          done();
+        });
+      });
+    } else {
+      done();
+    }
+  });
+  it('A function should be used instead of require("../local.js")', function() {
+    let local_config = new main.Config().slackHook();
+    local_config.should.not.equal(undefined);
+  });
+});

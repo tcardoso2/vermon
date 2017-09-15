@@ -185,12 +185,10 @@ describe("When a new t-motion-detector instance is started from main, ", functio
 
   it('the object Config can receive profiles with the name of the class (dependency injection), and array of attributes', function (done) {
     let alternativeConfig = new main.Config("/test/config_test2.js");
-    main.StartWithConfig(alternativeConfig);
-
-    let slackNotifier = main.GetNotifiers()[0];
-    slackNotifier.name.should.equal("My Slack channel");
-
-    done();
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      n[0].name.should.equal("My Slack channel");
+      done();
+    });
   });
 
   it('When starting with alternate config, the Notification Objects contained in the config file are automatically instanced as Notificators of main', function (done) {
