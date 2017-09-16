@@ -24,8 +24,10 @@ let ko = require("knockout");
 let fs = require('fs')
   , Log = require('log')
   , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
-var _ = require('lodash/core');
+let _ = require('lodash/core');
+let chalk = require('chalk');
 let plugins = {};
+
 
 /**
  * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
@@ -357,7 +359,7 @@ function _AddInstance(f, p, args){
     if (!AddNotifier(o)){
       if(!AddDetector(o, config.forceAdds)){
         if(!_InternalAddFilter(o)){
-          console.warn(`Object/class '${p}' could not be added. Proceeding.`)
+          console.warn(chalk.yellow(`Object/class '${p}' could not be added. Proceeding.`));
         }
       }
     }
@@ -436,7 +438,7 @@ class Config {
       log.info(`Loaded ${file_name}`);
     } catch (e)
     {
-      console.log(`Warning:'${e.message}', will fallback to config file...`);
+      console.log(chalk.yellow(`Warning:'${e.message}', will fallback to config file...`));
       this.file = this.fallback;
       this.fileNotFound = true;
     }

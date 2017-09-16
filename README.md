@@ -11,7 +11,7 @@ NOTE: this code has only been tested in the following Linux OS:
 - Raspbian: works only for ARM7 processors, meaning old Rpis won't work
 - OSX: Tests and code runs / works where no real sensors are involved
 ***
-* STEP 1 *: Create your config.js file:  
+* STEP 1 : Create your config.js file:  
 ````
 profiles = {
   default: {
@@ -43,7 +43,7 @@ profiles = {
 exports.profiles = profiles;
 exports.default = profiles.default;
 ````
-* STEP 2 *: Add your main file  
+* STEP 2 : Add your main file  
 ````
 let md = require('t-motion-detector');
 let config = new md.Config(__dirname + '/config.js', false);
@@ -62,29 +62,16 @@ motion sensor HC-SR501):
 let md = require('t-motion-detector');
 
 let env = new md.Entities.Environment();
-initialMD = new md.Extensions.PIRMotionDetector(17);
+initialMD = new md.Extensions.PIRMotionDetector(17); //Rpi listens on pin 17 for incoming signals from the PIR sensor
 md.Start({
 	environment: env,
 	initialMotionDetector: initialMD
 });
 
 camNotifier = new md.Extensions.RaspistillNotifier();
-md.AddNotifier(camNotifier);
+md.AddNotifier(camNotifier); //Rpi will take a picture if the PIR sensor detects movement
 ````
 
-Static configuration (to be deprecated): To configure locally to be notified via Slack first update your hook URL file (I'm working on overriding this in a local.js file so that this does not have to be done on the config.js of the package itself (HINT: use the new way of configuring the module from version 0.3.7 onwards - this one below still works but will be deprecated)):  
-````  
-profiles = {
-  default: {
-	slack: {
-	  hook: 'https://hooks.slack.com/services/<Your_Slack_URL_Should_Go_Here>'
-	}
-  },
-}
-
-exports.profiles = profiles;
-exports.default = profiles.default;
-````
 ***
 Unit tests: 
 t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go. to test use "npm test"
@@ -94,3 +81,4 @@ t-motion-detector uses mocha unit tests to test the detector, notifier and envir
   - [Documentation](https://github.com/tcardoso2/t-motion-detector/blob/master/DOCUMENTATION.md) 
   - [Code of Conduct](https://github.com/tcardoso2/t-motion-detector/blob/master/CODE_OF_CONDUCT.md)   
   - [Related Packages](https://www.npmjs.com/package/t-motion-detector-433)  
+  - [Roadmap (Work in Progress)](https://github.com/tcardoso2/t-motion-detector/blob/master/ROADMAP.mp) 

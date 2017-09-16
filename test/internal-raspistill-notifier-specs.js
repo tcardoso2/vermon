@@ -223,3 +223,31 @@ describe("When importing local configuration, ", function() {
     local_config.should.not.equal(undefined);
   });
 });
+
+describe("When detecting a change", function() {
+  it('Should not send to Slack old files in the folder (File Detector should not allow)', function(done) {
+    main.Reset(); 
+    let alternativeConfig = new main.Config("/test/config_test15.js");
+    let sConfig = new main.Config();
+    let slackNotifier = new ext.SlackNotifier("My Slack notifier", sConfig.slackHook(), sConfig.slackAuth());
+    slackNotifier.on('pushedNotification', function(message, text, data){
+      //Continuar daqui
+      should.fail();
+    });
+    
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      //Raspistill Notifier
+      n[0].on('pushedNotification', function(message, text, data){
+        //Continuar daqui
+        should.fail();
+      });
+      main.AddNotifier(slackNotifier);
+
+      //Act
+      d[0].send(9, e);
+    });
+
+    should.fail();
+  });
+});
+

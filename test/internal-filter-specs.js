@@ -300,4 +300,22 @@ describe("When a new filter is applied to the whole Environment,", function() {
   });
 });
 
+describe("When a new SystemEnvironmentFilter is applied to a SystemEnvironment,", function() {
+  it('it should not notify if the signal is not comming from the environment.', function () {
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test14.js");
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+
+      n[0].on('pushedNotification', function(message, text, data){
+        //Contrary to Motion Detector Filters, Environment filters prevent state to change
+        if (data.newState.stdout){
+          return;
+        }
+        should.fail();
+      });
+      //Act
+      d[0].send(9, e);
+    });
+  });
+});
 //Create tests removing Detectors and notifiers.
