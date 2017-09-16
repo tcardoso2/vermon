@@ -1,3 +1,8 @@
+[![NPM info](https://nodei.co/npm/t-motion-detector.png?downloads=true)](https://nodei.co/npm/t-motion-detector.png?downloads=true)
+
+[![Travis build status](https://travis-ci.org/tcardoso2/t-motion-detector.png?branch=master)](https://travis-ci.org/tcardoso2/t-motion-detector)
+[![dependencies](https://david-dm.org/tcardoso2/t-motion-detector.svg)](https://david-dm.org/tcardoso2/t-motion-detector.svg)
+
 # t-motion-detector
 A NodeJS Motion detector, initially aimed for Raspberry Pi.
 The Motion Detectors detect changes in the Environment and the Notifiers receive the Motion Detectors' event changes.  

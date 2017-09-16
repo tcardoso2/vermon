@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.0: Implemented badges, Travis build status and dependency status (david-dm.org)
 * v 0.4.15: Implemented SystemEnvironmentFilter propagating changes in case memory falls below certain values or when a command matches a certain regex (must be a simple command, meaning requiring no user input after issued).  
 * v 0.4.14: Removed post-install script  
 * v 0.4.13: Creating SystemEnvironmentFilter entity for only trigering notifications if a certain Environment value changes (WIP), eliminating post script question, plan is to instead use basic cli options. 
