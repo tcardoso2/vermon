@@ -11,98 +11,7 @@ NOTE: this code has only been tested in the following Linux OS:
 - Raspbian: works only for ARM7 processors, meaning old Rpis won't work
 - OSX: Tests and code runs / works where no real sensors are involved
 ***
-Code snippet (to programatically set events, detectors and notifiers):  
-````
-var main = require('t-motion-detector');
-var ent = main.Entities;
-
-var n = new ent.BaseNotifier();
-  n.on('pushedNotification', function(message, text){
-      console.log("A new notification has arrived!", message, text);
-  })
-
-  main.Start({
-    environment: new ent.Environment(),
-    initialNotifier: n,
-    initialMotionDetector: new ent.MotionDetector()
-  });
-
-e.AddChange(10);
-````
-If you want to override the notification message do (example with SlackNotifier):
-````
-var main = require('t-motion-detector');
-var ent = main.Entities;
-
-var n = new main.Extensions.SlackNotifier("My Slack", "https://hooks.slack.com/services/<Your_Slack_URL_Should_Go_Here>");
-var e = new ent.Environment();
-var m = new ent.MotionDetector();
-m.name = "My mock detector";
-n.on('pushedNotification', function(message, text){
-  console.log("A new notification has arrived!", message, text);
-})
-
-main.Start({
-  environment: e,
-  initialMotionDetector: m
-});
-main.AddNotifier(n, `Received notification from: ${m.name}`);
-e.AddChange(10);
-````
-
-NEW: From version 0.3.10 onwards you can apply filters so that you are not spammed with new incoming messages from the notifiers. Code snippet below:
-````
-var md = require('t-motion-detector');
-var filters = md.Filters;
-md.StartWithConfig(new md.Config("config.js")); //This is relative to your current workind durectory
-
-...
-let e = main.GetEnvironment();
-e.applyFilters(
-  new filters.HighPassFilter(10);
-);
-
-e.addChange(5);   //Will not notify
-e.addChange(15);  //Will notify
-
-````
-See full list of Filters on Change log. 
-You can also apply filters to individual Motion detectors instead of the Environment using the same function:
-````
-myMotionDetector.applyFilter(new LowPassFilter(5));
-````
-Differences with the previous approach are:
-* Obviously the filter applies to only specific Motion Detectors instead of all Motion Detectors inside the environment;
-* Important: The value passed to the filter is the currentState + change whereas on the previous case, the value passed to the filter is just the actual change;
-
-
-You can also extend your on Filter, by inheriting filters.BaseFilter class and override the filter() method like so:
-````
-let filters = require('t-motion-detector').filters;
-
-class MyCustomFilter extends filters.BaseFilter{
-
-  constructor(val){
-    super(val); //val is required it is the cut-off value which is used for your filter (below)
-  }
-
-  //If returning true, means the value will be filtered - filters values = 100
-  filter(newState, env, detector){
-    return newState == 100;
-  }
-}
-````
-
-From version 0.3.7 onwards there is a simpler way to call the API, using your own config file, which does a similar job as the one above:
-````
-var md = require('t-motion-detector');
-md.StartWithConfig(new md.Config("config.js")); //This is relative to your current workind durectory
-````
-
-If called via "StartWithConfig", method, the program expects your config file as such (below). Note
-the key names are real names of objects, which means you can use dependency injection to configure
-your entities. Make sure you also pass the start parameters for the constructor(s), if any:
-
+* STEP 1 *: Create your config.js file:  
 ````
 profiles = {
   default: {
@@ -134,15 +43,14 @@ profiles = {
 exports.profiles = profiles;
 exports.default = profiles.default;
 ````
-In the example above Notice a Filters applicable to "MD 1" and "MD2" was also configured. It is possible
-to add MotionDetectors and Filters of the same instance by passing an array.  
-
-To access your Motion Detectors and Notifiers, use:
+* STEP 2 *: Add your main file  
 ````
-var md = require('t-motion-detector');
-let myEnvironment = md.GetEnvironment();
-let myDetectors = md.GetMotionDetectors(); // returns array
-let myNotifiers = md.GetNotifiers(); // returns array
+let md = require('t-motion-detector');
+let config = new md.Config(__dirname + '/config.js', false);
+
+md.StartWithConfig(config, (e,d,n,f)=>{
+  console.log(`Good to go! My environment is ${e}, detectors are ${d}, notifiers ${n} and filters ${f}`);
+});
 ````
 
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
@@ -151,9 +59,9 @@ movement is detected. Here's an example which takes a snapshot once the Raspberr
 movement via the PIRMotionDetector connected to pin 17 (requires a sensor like the Infrared 
 motion sensor HC-SR501):
 ````
-var md = require('t-motion-detector');
+let md = require('t-motion-detector');
 
-var env = new md.Entities.Environment();
+let env = new md.Entities.Environment();
 initialMD = new md.Extensions.PIRMotionDetector(17);
 md.Start({
 	environment: env,
@@ -178,16 +86,8 @@ exports.profiles = profiles;
 exports.default = profiles.default;
 ````
 ***
-Extend your own notifier: 
-More info coming soon!
-
-***
-Extend your own motion detector: 
-More info coming soon!
-
-***
 Unit tests: 
-t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go.
+t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go. to test use "npm test"
 
 ## Links
   - [ChangeLog](https://github.com/tcardoso2/t-motion-detector/blob/master/CHANGELOG.md)  
