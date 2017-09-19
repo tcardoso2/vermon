@@ -40,7 +40,6 @@ jspm_packages
 # Examples files and local files
 examples
 local*
-photos
 out
 docs
 *sublime-*
