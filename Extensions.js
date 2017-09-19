@@ -11,6 +11,7 @@ let os = require("os");
 const Raspistill = require('node-raspistill').Raspistill;
 let chokidar = require('chokidar');
 let node_cmd = require('node-cmd');
+let moment = require('moment');
 
 /**
  * A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
@@ -51,24 +52,45 @@ class SystemEnvironment extends ent.Environment {
 //A concrete MotionDetector for detecting files in a folder
 class FileDetector extends MotionDetector{
   
-  constructor(name, filePath){
+  constructor(name, filePath, sendOld = false){
     super(name);
     this.watcher = chokidar.watch(filePath, {
       ignored: /[\/\\]\./, persistent: true
     });
     this.path = filePath;
+    this.sendOld = sendOld;
   }
   startMonitoring(){
     super.startMonitoring();
     let m = this;
     this.watcher
-      .on('add', function(path) {
-        console.log('>>>>>>> File', path, 'has been added'); 
-        m.send(path);
+      .on('add', (path)=> {
+        fs.stat(path, (err, stats)=> {
+          if(!err)
+          {
+            if (!m.sendOld){
+              //Checks if should send old files
+              let ft = moment(stats.ctime);
+              if (ft.isBefore(moment().subtract(5, 'seconds')))
+              {
+                console.log('Ignoring old file: ', path);
+                return;
+              }
+              else {
+                console.log('>>>>>>> File', path, 'has been added'); 
+                m.send(path);
+              }
+            } else {
+              m.send(path);
+            }
+          }
+        });
       })
       .on('change', function(path) {
-        console.log('>>>>>>> File', path, 'has been changed');
-        m.send(path);
+        fs.stat(path, (err, stats)=> {
+          console.log('>>>>>>> File', path, 'has been changed');
+          m.send(path);
+        })
       });
   }
 }

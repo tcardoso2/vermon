@@ -103,11 +103,15 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
     detector.name = "Mock_detector";
     let key = new main.Config().slackHook();
     let notifier = new ext.SlackNotifier("My Slack Notifier", key);
-
+    let notified = false;
     notifier.on("pushedNotification", function(name, text){
       chai.assert.isOk("notified");
-      //console.log(`Got a notification from ${name}: ${text}`);
-      done();
+      if (!notified)
+      {
+        notified = true;
+        //console.log(`Got a notification from ${name}: ${text}`);
+        done();
+      }
     });
     detector.on("hasDetected", function(current, newState, d){
       chai.assert.isOk("detected");
@@ -147,5 +151,59 @@ describe("When a new Environment with a Slack Notifier is created, ", function()
     });
 
     e0.addChange(10);
+  });
+});
+
+describe("When detecting a change", function() {
+
+  it('Should send to Slack old files (3 files) in the folder when FileDetector "sendOld = true"', function(done) {
+    this.timeout(4000);
+    main.Reset();
+
+    let alternativeConfig = new main.Config("/test/config_test16.js");
+    let count = 0;
+    
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      let sConfig = new main.Config();
+      let slackNotifier1 = new ext.SlackNotifier("My Slack notifier", sConfig.slackHook(), sConfig.slackAuth());
+      slackNotifier1.on('pushedNotification', function(message, text, data){
+        text.should.contain("received Notification received from: 'File Detector 16 - should notify'");
+        console.log("Notified!");
+        count++;
+        if (count == 2){
+          done();
+        }
+      });
+
+      //Raspistill Notifier
+      n[0].on('pushedNotification', function(message, text, data){
+        console.log(text);
+      });
+      main.AddNotifier(slackNotifier1);
+
+      //Act
+      d[0].send(9, e);
+    });
+  });
+
+  it('Should not send to Slack old files in the folder (File Detector should not allow)', function() {
+    main.Reset(); 
+    let alternativeConfig = new main.Config("/test/config_test15.js");
+    let sConfig = new main.Config();
+    let slackNotifier = new ext.SlackNotifier("My Slack notifier", sConfig.slackHook(), sConfig.slackAuth());
+    slackNotifier.on('pushedNotification', function(message, text, data){
+      text.should.not.contain("should not notify");
+    });
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      //Raspistill Notifier
+      n[0].on('pushedNotification', function(message, text, data){
+        console.log(">>>>", text);
+        text.should.not.contain("should not notify");
+      });
+      main.AddNotifier(slackNotifier);
+
+      //Act
+      d[0].send(9, e);
+    });
   });
 });

@@ -106,7 +106,7 @@ function AddDetector(detector, force = false){
     motionDetectors.push(detector);
     if (environment)
     {
-      environment.bindDetector(detector, notifiers);
+      environment.bindDetector(detector, notifiers, force);
       detector.startMonitoring();
       return true;
     } else {
@@ -148,15 +148,43 @@ function ActivateDetector(name)
  * Removes an existing notifier from the context.
  * Does not fail if the notifier is not found.
  * @param {object} notifier is the notifier instance to remove.
+ * @param {booleal} sileng states if = true the removal should not send a notification
  * @returns true if the notifier was found (and subsequently removed).
  * @public
  */
-function RemoveNotifier(notifier){
+function RemoveNotifier(notifier, silent = false){
   let index = notifiers.indexOf(notifier);
+  console.log("Removing Notifier...");
   if (index > -1) {
-  	notifiers[index].notify("Removing Notifier...");
+    if(!silent){
+  	  notifiers[index].notify("Removing Notifier...");
+    }
   	notifiers.splice(index, 1);
     return true;
+  } else {
+    console.log(chalk.yellow(`Notifier ${notifier} not found, ignoring and returning false...`));
+  }
+  return false;
+}
+
+/**
+ * Removes an existing MotionDetector from the context, including its event listeners.
+ * Does not fail if the detector is not found.
+ * @param {object} detector is the MotionDetector instance to remove.
+ * @returns true if the detector was found (and subsequently removed).
+ * @public
+ */
+function RemoveDetector(detector){
+  let index = motionDetectors.indexOf(detector);
+  console.log("Removing Detector...");
+  if (index > -1) {
+    environment.unbindDetector(detector);
+    motionDetectors.splice(index, 1);
+    //Redundant: Motion detectors are also copied to environment!
+    environment.motionDetectors.splice(index, 1);
+    return true;
+  } else {
+    console.log(chalk.yellow(`Detector ${detector} not found, ignoring and returning false...`));
   }
   return false;
 }
@@ -231,8 +259,17 @@ function GetFilters()
 function Reset()
 {
   console.log("Reseting environment...");
+  for (let m in motionDetectors){
+    RemoveDetector(motionDetectors[m]);
+  }
+  for (let n in notifiers){
+    RemoveNotifier(notifiers[n], true);
+  }
   notifiers = [];
-  environment = undefined;
+  if (environment){
+    environment.removeAllListeners('changedState');
+    environment = undefined;
+  }
   motionDetectors = [];
   plugins = {};
   console.log("Done Reseting environment.");
@@ -433,7 +470,9 @@ class Config {
   mapToFile(file_name, prepend_cwd = true)
   {
     try{
-      this.file = require(prepend_cwd ? this.cwd() + file_name : file_name);
+      let _f = prepend_cwd ? this.cwd() + file_name : file_name;
+      console.log(`Attempting to "require('${_f}'')"...`);
+      this.file = require(_f);
       this.fileNotFound = false;
       log.info(`Loaded ${file_name}`);
     } catch (e)

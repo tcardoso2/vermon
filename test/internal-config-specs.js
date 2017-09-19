@@ -17,6 +17,7 @@ let ent = require('../Entities.js');
 let ext = require('../Extensions.js');
 let main = require('../main.js');
 let events = require('events');
+let chalk = require('chalk');
 
 before(function(done) {
   done();
@@ -384,13 +385,11 @@ describe("When creating a config file of several components of same type, ", fun
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test8.js");
 
-    main.StartWithConfig(alternativeConfig);
-
-    let md = main.GetMotionDetectors();
-    md[0].name.should.equal("MD 2");
-    md[1].name.should.equal("MD 1");
-
-    done();
+    main.StartWithConfig(alternativeConfig, (e, d, n, f) => {
+      d[0].name.should.equal("MD 2");
+      d[1].name.should.equal("MD 1");
+      done();
+    });
   });
   it('I should be able to add 2 filters of the same type in an array-type structure', function (done) {
     //Main needs to be reset explicitely because it keeps objects from previous test
@@ -400,9 +399,9 @@ describe("When creating a config file of several components of same type, ", fun
   it('Signal with intensity 5 should be reflected on the respective Detector only', function (done) {
     //Main needs to be reset explicitely because it keeps objects from previous test
 
-    let n = main.GetNotifiers();
-    n.length.should.equal(1);
-    n[0].on('pushedNotification', function(message, text, data){
+    let n11 = main.GetNotifiers();
+    n11.length.should.equal(1);
+    n11[0].on('pushedNotification', function(message, text, data){
       data.detector.name.should.equal("MD 2");
     });
 

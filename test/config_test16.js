@@ -4,16 +4,14 @@ profiles = {
       command: "ping -c 1 localhost",
       interval: 0
     },
-    BaseNotifier: {
-      name: "My Base Notifier",
-    },
-    MotionDetector: {
-      name: "This detector 15 will notify"
+    RaspistillNotifier: {
+      name: "My Raspistill Notifier",
+      fileName: "image_" + Date.now(),
     },
     FileDetector: {
-      name: "File Detector 15 - should not notify",
+      name: "File Detector 16 - should notify",
       path: "photos",
-      sendOld: false
+      sendOld: true
     },
     SystemEnvironmentFilter: [
     {

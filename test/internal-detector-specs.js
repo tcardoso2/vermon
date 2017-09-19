@@ -39,6 +39,16 @@ describe("When a detector is added, ", function() {
     main.GetMotionDetectors().length.should.equal(m);
     result.should.equal(false);
   });
+  
+  it('should be added if object is not of type Detector, but force = true', function () {
+    //Prepare
+    main.Reset();
+    let m = main.GetMotionDetectors().length;
+    main.Start({ environment: new ent.Environment() }, true);
+    let result = main.AddDetector({ startMonitoring: function(){} }, true);
+    main.GetMotionDetectors().length.should.equal(m+1);
+    result.should.equal(true);
+  });
 
   it('should be added if object is of type Detector', function () {
     //Prepare

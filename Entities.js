@@ -5,6 +5,7 @@
 let events = require("events");
 let filters = require("./Filters.js");
 let ko = require("knockout");
+let chalk = require('chalk');
 
 /**
  * @class: Entities.Environment
@@ -36,7 +37,7 @@ class Environment{
     //biderectional binding, once a state is changed, the Environment Sends a signal to all the Motion
     //detectors SEQUENTIALLY
     this.on('changedState', function(oldState, newState){
-  	  for (var m in this.motionDetectors)
+  	  for (let m in this.motionDetectors)
   	  {
   	    this.motionDetectors[m].send(newState, this);
       }
@@ -50,20 +51,23 @@ class Environment{
   }
 
   //Expects a MotionDetector entity passed as arg
-  bindDetector(md, notifiers){
+  bindDetector(md, notifiers, force = false){
     this.motionDetectors.push(md);
     if (notifiers)
     {
-      for (var n in notifiers)
+      for (let n in notifiers)
       {
-        notifiers[n].bindToDetector(md);
+        notifiers[n].bindToDetector(md, undefined, force);
       }
     }
   }
 
-  //Expects a MotionDetector entity passed as arg
+  //Expects a MotionDetector entity passed as arg, also removes listener
   unbindDetector(md){
-  	var index = this.motionDetectors.indexOf(md);
+    if (md.removeAllListeners) {
+      md.removeAllListeners('hasDetected');
+    }
+  	let index = this.motionDetectors.indexOf(md);
     if (index > -1) {
       this.motionDetectors.splice(index, 1);
     }
@@ -272,9 +276,9 @@ class BaseNotifier{
   }
 
   //It's the notifier who has the responsibility to bind to existing detectors
-  bindToDetector(detector, template){
+  bindToDetector(detector, template, force = false){
     //Find a better way since it is not possible to unbind?
-    if (!(detector instanceof MotionDetector)){
+    if (!force && !(detector instanceof MotionDetector)){
       throw new Error("detector is not of MotionDetector type.");
     }
 
@@ -285,16 +289,18 @@ class BaseNotifier{
     }
     console.log(`Binding Notifier '${this.name}' to detector '${detector.name}'...`);
     detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
-      n.notify(template, currentIntensity, newState, environment, detector);
+      if (n) { // Testing if the notifier is still there because it might be removed anytime
+        n.notify(template, currentIntensity, newState, environment, detector);
+      }
     });
     this.detectors.push(detector);
   }
 
-  bindToDetectors(detectors, template){
+  bindToDetectors(detectors, template, force = false){
     //Find a better way since it is not possible to unbind?
     for (let d in detectors)
     {
-      this.bindToDetector(detectors[d], template);
+      this.bindToDetector(detectors[d], template, force);
     }
   }
 
