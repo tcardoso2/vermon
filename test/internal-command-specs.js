@@ -50,19 +50,40 @@ describe("When a new Simple Command is created for an environment,", function() 
     let env = new ext.SystemEnvironment("ls");
     (env instanceof ent.Environment).should.equal(true);
   });
+  it('SystemEnvironment should contain as lastState property: totalmem, freemem and cpus.', function (done) {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test11.js");
+    let = _done = false;
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      console.log("SystemEnvironment last State: ", e.lastState);
+      if(!_done)
+      {
+        _done = true;
+        e.lastState.cpus.should.equal(-1);
+        e.lastState.freemem.should.equal(-1);
+        e.lastState.totalmem.should.equal(-1);
+        done();
+      }
+    });
+  });
   it('should be able to output the command line stdout, and provide info such as cpus used, freemem and totalmem', function (done) {
     //Prepare
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test11.js");
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-
+      let = _done = false;
       n[0].on('pushedNotification', function(message, text, data){
-        //Contrary to Motion Detector Filters, Environment filters prevent state to change
-        data.newState.stdout.data.should.equal(process.cwd()+'\n');
-        data.newState.cpus.should.not.equal(undefined);
-        data.newState.freemem.should.not.equal(undefined);
-        data.newState.totalmem.should.not.equal(undefined);
-        done();
+        if(!_done)
+        {
+          _done = true;
+          //Contrary to Motion Detector Filters, Environment filters prevent state to change
+          data.newState.stdout.data.should.equal(process.cwd()+'\n');
+          data.newState.cpus.should.not.equal(undefined);
+          data.newState.freemem.should.not.equal(undefined);
+          data.newState.totalmem.should.not.equal(undefined);
+          done();
+        }
       });
       //Should send a signal right away
     });

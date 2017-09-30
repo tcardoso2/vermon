@@ -28,24 +28,34 @@ class SystemEnvironment extends ent.Environment {
     }
     this.command = command;
     this.interval = interval;
+    this.lastState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 };
     let m = this;
     this.i = setInterval(() => {
       // This is executed after about x milliseconds.
-      node_cmd.get(
-        m.command,
-        function(err, data, stderr){
-          m.addChange({
-            stdout: {"err": err, "data" : data, "stderr": stderr},
-            cpus: os.cpus(),
-            totalmem: os.totalmem(),
-            freemem: os.freemem()
-          });
+      m.getValues((m)=>{
+        m.addChange(m.lastState);
+        if (m.interval == 0) {
+          clearInterval(m.i);
         }
-      );
-      if (m.interval == 0) {
-        clearInterval(m.i);
-      }
+      });
     }, this.interval);
+  }
+
+  getValues(callback){
+    let m = this;
+    node_cmd.get(
+      m.command,
+      function(err, data, stderr){
+        m.lastState = {
+          stdout: {"err": err, "data" : data, "stderr": stderr},
+          cpus: os.cpus(),
+          totalmem: os.totalmem(),
+          freemem: os.freemem(),
+          timestamp: new Date()
+        }
+        callback(m);
+      }
+    );
   }
 }
 
