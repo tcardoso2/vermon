@@ -1,7 +1,8 @@
 # Change log:
 
 ***  
-* v 0.5.2: Added unit test # badge
+* v 0.5.3: Added lastState to SystemEnvironment.  
+* v 0.5.2: Added unit test # badge  
 * v 0.5.1: Update of readme information. WIP on FileDetector to not send old files by default (WIP, adding a new argument to the constructor). Added Roadmap (WIP) page. Fix AddDetector force=true was not propagating correctly. Created Notificator.unbindFromDetector (needed for main.Reset()). Bug Fixes.  
 * v 0.5.0: Implemented badges, Travis build status and dependency status (david-dm.org)  
 * v 0.4.15: Implemented SystemEnvironmentFilter propagating changes in case memory falls below certain values or when a command matches a certain regex (must be a simple command, meaning requiring no user input after issued).  
