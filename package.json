@@ -40,7 +40,7 @@
     "type": "git",
     "url": "git://github.com/tcardoso2/t-motion-detector.git"
   },
-  "license": "MIT",
+  "license": "BSD-2",
   "description": "A library for detecting motion in general, with an application for Raspberry Pi in particular.",
   "name": "t-motion-detector",
   "main": "main",
