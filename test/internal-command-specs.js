@@ -50,19 +50,19 @@ describe("When a new Simple Command is created for an environment,", function() 
     let env = new ext.SystemEnvironment("ls");
     (env instanceof ent.Environment).should.equal(true);
   });
-  it('SystemEnvironment should contain as lastState property: totalmem, freemem and cpus.', function (done) {
+  it('SystemEnvironment should contain as currentState property: totalmem, freemem and cpus.', function (done) {
     //Prepare
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test11.js");
     let = _done = false;
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
-      console.log("SystemEnvironment last State: ", e.lastState);
+      console.log("SystemEnvironment last State: ", e.currentState);
       if(!_done)
       {
         _done = true;
-        e.lastState.cpus.should.equal(-1);
-        e.lastState.freemem.should.equal(-1);
-        e.lastState.totalmem.should.equal(-1);
+        e.currentState.cpus.should.equal(-1);
+        e.currentState.freemem.should.equal(-1);
+        e.currentState.totalmem.should.equal(-1);
         done();
       }
     });

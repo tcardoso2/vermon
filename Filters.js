@@ -143,15 +143,20 @@ class SystemEnvironmentFilter extends BaseFilter{
     this.stdoutMatchesRegex = stdoutMatchesRegex;
   }
 
-  filter(newState, env, detector){
-    console.log(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}`);
+  filter(newState, source, detector){
+    console.log(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}, sent by ${source.constructor.name}`);
     //Tests first if the signal is comming from a System Environment
-    if(newState.freemem && newState.stdout){
-      //Then Tests first if it is below memory
-      if ((newState.freemem < this.valueToFilter) ||
-        (this.stdoutMatchesRegex && newState.stdout.data.match(this.stdoutMatchesRegex))) {
-        return newState;
+    if (source.constructor.name == "SystemEnvironment"){
+      if(newState.freemem && newState.stdout){
+        //Then Tests first if it is below memory
+        if ((newState.freemem < this.valueToFilter) ||
+          (this.stdoutMatchesRegex && newState.stdout.data.match(this.stdoutMatchesRegex))) {
+          return newState;
+        }
       }
+    } else {
+      console.log(`Signal does not come from a SystemEnvironment (${source.constructor.name} instead), ignoring filter.`);
+      return newState;
     }
 
     return false;

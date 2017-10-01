@@ -163,7 +163,7 @@ class MotionDetector{
   }
 
   //Sends a signal to the motion detector
-  send(newState, env)
+  send(newState, source)
   {
     //Does not do anything with the env. Maybe deprecate it?
     if(this._isActive){
@@ -171,14 +171,14 @@ class MotionDetector{
       //will filter if there are any filters
       for (let i in this.filters)
       {
-        newState = this.filters[i].filter(newState, env, this);
+        newState = this.filters[i].filter(newState, source, this);
         if(!newState)
         {
           //No newState any longer, then the Motion treats this as something which should not be notified
           return;
         }
       }
-      this.emit("hasDetected", this.currentIntensity, newState, env, this);
+      this.emit("hasDetected", this.currentIntensity, newState, source, this);
       this.currentIntensity = newState;
     }
   }

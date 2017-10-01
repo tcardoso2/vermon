@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.5: Fixing a bug which did not allow File detector to save files if there is a SystemEnvironment Filter applied to it (WIP)  
 * v 0.5.4: Updated to BSD-2-Clause license. "applyTo" member in Filters can take an array of names of detectors to filter from.  
 * v 0.5.3: Added lastState to SystemEnvironment.  
 * v 0.5.2: Added unit test # badge  

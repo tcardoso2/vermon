@@ -301,14 +301,13 @@ describe("When a new filter is applied to the whole Environment,", function() {
 });
 
 describe("When a new SystemEnvironmentFilter is applied to a SystemEnvironment,", function() {
-  it('it should not notify if the signal is not comming from the environment.', function (done) {
+  it('it notify if the signal is comming from the environment.', function (done) {
     main.Reset();
     this.timeout(3000);
     let alternativeConfig = new main.Config("/test/config_test14.js");
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
       let _done = false;
       n[0].on('pushedNotification', function(message, text, data){
-        //Contrary to Motion Detector Filters, Environment filters prevent state to change
         if (data.newState.stdout){
           if(!_done){ 
             _done = true;
@@ -318,8 +317,20 @@ describe("When a new SystemEnvironmentFilter is applied to a SystemEnvironment,"
         }
         should.fail();
       });
+    });
+  });
+  it('it should not filter if the signal is not coming from the environment.', function (done) {
+    main.Reset();
+    this.timeout(3000);
+    let alternativeConfig = new main.Config("/test/config_test17.js");
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      n[0].on('pushedNotification', function(message, text, data){
+        //Contrary to Motion Detector Filters, Environment filters prevent state to change
+        data.newState.should.equal(9);
+        done();
+      });
       //Act
-      d[0].send(9, e);
+      d[0].send(9, d[0]);
     });
   });
   it('it should be able to filter for more than one detector.', function (done) {

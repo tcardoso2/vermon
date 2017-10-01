@@ -28,7 +28,7 @@ class SystemEnvironment extends ent.Environment {
     }
     this.command = command;
     this.interval = interval;
-    this.lastState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 };
+    this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 };
     let m = this;
     this.i = setInterval(() => {
       // This is executed after about x milliseconds.
@@ -88,10 +88,10 @@ class FileDetector extends MotionDetector{
               }
               else {
                 console.log('>>>>>>> File', path, 'has been added'); 
-                m.send(path);
+                m.send(path, m);
               }
             } else {
-              m.send(path);
+              m.send(path, m);
             }
           }
         });
@@ -99,9 +99,16 @@ class FileDetector extends MotionDetector{
       .on('change', function(path) {
         fs.stat(path, (err, stats)=> {
           console.log('>>>>>>> File', path, 'has been changed');
-          m.send(path);
+          m.send(path, m);
         })
       });
+  }
+
+  send(data, from){
+    //Only sends if the signal was detected from self and not Environment
+    if (from == this){
+      super.send(data);//Ignores signals sent from Environment
+    }
   }
 }
 
