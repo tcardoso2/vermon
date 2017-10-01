@@ -310,10 +310,9 @@ describe("When a new SystemEnvironmentFilter is applied to a SystemEnvironment,"
       n[0].on('pushedNotification', function(message, text, data){
         //Contrary to Motion Detector Filters, Environment filters prevent state to change
         if (data.newState.stdout){
-          if(!_done){ 
-            _done = true
+          //if(!_done){ 
+            //_done = true;
             done();
-          }
           return;
         }
         should.fail();
