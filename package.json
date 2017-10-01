@@ -40,10 +40,10 @@
     "type": "git",
     "url": "git://github.com/tcardoso2/t-motion-detector.git"
   },
-  "license": "BSD-2",
+  "license": "BSD-2-Clause",
   "description": "A library for detecting motion in general, with an application for Raspberry Pi in particular.",
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.5.3"
+  "version": "0.5.4"
 }

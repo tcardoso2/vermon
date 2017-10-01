@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.4: Updated to BSD-2-Clause license. "applyTo" member in Filters can take an array of names of detectors to filter from.  
 * v 0.5.3: Added lastState to SystemEnvironment.  
 * v 0.5.2: Added unit test # badge  
 * v 0.5.1: Update of readme information. WIP on FileDetector to not send old files by default (WIP, adding a new argument to the constructor). Added Roadmap (WIP) page. Fix AddDetector force=true was not propagating correctly. Created Notificator.unbindFromDetector (needed for main.Reset()). Bug Fixes.  

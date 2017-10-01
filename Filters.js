@@ -43,23 +43,32 @@ class BaseFilter{
       case "string":
         // applies all motion detectors matching name
         console.log(`>>>>> applying to motion detectors with name: ${this.applyToName}`);
-        for (let i in motionDetectors)
-        {
-          console.log(`Filter to be applied to items of name: "${this.applyToName}". Searching current motion detectors...`);
-          if (motionDetectors[i].name == this.applyToName)
-          {
-            console.log("Found. Applying filter.")
-            motionDetectors[i].applyFilter(this);
-          }
-        }
+        this._applyToDetectorNames(motionDetectors, [this.applyToName]);
         break;
       case "object":
         //Assumes it is a motion detector, or at least an object which implements the applyFilter method
         console.log(">>>>> applying to motion detector:");
-        this.applyToName.applyFilter(this);
+        //could be an array
+        if(Array.isArray(this.applyToName)){
+          this._applyToDetectorNames(motionDetectors, this.applyToName);
+        } else {
+          this.applyToName.applyFilter(this);
+        }
         break;
       default:
         break;
+    }
+  }
+  //Internal. Requires dName to be a string
+  _applyToDetectorNames(motionDetectors, dName){
+    for (let i in motionDetectors)
+    {
+      console.log(`Filter to be applied to items of name: "${dName}". Searching current motion detectors...`);
+      if (dName.indexOf(motionDetectors[i].name) >= 0)
+      {
+        console.log("Found. Applying filter.")
+        motionDetectors[i].applyFilter(this);
+      }
     }
   }
 }

@@ -13,6 +13,12 @@ profiles = {
       path: "photos",
       sendOld: true
     },
+    BaseDetector: [{
+      name: "MD 1"
+    },
+    {
+      name: "MD 2"
+    }]
     SystemEnvironmentFilter: [
     {
       freeMemBelow: 300000,

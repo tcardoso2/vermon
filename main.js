@@ -471,7 +471,7 @@ class Config {
   {
     try{
       let _f = prepend_cwd ? this.cwd() + file_name : file_name;
-      console.log(`Attempting to "require('${_f}'')"...`);
+      console.log(`Attempting to "require('${_f}')"...`);
       this.file = require(_f);
       this.fileNotFound = false;
       log.info(`Loaded ${file_name}`);
