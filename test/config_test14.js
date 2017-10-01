@@ -1,8 +1,8 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "ping -c 1 localhost",
-      interval: 0
+      command: "echo t-motion",
+      interval: 1000
     },
     MotionDetector: {
       name: "MD 1",
@@ -11,9 +11,9 @@ profiles = {
     },
     SystemEnvironmentFilter: [
     {
-      freeMemBelow: 0,
+      freeMemBelow: 1000,
       applyTo: "MD 1",
-      stdoutMatchesRegex: "1 packets transmitted, 1 packets received, 0.0% packet loss"
+      stdoutMatchesRegex: "t-motion"
     }]
   }
 }
