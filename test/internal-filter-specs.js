@@ -303,6 +303,7 @@ describe("When a new filter is applied to the whole Environment,", function() {
 describe("When a new SystemEnvironmentFilter is applied to a SystemEnvironment,", function() {
   it('it should not notify if the signal is not comming from the environment.', function (done) {
     main.Reset();
+    this.timeout(5000);
     let alternativeConfig = new main.Config("/test/config_test14.js");
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
       let _done = false;
