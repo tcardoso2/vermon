@@ -38,7 +38,8 @@ class SystemEnvironment extends ent.Environment {
       m.getValues((m)=>{
         m.addChange(m.lastState);
       });
-      if ((m.interval == 0) || killAfter == 0){
+      if ((m.interval == 0) || (m.killAfter == 0)){
+        console.log(`Clearing interval killAfter = ${killAfter}`);
         clearInterval(m.i);
       }
     }
