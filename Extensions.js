@@ -21,7 +21,7 @@ let moment = require('moment');
  * @param {int} an interval in seconds to execute the commands
  */
 class SystemEnvironment extends ent.Environment {
-  constructor(command, interval = 0){
+  constructor(command, interval = 1000){
     super();
     if (!command){
       throw new Error("ERROR: You must provide a command as the first argument.");

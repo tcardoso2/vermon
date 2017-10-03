@@ -1,8 +1,7 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "pwd",
-      interval: 500
+      command: "pwd"
     },
     MotionDetector: {
       name: "MD 1",
