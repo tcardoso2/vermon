@@ -55,7 +55,7 @@ md.StartWithConfig(config, (e,d,n,f)=>{
 });
 ````
 * Featured detectors:  
-![PIRMotionDetector](files/pir_wiring.png)  
+![PIRMotionDetector](files/pir_wiring.png = 200x)  
 ````
 //Sends a Slack message if the PIR sensor detects movement
 profiles = {
