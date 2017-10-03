@@ -18,7 +18,7 @@ profiles = {
     },
     {
       name: "MD 2"
-    }]
+    }],
     SystemEnvironmentFilter: [
     {
       freeMemBelow: 300000,
