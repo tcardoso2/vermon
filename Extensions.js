@@ -21,7 +21,7 @@ let moment = require('moment');
  * @param {int} an interval in seconds to execute the commands
  */
 class SystemEnvironment extends ent.Environment {
-  constructor(command, interval = 1000){
+  constructor(command, interval = 0){
     super();
     if (!command){
       throw new Error("ERROR: You must provide a command as the first argument.");
@@ -38,7 +38,7 @@ class SystemEnvironment extends ent.Environment {
           clearInterval(m.i);
         }
       });
-    }, this.interval);
+    }, this.interval < 500 ? 500 : this.interval); //interval is never below 500 millisecond for performance reasons
   }
 
   getValues(callback){
@@ -56,6 +56,11 @@ class SystemEnvironment extends ent.Environment {
         callback(m);
       }
     );
+  }
+
+  exit(){
+    super.exit();
+    clearInterval(this.i);
   }
 }
 

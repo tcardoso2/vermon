@@ -268,6 +268,7 @@ function Reset()
   notifiers = [];
   if (environment){
     environment.removeAllListeners('changedState');
+    environment.exit();
     environment = undefined;
   }
   motionDetectors = [];

@@ -112,8 +112,7 @@ class Environment{
   
   //Do any exit procedures required here (e.g. releasing memory, etc...)
   exit()
-  {
-    throw new Error("Not Implemented.");    
+  {  
   }
 }
 

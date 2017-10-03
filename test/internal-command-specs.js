@@ -28,6 +28,7 @@ before(function(done) {
 
 after(function(done) {
   // here you can clear fixtures, etc.
+  main.Reset();
   done();
 });
 
@@ -125,4 +126,31 @@ describe("When a new Simple Command is created for an environment,", function() 
       //Should send a signal right away
     });
   });
+    it('it should not filter if the signal is not coming from the environment.', function (done) {
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test17.js");
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      n[0].on('pushedNotification', function(message, text, data){
+        //Contrary to Motion Detector Filters, Environment filters prevent state to change
+        data.newState.should.equal(9);
+        done();
+      });
+      //Act
+      d[0].send(9, d[0]);
+    });
+  });
+  it('it should be able to filter for more than one detector.', function (done) {
+    main.Reset();
+    setTimeout(() => { done(); },1000);
+    let alternativeConfig = new main.Config("/test/config_test17.js");
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+
+      n[0].on('pushedNotification', function(message, text, data){
+        //Contrary to Motion Detector Filters, Environment filters prevent state to change
+        console.log(message, text, data);
+        should.fail();
+      });
+      //Will already send a value
+    });
+  });  
 });
