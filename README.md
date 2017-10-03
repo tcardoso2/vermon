@@ -76,7 +76,8 @@ exports.profiles = profiles;
 exports.default = profiles.default;
 ````  
 #### FileDetector  
-<img src="files/icons-files.jpg" alt="FileDetector" width="80"/>
+<img src="files/icons-files.jpg" alt="FileDetector" width="80"/>  
+
 ````
 //Sends a Slack message if any file is added, removed or changed in the "photos" folder
 profiles = {
