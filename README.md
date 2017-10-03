@@ -54,8 +54,10 @@ md.StartWithConfig(config, (e,d,n,f)=>{
   console.log(`Good to go! My environment is ${e}, detectors are ${d}, notifiers ${n} and filters ${f}`);
 });
 ````
-* Featured detectors:  
-<img src="files/pir_wiring.png" alt="PIRMotionDetector" style="width: 200px;"/>
+### Featured detectors:  
+#### PIRMotionDetector  
+<img src="files/pir_wiring.png" alt="PIRMotionDetector" width="480"/>  
+
 ````
 //Sends a Slack message if the PIR sensor detects movement
 profiles = {
@@ -72,8 +74,28 @@ profiles = {
 }
 exports.profiles = profiles;
 exports.default = profiles.default;
+````  
+#### FileDetector  
+<img src="files/icons-files.jpg" alt="FileDetector" width="80"/>
 ````
-<img src="files/icons-files.jpg" alt="FileDetector" style="width: 200px;"/>
+//Sends a Slack message if any file is added, removed or changed in the "photos" folder
+profiles = {
+  default: {
+    Environment: {},
+    FileDetector: {
+      name: "File Detector",
+      path: "photos",
+      sendOld: false
+    },
+    SlackNotifier: {
+      name: "My Slack channel",
+      key: "https://hooks.slack.com/services/<MySlackURL>"
+    }
+  }
+}
+exports.profiles = profiles;
+exports.default = profiles.default;
+````  
 
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
 RaspistillNotifier, which means you can use your Raspberry pi camera to take pictures when
