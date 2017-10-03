@@ -117,7 +117,7 @@ describe("When a new Simple Command is created for an environment,", function() 
         if (!_done){
           //Contrary to Motion Detector Filters, Environment filters prevent state to change
           console.log("MEMORY:", data.newState.freemem);
-          (data.newState.freemem < 99000000000000).should.equal(true);
+          (data.newState.freemem < 9900000000000).should.equal(true);
           done();
           _done = true;
         }

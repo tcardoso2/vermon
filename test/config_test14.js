@@ -2,7 +2,7 @@ profiles = {
   default: {
     SystemEnvironment: {
       command: "echo t-motion",
-      interval: 1000
+      interval: 10000
     },
     MotionDetector: {
       name: "MD 1",
