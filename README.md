@@ -9,12 +9,11 @@
 # t-motion-detector
 A NodeJS Motion detector, initially aimed for Raspberry Pi.
 The Motion Detectors detect changes in the Environment and the Notifiers receive the Motion Detectors' event changes.  
-Author: Tiago Cardoso
 NOTE: this code has only been tested in the following Linux OS:
-- Raspbian: works only for ARM7 processors, meaning old Rpis won't work
+- Raspbian: using Node ARMv7
 - OSX: Tests and code runs / works where no real sensors are involved
 ***
-* STEP 1 : Create your config.js file:  
+* STEP 1 : Create your config.js file and define the default profile of your app:  
 ````
 profiles = {
   default: {
@@ -55,6 +54,27 @@ md.StartWithConfig(config, (e,d,n,f)=>{
   console.log(`Good to go! My environment is ${e}, detectors are ${d}, notifiers ${n} and filters ${f}`);
 });
 ````
+* Featured detectors:  
+![PIRMotionDetector](files/pir_wiring.png)  
+````
+//Sends a Slack message if the PIR sensor detects movement
+profiles = {
+  default: {
+    Environment: {},
+    PIRMotionDetector: {
+      pin: 4
+    },
+    SlackNotifier: {
+      name: "My Slack channel",
+      key: "https://hooks.slack.com/services/<MySlackURL>"
+    }
+  }
+}
+exports.profiles = profiles;
+exports.default = profiles.default;
+````
+![FileDetector](files/pir_wiring.png)  
+
 
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
 RaspistillNotifier, which means you can use your Raspberry pi camera to take pictures when
