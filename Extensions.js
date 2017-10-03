@@ -18,7 +18,7 @@ let moment = require('moment');
  * and propagates the stdout result to the notifier. It uses node-cmd under the hood. Also provides
  * System additional info such as memory used, free memory and cpu usage
  * @param {String} command is a command to execute
- * @param {int} an interval in seconds to execute the commands
+ * @param {int} an interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
  */
 class SystemEnvironment extends ent.Environment {
   constructor(command, interval = 0){
@@ -32,12 +32,13 @@ class SystemEnvironment extends ent.Environment {
     let m = this;
     let f = () => {
       // This is executed after about x milliseconds.
+      console.log("SystemEnvironment is executing command...");
       m.getValues((m)=>{
         m.addChange(m.lastState);
-        if (m.interval == 0) {
-          clearInterval(m.i);
-        }
       });
+      if (m.interval == 0) {
+        clearInterval(m.i);
+      }
     }
     if (this.interval != 0)
     {

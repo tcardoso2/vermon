@@ -170,6 +170,7 @@ describe("When detecting a change", function() {
       n[0].on('pushedNotification', function(message, text, data){
         console.log(">>>>", text);
         text.should.not.contain("should not notify");
+        main.Reset();
       });
       main.AddNotifier(slackNotifier);
 
