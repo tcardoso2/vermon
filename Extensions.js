@@ -30,7 +30,7 @@ class SystemEnvironment extends ent.Environment {
     this.interval = interval;
     this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 };
     let m = this;
-    this.i = setInterval(() => {
+    let f = () => {
       // This is executed after about x milliseconds.
       m.getValues((m)=>{
         m.addChange(m.lastState);
@@ -38,7 +38,13 @@ class SystemEnvironment extends ent.Environment {
           clearInterval(m.i);
         }
       });
-    }, this.interval < 500 ? 500 : this.interval); //interval is never below 500 millisecond for performance reasons
+    }
+    if (this.interval != 0)
+    {
+      this.i = setInterval(f, this.interval < 500 ? 500 : this.interval); //interval is never below 500 millisecond for performance reasons
+    } else {
+      f();
+    }
   }
 
   getValues(callback){

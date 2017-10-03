@@ -1,7 +1,8 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "ping -c 1 localhost"
+      command: "ping -c 1 localhost",
+      interval: 0
     },
     BaseNotifier: {
       name: "My Base Notifier",

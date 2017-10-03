@@ -32,6 +32,7 @@ after(function(done) {
       //if (err) throw err;
     //});
   }
+  main.Reset();
   done();
 });
 
