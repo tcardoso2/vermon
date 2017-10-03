@@ -101,3 +101,28 @@ describe("When a new Simple Command is created for an environment with a Filter,
     });
   });
 });
+
+describe("When detecting a change", function() {
+
+  it('Should not send to Slack old files in the folder (File Detector should not allow)', function() {
+    main.Reset(); 
+    let alternativeConfig = new main.Config("/test/config_test15.js");
+    let sConfig = new main.Config();
+    let slackNotifier = new ext.SlackNotifier("My Slack notifier", sConfig.slackHook(), sConfig.slackAuth());
+    slackNotifier.on('pushedNotification', function(message, text, data){
+      text.should.not.contain("should not notify");
+    });
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      //Raspistill Notifier
+      n[0].on('pushedNotification', function(message, text, data){
+        console.log(">>>>", text);
+        text.should.not.contain("should not notify");
+        main.Reset();
+      });
+      main.AddNotifier(slackNotifier);
+
+      //Act
+      d[0].send(9, e);
+    });
+  });
+});
