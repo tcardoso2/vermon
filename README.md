@@ -55,7 +55,7 @@ md.StartWithConfig(config, (e,d,n,f)=>{
 });
 ````
 * Featured detectors:  
-![PIRMotionDetector](files/pir_wiring.png = 200x)  
+![PIRMotionDetector](files/pir_wiring.png =200x)  
 ````
 //Sends a Slack message if the PIR sensor detects movement
 profiles = {
@@ -73,7 +73,7 @@ profiles = {
 exports.profiles = profiles;
 exports.default = profiles.default;
 ````
-![FileDetector](files/pir_wiring.png)  
+![FileDetector](files/icons-files.jpg)  
 
 
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
