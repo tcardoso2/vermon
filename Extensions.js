@@ -21,7 +21,7 @@ let moment = require('moment');
  * @param {int} an interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
  */
 class SystemEnvironment extends ent.Environment {
-  constructor(command, interval = 0){
+  constructor(command, interval = 0, killAfter = 0){
     super();
     if (!command){
       throw new Error("ERROR: You must provide a command as the first argument.");
@@ -29,14 +29,16 @@ class SystemEnvironment extends ent.Environment {
     this.command = command;
     this.interval = interval;
     this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 };
+    this.killAfter = killAfter;
     let m = this;
     let f = () => {
+      m.killAfter--;
       // This is executed after about x milliseconds.
       console.log("SystemEnvironment is executing command...");
       m.getValues((m)=>{
         m.addChange(m.lastState);
       });
-      if (m.interval == 0) {
+      if ((m.interval == 0) || killAfter == 0){
         clearInterval(m.i);
       }
     }
