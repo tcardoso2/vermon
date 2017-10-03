@@ -55,7 +55,7 @@ md.StartWithConfig(config, (e,d,n,f)=>{
 });
 ````
 * Featured detectors:  
-![PIRMotionDetector](files/pir_wiring.png =200x)  
+<img src="files/pir_wiring.png" alt="PIRMotionDetector" style="width: 200px;"/>
 ````
 //Sends a Slack message if the PIR sensor detects movement
 profiles = {
@@ -73,8 +73,7 @@ profiles = {
 exports.profiles = profiles;
 exports.default = profiles.default;
 ````
-![FileDetector](files/icons-files.jpg)  
-
+<img src="files/icons-files.jpg" alt="FileDetector" style="width: 200px;"/>
 
 From version 0.3.3 onwards, it is possible to attach a Notifier based on node-raspistill,
 RaspistillNotifier, which means you can use your Raspberry pi camera to take pictures when
