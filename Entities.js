@@ -130,7 +130,6 @@ Environment.prototype.toJSON = function() {
   delete copy.motionDetectors; //remove an extra property
   delete copy.filters; //remove an extra property
   delete copy.domain;
-  delete copy.currentState; 
   delete copy.name; 
   return copy; //return the copy to be serialized
 };

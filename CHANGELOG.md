@@ -1,7 +1,9 @@
 # Change log:
 
 ***  
-* v 0.5.6: Modified README with images   
+* v 0.5.8: Environment: Added "currentState" as part of serialized JSON.  
+* v 0.5.7: Small fixes.  
+* v 0.5.6: Modified README with images, made imprevements to SystemEnvironment, added KillAfter argument which allows stoping the interval command after x iterations   
 * v 0.5.5: Fixing a bug which did not allow File detector to save files if there is a SystemEnvironment Filter applied to it (WIP)  
 * v 0.5.4: Updated to BSD-2-Clause license. "applyTo" member in Filters can take an array of names of detectors to filter from.  
 * v 0.5.3: Added lastState to SystemEnvironment.  
