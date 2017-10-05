@@ -19,6 +19,7 @@ let moment = require('moment');
  * System additional info such as memory used, free memory and cpu usage
  * @param {String} command is a command to execute
  * @param {int} an interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
+ * @param {int} an killAfter will clear the interval and stop the command after specified number of times.
  */
 class SystemEnvironment extends ent.Environment {
   constructor(command, interval = 0, killAfter = 0){
@@ -35,13 +36,13 @@ class SystemEnvironment extends ent.Environment {
       m.killAfter--;
       // This is executed after about x milliseconds.
       console.log("SystemEnvironment is executing command...");
-      m.getValues((m)=>{
-        m.addChange(m.lastState);
-      });
       if ((m.interval == 0) || (m.killAfter == 0)){
         console.log(`Clearing interval killAfter = ${killAfter}`);
         clearInterval(m.i);
       }
+      m.getValues((m)=>{
+        m.addChange(m.currentState);
+      });
     }
     if (this.interval != 0)
     {
@@ -56,7 +57,7 @@ class SystemEnvironment extends ent.Environment {
     node_cmd.get(
       m.command,
       function(err, data, stderr){
-        m.lastState = {
+        m.currentState = {
           stdout: {"err": err, "data" : data, "stderr": stderr},
           cpus: os.cpus(),
           totalmem: os.totalmem(),

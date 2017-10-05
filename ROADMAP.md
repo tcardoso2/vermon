@@ -1,15 +1,14 @@
 # ROADMAP  
 This list briefly defines which items are planned for the roadmap. The priority of these might change according to need. Github issue links should exist for all items
 
-### 0.5.5 to 0.5.8:  
-* [GitHub Issue #] Add images to the README file with catchy examples (e.g. PIR Sensor).  
+### 0.5.6 to 0.5.9:  
 * [GitHub Issue #] Work on the setup of the system through CLI (Add, delete, save config (on disk), etc).  
 * [GitHub Issue #] Create environment mode (Record).   
 * [GitHub Issue #] Fix issue '[object Object]' not a valid path, ignoring slack upload. took photo <Buffer ... >
 * [GitHub Issue #] Need to add Linting
-### 0.5.8-0.5.12:  
+### 0.5.10-0.5.15:  
 * [GitHub Issue #] Improve Logging: Proper headings: Date/Time + Criticality + source.  
-* [GitHub Issue #] Improve documentation with examples.  
+* [GitHub Issue #] Improve documentation with examples, update documentation with not just the main.js comments 
 ### 0.6.x:  
 * [GitHub Issue #] Create MongoEnvironment, MongoNotifier and MongoDetector for persistent storage  
 * [GitHub Issue #] Integration tests  
@@ -21,12 +20,6 @@ This list briefly defines which items are planned for the roadmap. The priority 
 ### 0.8.x:  
 * [GitHub Issue #] Automated centralized deployment (DeploymentNotifier)  
 
-## 433 and CLI (0.5.5 to 0.5.12):
+## 433 (0.5.5 to 0.5.12):
 * [GitHub Issue #] Listening mode: Listen for 433MHz signals and record.  
-* [GitHub Issue #] Listening mode: Listen for ping to other units to see if these are up (NodeDetector).
-* [GitHub Issue #] UI: Use CLI as Web/API/UI for this interface.  
-* [GitHub Issue #] UI: Create an Environment Web API service - Build an Atlasboard widget to read that value. 
-
-## 433 and CLI (0.6.x):
-* [GitHub Issue #] Add page which allows seeing on dashboard other units (via re-routing requests) 
 
