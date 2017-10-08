@@ -157,9 +157,9 @@ function RemoveNotifier(notifier, silent = false){
   console.log("Removing Notifier...");
   if (index > -1) {
     if(!silent){
-  	  notifiers[index].notify("Removing Notifier...");
+      notifiers[index].notify("Removing Notifier...");
     }
-  	notifiers.splice(index, 1);
+    notifiers.splice(index, 1);
     return true;
   } else {
     console.log(chalk.yellow(`Notifier ${notifier} not found, ignoring and returning false...`));
@@ -198,9 +198,9 @@ function RemoveDetector(detector){
 function GetEnvironment()
 {
   if (environment == undefined) {
-  	throw new Error('Environment does not exist. Please run the Start() function first or one of its overrides.');
+    throw new Error('Environment does not exist. Please run the Start() function first or one of its overrides.');
   }
-  return environment;	
+  return environment; 
 }
 
 /**
@@ -297,9 +297,9 @@ function Start(params, silent = false){
     {
       _InternalAddEnvironment();
     }
-  	if (params.initialMotionDetector){
+    if (params.initialMotionDetector){
       AddDetector(params.initialMotionDetector);
-  	}
+    }
     if (params.initialNotifier){
       AddNotifier(params.initialNotifier);
     }
@@ -308,7 +308,7 @@ function Start(params, silent = false){
   //Will set a default Environment if does not exist;
   if(!environment){
     _InternalAddEnvironment();
-  	//environment = new ent.Environment();
+    //environment = new ent.Environment();
   }
 
   if (!silent)
@@ -321,9 +321,28 @@ function Start(params, silent = false){
   }
   log.info("ready.");
 }
+/**
+ * Internal function which Starts all the Plugins, ran when StartWithConfir is called.
+ * Throws an Error if any of the plugins does not implement the "Start" method.
+ * @param {e} The current Environment.
+ * @param {m} The current MotionDetectors.
+ * @param {n} The current Notifiers.
+ * @param {f} The current Filters.
+ */
+function _StartPlugins(e,m,n,f){
+  Object.keys(plugins).forEach(function(key) {
+    let p = plugins[key];
+    console.log(`  Attempting to start ${p.id}...`);
+    if(!p.Start) throw new Error("A plugin must have a 'Start' method implemented.");
+    p.Start(e,m,n,f,config);
+    console.log("ok.");
+  });
+}
 
 /**
- * Starts the current environment based on existing configuration. Use this method instead of {Start}
+ * Starts the current environment based on existing configuration. Use this method instead of {Start}.
+ * If there are any plugins added to the environment, it calls their respective "Start" functions as well.
+ * In the end executes a callback.
  * @param {Config} configParams a parameter object of the {Config} instance.
  * @param {Function} callback is a function which will be called after all initialization is done.\n
  * args passed to that callback function, are: Environment, MotionDetectors, Notifiers and Filters objects.
@@ -375,6 +394,8 @@ function StartWithConfig(configParams, callback){
       }
     }
   }
+  _StartPlugins(environment,GetMotionDetectors(),GetNotifiers(),GetFilters());
+
   log.info("ready. returning to callback...");
   if (callback) callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());
 }
@@ -663,7 +684,7 @@ function AddPlugin(ext_module){
 
   let runPostWorkflowFunctions = function(){
     if(!plugins[ext_module.id].PostAddPlugin) throw new Error("Error: PostAddPlugin function must be implemented.");
-    plugins[ext_module.id].PostAddPlugin();
+    plugins[ext_module.id].PostAddPlugin(plugins[ext_module.id]);
   }
 
   //Checks the extension module is not null
@@ -674,19 +695,18 @@ function AddPlugin(ext_module){
   if(plugins[ext_module.id]) throw new Error(`Error: A plugin object with id '${ext_module.id}' already exists.`);
 
   //Checks if the module exports functions
-  if(!ext_module.exports)
-  {
+  if(!ext_module.exports) {
     throw new Error(`Error: Does not seem to be a valid module.`);    
   }
   else {
-
-    runPreWorkflowFunctions();
+    runPreWorkflowFunctions();  
     //Adds the module
     plugins[ext_module.id] = ext_module.exports;
-
+    
     //stores a reference of the exported functions of the main library in the object
-    plugins[ext_module.id].$ = module.exports;
-    console.log("Added Plugin", plugins);
+    ext_module.exports._ = module.exports;
+
+    console.log("Added Plugin", ext_module.id);
     runPostWorkflowFunctions();
 
     return true;

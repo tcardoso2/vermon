@@ -14,6 +14,7 @@
 -   [DeactivateDetector](#deactivatedetector)
 -   [ActivateDetector](#activatedetector)
 -   [RemoveNotifier](#removenotifier)
+-   [RemoveDetector](#removedetector)
 -   [GetEnvironment](#getenvironment)
 -   [GetNotifiers](#getnotifiers)
 -   [GetMotionDetectors](#getmotiondetectors)
@@ -21,6 +22,7 @@
 -   [GetFilters](#getfilters)
 -   [Reset](#reset)
 -   [Start](#start)
+-   [\_StartPlugins](#_startplugins)
 -   [StartWithConfig](#startwithconfig)
 -   [\_AddInstance](#_addinstance)
 -   [Config](#config)
@@ -71,7 +73,9 @@ System additional info such as memory used, free memory and cpu usage
 
 -   `command` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is a command to execute
 -   `interval`   (optional, default `0`)
--   `an` **int** interval in seconds to execute the commands
+-   `killAfter`   (optional, default `0`)
+-   `an` **int** interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
+-   `an` **int** killAfter will clear the interval and stop the command after specified number of times.
 
 ## BaseFilter
 
@@ -159,8 +163,21 @@ Does not fail if the notifier is not found.
 **Parameters**
 
 -   `notifier` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the notifier instance to remove.
+-   `silent`   (optional, default `false`)
+-   `sileng` **booleal** states if = true the removal should not send a notification
 
 Returns **any** true if the notifier was found (and subsequently removed).
+
+## RemoveDetector
+
+Removes an existing MotionDetector from the context, including its event listeners.
+Does not fail if the detector is not found.
+
+**Parameters**
+
+-   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector instance to remove.
+
+Returns **any** true if the detector was found (and subsequently removed).
 
 ## GetEnvironment
 
@@ -214,6 +231,22 @@ to use {StartWithConfig} instead.
     (2) an "initialMotionDetector" attribute with one {MotionDetector} object to set (does not allow several motion detectors); \\n
     (3) an "initialNotifier" attribute with the {Notifier} object to set (does not allow several notifiers); \\n
 -   `silent` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** if set to true will not send an initial notification to notifiers when starting up (by default is set to false). (optional, default `false`)
+
+## \_StartPlugins
+
+Internal function which Starts all the Plugins, ran when StartWithConfir is called.
+Throws an Error if any of the plugins does not implement the "Start" method.
+
+**Parameters**
+
+-   `e`  
+-   `m`  
+-   `n`  
+-   `f`  
+-   `The` **e** current Environment.
+-   `The` **m** current MotionDetectors.
+-   `The` **n** current Notifiers.
+-   `The` **f** current Filters.
 
 ## StartWithConfig
 

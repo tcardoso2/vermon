@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.9: Added Start Plugin code which gets called when StartWithConfig is called. Fixes required for Plugins to work properly.  
 * v 0.5.8: Environment: Added "currentState" as part of serialized JSON.  
 * v 0.5.7: Small fixes.  
 * v 0.5.6: Modified README with images, made imprevements to SystemEnvironment, added KillAfter argument which allows stoping the interval command after x iterations   
