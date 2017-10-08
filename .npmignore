@@ -9,6 +9,7 @@ out
 docs
 *sublime-*
 test/*_test_my_saved_config*
+*.log
 
 # Packages
 *.tgz
