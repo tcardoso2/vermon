@@ -22,8 +22,8 @@ let motionDetectors = [];
 let config;
 let ko = require("knockout");
 let fs = require('fs')
-  , Log = require('log')
-  , log = new Log('debug', fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
+  , Log = require('log');
+var log = new Log('debug');//, fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
 let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
@@ -154,7 +154,7 @@ function ActivateDetector(name)
  */
 function RemoveNotifier(notifier, silent = false){
   let index = notifiers.indexOf(notifier);
-  console.log("Removing Notifier...");
+  log.info("Removing Notifier...");
   if (index > -1) {
     if(!silent){
       notifiers[index].notify("Removing Notifier...");
@@ -162,7 +162,7 @@ function RemoveNotifier(notifier, silent = false){
     notifiers.splice(index, 1);
     return true;
   } else {
-    console.log(chalk.yellow(`Notifier ${notifier} not found, ignoring and returning false...`));
+    log.info(chalk.yellow(`Notifier ${notifier} not found, ignoring and returning false...`));
   }
   return false;
 }
@@ -176,7 +176,7 @@ function RemoveNotifier(notifier, silent = false){
  */
 function RemoveDetector(detector){
   let index = motionDetectors.indexOf(detector);
-  console.log("Removing Detector...");
+  log.info("Removing Detector...");
   if (index > -1) {
     environment.unbindDetector(detector);
     motionDetectors.splice(index, 1);
@@ -184,7 +184,7 @@ function RemoveDetector(detector){
     environment.motionDetectors.splice(index, 1);
     return true;
   } else {
-    console.log(chalk.yellow(`Detector ${detector} not found, ignoring and returning false...`));
+    log.info(chalk.yellow(`Detector ${detector} not found, ignoring and returning false...`));
   }
   return false;
 }
@@ -272,7 +272,16 @@ function Reset()
     environment = undefined;
   }
   motionDetectors = [];
+  Object.keys(plugins).forEach(function(key) {
+    let p = plugins[key];
+    console.log(`  Attempting to reset plugin ${p.id} with key ${key}...`);
+    if(p.Reset){
+      p.Reset();
+      log.info("ok.");     
+    }
+  });
   plugins = {};
+  config = {};
   console.log("Done Reseting environment.");
 }
 
@@ -332,7 +341,7 @@ function Start(params, silent = false){
 function _StartPlugins(e,m,n,f){
   Object.keys(plugins).forEach(function(key) {
     let p = plugins[key];
-    console.log(`  Attempting to start ${p.id}...`);
+    log.info(`  Attempting to start ${p.id}...`);
     if(!p.Start) throw new Error("A plugin must have a 'Start' method implemented.");
     p.Start(e,m,n,f,config);
     console.log("ok.");
@@ -380,7 +389,7 @@ function StartWithConfig(configParams, callback){
       {
         //We always assume that if the object found is an array then it is an array of objects instead
         if (Array.isArray(profileObj[p])){
-          console.log("Object provided in config is an array, instanciating each object...");
+          log.info("Object provided in config is an array, instanciating each object...");
           for (let i in profileObj[p])
           {
             //instanciates each object
@@ -411,14 +420,14 @@ function StartWithConfig(configParams, callback){
  * @internal
  */
 function _AddInstance(f, p, args){
-  console.log(`Creating entity "${p}" with args ${args}...`);
+  log.info(`Creating entity "${p}" with args ${args}...`);
   let o = f.instanciate(p, args);
   //The way this is written, forces the environment to be created first
   if(!_InternalAddEnvironment(o)){
     if (!AddNotifier(o)){
       if(!AddDetector(o, config.forceAdds)){
         if(!_InternalAddFilter(o)){
-          console.warn(chalk.yellow(`Object/class '${p}' could not be added. Proceeding.`));
+          log.warn(chalk.yellow(`Object/class '${p}' could not be added. Proceeding.`));
         }
       }
     }
@@ -493,13 +502,13 @@ class Config {
   {
     try{
       let _f = prepend_cwd ? this.cwd() + file_name : file_name;
-      console.log(`Attempting to "require('${_f}')"...`);
+      log.info(`Attempting to "require('${_f}')"...`);
       this.file = require(_f);
       this.fileNotFound = false;
       log.info(`Loaded ${file_name}`);
     } catch (e)
     {
-      console.log(chalk.yellow(`Warning:'${e.message}', will fallback to config file...`));
+      log.info(chalk.yellow(`Warning:'${e.message}', will fallback to config file...`));
       this.file = this.fallback;
       this.fileNotFound = true;
     }
@@ -706,7 +715,7 @@ function AddPlugin(ext_module){
     //stores a reference of the exported functions of the main library in the object
     ext_module.exports._ = module.exports;
 
-    console.log("Added Plugin", ext_module.id);
+    log.info("Added Plugin", ext_module.id);
     runPostWorkflowFunctions();
 
     return true;
@@ -735,7 +744,7 @@ function RemovePlugin(ext_module_id){
 
   runPreWorkflowFunctions();
   delete plugins[ext_module_id];
-  console.log("Removed Plugin", ext_module_id);
+  log.info("Removed Plugin", ext_module_id);
   runPostWorkflowFunctions();
 
   return true;

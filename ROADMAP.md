@@ -6,6 +6,7 @@ This list briefly defines which items are planned for the roadmap. The priority 
 * [GitHub Issue #] Create environment mode (Record).   
 * [GitHub Issue #] Fix issue '[object Object]' not a valid path, ignoring slack upload. took photo <Buffer ... >
 * [GitHub Issue #] Need to add Linting
+* [GitHub Issue #] Configure log level and output (default: stdout, else file)
 ### 0.5.10-0.5.15:  
 * [GitHub Issue #] Improve Logging: Proper headings: Date/Time + Criticality + source.  
 * [GitHub Issue #] Improve documentation with examples, update documentation with not just the main.js comments 

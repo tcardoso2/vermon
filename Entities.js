@@ -238,7 +238,7 @@ MotionDetector.prototype.toJSON = function() {
   let copy = ko.toJS(this); //easy way to get a clean copy
   let props = Object.getOwnPropertyNames(copy);
   for (let i in props){
-    if (props[i].startsWith("_"))
+    if (props[i].startsWith("_") && !props[i].startsWith("_is")) //The getters I want to print (like _isActive)
     {
       delete copy[props[i]];
     }
