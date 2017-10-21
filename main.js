@@ -14,6 +14,7 @@
 //
 
 let ent = require("./Entities.js");
+let cmd = require("node-cmd");
 let filters = ent.Filters;
 let ext = require("./Extensions.js");
 let notifiers = [];
@@ -778,8 +779,9 @@ exports.Entities = ent;
  */
 exports.Extensions = ext;
 /**
- * Exposes the Filters accessible
+ * Exposes the command line library (node-cmd) accessible
  */
+exports.Cmd = cmd;
 exports.Filters = filters;
 exports.Start = Start;
 exports.StartWithConfig = StartWithConfig;

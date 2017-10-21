@@ -41,7 +41,7 @@
 -   [GetPlugins](#getplugins)
 -   [Entities](#entities)
 -   [Extensions](#extensions)
--   [Filters](#filters)
+-   [Cmd](#cmd)
 
 ## Environment
 
@@ -250,7 +250,9 @@ Throws an Error if any of the plugins does not implement the "Start" method.
 
 ## StartWithConfig
 
-Starts the current environment based on existing configuration. Use this method instead of {Start}
+Starts the current environment based on existing configuration. Use this method instead of {Start}.
+If there are any plugins added to the environment, it calls their respective "Start" functions as well.
+In the end executes a callback.
 
 **Parameters**
 
@@ -422,6 +424,6 @@ Exposes the Entities accessible
 
 Exposes the Extensions accessible
 
-## Filters
+## Cmd
 
-Exposes the Filters accessible
+Exposes the command line library (node-cmd) accessible

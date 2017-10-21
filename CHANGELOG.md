@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.11:Exposed "node-cmd", from main._.Cmd, so that Plugin extensions can use commend line  
 * v 0.5.10:Updated main console.log by log.info on main.js. Reset also calls Reset method of plugins.  
 * v 0.5.9: Added Start Plugin code which gets called when StartWithConfig is called. Fixes required for Plugins to work properly.  
 * v 0.5.8: Environment: Added "currentState" as part of serialized JSON.  

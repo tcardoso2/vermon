@@ -153,4 +153,17 @@ describe("When a new Simple Command is created for an environment,", function() 
       //Will already send a value
     });
   });  
+  it('should expose "Cmd" as a "node-cmd" object.', function (done) {
+    main.Reset();
+    main.Cmd.get(
+      'pwd',
+      function(err, data, stderr){
+        (err == null).should.equal(true);
+        stderr.should.equal('');
+        console.log('the current working dir is : ',data);
+        data.should.not.equal(null);
+        done();
+      }
+    );
+  });  
 });
