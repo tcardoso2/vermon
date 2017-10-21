@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mocha test/internal-command-specs.js &&
+mocha test/internal-command-specs.js --testcli &&
 mocha test/internal-config-specs.js &&
 mocha test/internal-detector-specs.js &&
 mocha test/internal-extension-specs.js &&

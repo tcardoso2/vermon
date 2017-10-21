@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.12:Exposed "commander", from main._.Cli, so program can be used as a basic CLI tool as well.  
 * v 0.5.11:Exposed "node-cmd", from main._.Cmd, so that Plugin extensions can use command line.  
 * v 0.5.10:Updated main console.log by log.info on main.js. Reset also calls Reset method of plugins.  
 * v 0.5.9: Added Start Plugin code which gets called when StartWithConfig is called. Fixes required for Plugins to work properly.  

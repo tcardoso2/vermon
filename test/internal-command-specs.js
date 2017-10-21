@@ -166,4 +166,16 @@ describe("When a new Simple Command is created for an environment,", function() 
       }
     );
   });  
+  it('should expose "Cli" as a "commander" object.', function (done) {
+    //Test command Must be run with --testcli argument for this test to pass
+    main.Reset();
+    main.Cli.version('0.1.0')
+      .option('-p, --testcli', 'test')
+      .option('-P, --pineapple', 'Add pineapple')
+      .option('-b, --bbq-sauce', 'Add bbq sauce')
+      .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
+      .parse(process.argv);
+    main.Cli.testcli.should.equal(true);
+    done();
+  });  
 });

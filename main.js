@@ -15,6 +15,7 @@
 
 let ent = require("./Entities.js");
 let cmd = require("node-cmd");
+let cli = require("commander");
 let filters = ent.Filters;
 let ext = require("./Extensions.js");
 let notifiers = [];
@@ -782,6 +783,10 @@ exports.Extensions = ext;
  * Exposes the command line library (node-cmd) accessible
  */
 exports.Cmd = cmd;
+/**
+ * Exposes a CLI tool based on 'commander' node package
+ */
+exports.Cli = cli;
 exports.Filters = filters;
 exports.Start = Start;
 exports.StartWithConfig = StartWithConfig;
