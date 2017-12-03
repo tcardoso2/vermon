@@ -222,7 +222,7 @@ class SlackNotifier extends BaseNotifier{
       this.slack.webhook({
         channel: '#general',
         icon_emoji: ":ghost:",
-        text: some_text,
+        text: some_text + JSON.stringify(this.newState),
         username: this.name,
       }, function(err, response){
         if (!err)
