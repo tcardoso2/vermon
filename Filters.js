@@ -144,7 +144,8 @@ class SystemEnvironmentFilter extends BaseFilter{
   }
 
   filter(newState, source, detector){
-    console.log(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}, sent by ${source.constructor.name}`);
+    let source_c = source ? source.constructor.name : undefined;
+    console.log(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}, sent by ${source_c}`);
     //Tests first if the signal is comming from a System Environment
     if (source.constructor.name == "SystemEnvironment"){
       if(newState.freemem && newState.stdout){
