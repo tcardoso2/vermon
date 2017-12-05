@@ -1,7 +1,7 @@
 # Change log:
 
 ***  
-* v 0.5.14:Small bug fix on Filters, was crashing when source was not defined.  
+* v 0.5.14 and 0.5.15:Small bug fix on Filters, was crashing when source was not defined.  
 * v 0.5.13:Fix, added commander as dependency, adding additional info sent on SlackNotifier by default (newState)  
 * v 0.5.12:Exposed "commander", from main._.Cli, so program can be used as a basic CLI tool as well.  
 * v 0.5.11:Exposed "node-cmd", from main._.Cmd, so that Plugin extensions can use command line.  

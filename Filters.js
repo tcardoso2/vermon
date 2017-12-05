@@ -147,7 +147,7 @@ class SystemEnvironmentFilter extends BaseFilter{
     let source_c = source ? source.constructor.name : undefined;
     console.log(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}, sent by ${source_c}`);
     //Tests first if the signal is comming from a System Environment
-    if (source.constructor.name == "SystemEnvironment"){
+    if (source_c == "SystemEnvironment"){
       if(newState.freemem && newState.stdout){
         //Then Tests first if it is below memory
         if ((newState.freemem < this.valueToFilter) ||
@@ -156,7 +156,7 @@ class SystemEnvironmentFilter extends BaseFilter{
         }
       }
     } else {
-      console.log(`Signal does not come from a SystemEnvironment (${source.constructor.name} instead), ignoring filter.`);
+      console.log(`Signal does not come from a SystemEnvironment (${source_c} instead), ignoring filter.`);
       return newState;
     }
 
