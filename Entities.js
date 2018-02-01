@@ -30,7 +30,16 @@ class Environment{
       this.name = params.name;
       //This is kept for serialization purpose, TODO: improve
       this.params = params;
+      if (params.state){
+        this.currentState = params.state;
+      }
     }
+
+    //Makes originalState immutable, works only on strict mode
+    Object.defineProperty(this, 'originalState', {
+      value: this.currentState,
+      writable: false
+    });
   
     events.EventEmitter.call(this);
   
@@ -48,6 +57,12 @@ class Environment{
   getCurrentState()
   {
   	return this.currentState;
+  }
+
+  //Gets the original state of the environment (should be immutable)
+  getOriginalState()
+  {
+    return this.originalState;
   }
 
   //Expects a MotionDetector entity passed as arg

@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.16: If "state" is passed as a member of the Entities object, then stores it in the currentState. Created also originalState / getOriginalState (immutable);  
 * v 0.5.14 and 0.5.15:Small bug fix on Filters, was crashing when source was not defined.  
 * v 0.5.13:Fix, added commander as dependency, adding additional info sent on SlackNotifier by default (newState)  
 * v 0.5.12:Exposed "commander", from main._.Cli, so program can be used as a basic CLI tool as well.  

@@ -191,3 +191,24 @@ describe("When 2 new Motion Detectors are added to an Environment, ", function()
     count.should.equal(1);
   });
 });
+
+describe("When an environment is created, ", function() {
+  it('should store the state if passed as argument', function () {
+    let e = new ent.Environment({ state: 10 });
+    e.getCurrentState().should.equal(10);
+  });
+
+  it('should be able to retrieve its original state', function () {
+    let e = new ent.Environment({ state: 10 });
+    e.currentState = 20;
+    e.getCurrentState().should.equal(20);
+    e.getOriginalState().should.equal(10);    
+  });
+
+  it('original state should be immutable', function () {
+    let e = new ent.Environment({ state: 10 });
+    e.originalState = 20;
+    e.getCurrentState().should.equal(10);
+    e.getOriginalState().should.equal(10);    
+  });
+});
