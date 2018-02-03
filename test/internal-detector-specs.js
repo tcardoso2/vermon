@@ -212,3 +212,26 @@ describe("When an environment is created, ", function() {
     e.getOriginalState().should.equal(10);    
   });
 });
+
+describe("When a detector is created, ", function() {
+  it('should store the intensity if passed as argument', function () {
+    let d = new ent.MotionDetector("My detector", 10);
+    d.getIntensity().should.equal(10);
+  });
+
+  it('should be able to retrieve its original intensity', function () {
+    let d = new ent.MotionDetector("My detector", 10);
+    d.getIntensity().should.equal(10);
+    d.currentIntensity = 20;
+    d.getIntensity().should.equal(20);
+    d.getOriginalIntensity().should.equal(10);    
+  });
+
+  it('original intensity should be immutable', function () {
+    let d = new ent.MotionDetector("My detector", 10);
+    d.originalIntensity = 20;
+    d.getOriginalIntensity().should.equal(10);
+  });
+});
+
+

@@ -158,10 +158,17 @@ Environment.prototype.toJSON = function() {
  */
 class MotionDetector{
 
-  constructor(name){
+  constructor(name, initialIntensity){
     this._isActive = false;
     this.count;
-    this.currentIntensity;
+    this.currentIntensity = initialIntensity;
+
+    //Makes originalIntensity immutable, works only on strict mode
+    Object.defineProperty(this, 'originalIntensity', {
+      value: this.currentIntensity,
+      writable: false
+    });
+
     this.name = name ? name : "unnamed detector."
     if ((typeof this.name) != "string"){
       throw new Error(`Motion detector first argument (name) is not of type string. Provided value was ${JSON.stringify(name)}`);
@@ -206,6 +213,14 @@ class MotionDetector{
   getIntensity()
   {
     return this.currentIntensity;  	
+  }
+
+/**
+ * Gets the Intensity of the signal when the detector was originally created
+ */
+  getOriginalIntensity()
+  {
+    return this.originalIntensity;   
   }
 
   //Starts monitoring any movement
