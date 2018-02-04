@@ -1,6 +1,8 @@
 # Change log:
 
 ***  
+* v 0.5.18: main.Entities.GetExtensions() now returs all the classes which have been extended by the EntitiesFactory class;  
+* v 0.5.17: Created originalIntensity for Detectors, an immutable value, similar to "originalState" for Environment classes;  
 * v 0.5.16: If "state" is passed as a member of the Entities object, then stores it in the currentState. Created also originalState / getOriginalState (immutable);  
 * v 0.5.14 and 0.5.15:Small bug fix on Filters, was crashing when source was not defined.  
 * v 0.5.13:Fix, added commander as dependency, adding additional info sent on SlackNotifier by default (newState)  

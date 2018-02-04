@@ -372,7 +372,7 @@ BaseNotifier.prototype.toJSON = function() {
 };
 
 //Entities Factory
-const classes = { Environment, MotionDetector, BaseNotifier};
+const classes = { Environment, MotionDetector, BaseNotifier };
 //Keys 
 const reservedKeys = [ "slack", "raspistill" ]
 
@@ -432,6 +432,9 @@ class EntitiesFactory
 
 
 //Extending Factory methods
+function GetExtensions(){
+  return classes;
+}
 
 new EntitiesFactory().extend(filters.classes);
 
@@ -439,6 +442,7 @@ Environment.prototype.__proto__ = events.EventEmitter.prototype;
 MotionDetector.prototype.__proto__ = events.EventEmitter.prototype;
 BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
 
+exports.GetExtensions = GetExtensions;
 exports.Filters = filters;
 exports.EntitiesFactory = EntitiesFactory;
 exports.Environment = Environment;
