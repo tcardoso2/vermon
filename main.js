@@ -25,7 +25,8 @@ let config;
 let ko = require("knockout");
 let fs = require('fs')
   , Log = require('log');
-var log = new Log('debug');//, fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
+var log = require('tracer').colorConsole();//new Log('debug');//, fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
+log.warning = log.warn;
 let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
@@ -345,6 +346,7 @@ function _StartPlugins(e,m,n,f){
     let p = plugins[key];
     log.info(`  Attempting to start ${p.id}...`);
     if(!p.Start) throw new Error("A plugin must have a 'Start' method implemented.");
+    //TODO, add a way to call StartWithConfig
     p.Start(e,m,n,f,config);
     console.log("ok.");
   });

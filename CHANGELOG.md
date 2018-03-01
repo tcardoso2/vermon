@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.19: Substituted log module with tracer which provides better output (colors and file location);  
 * v 0.5.18: main.Entities.GetExtensions() now returs all the classes which have been extended by the EntitiesFactory class;  
 * v 0.5.17: Created originalIntensity for Detectors, an immutable value, similar to "originalState" for Environment classes;  
 * v 0.5.16: If "state" is passed as a member of the Entities object, then stores it in the currentState. Created also originalState / getOriginalState (immutable);  
