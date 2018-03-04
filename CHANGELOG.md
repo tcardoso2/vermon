@@ -1,6 +1,8 @@
 # Change log:
 
 ***  
+* v 0.5.21 :TO-DO: Start working on EnvironmentDetectors for ability to add additional environments;  
+* v 0.5.20: Added check to see if detector exists in case AddDetector = false (safeguard);  
 * v 0.5.19: Substituted log module with tracer which provides better output (colors and file location);  
 * v 0.5.18: main.Entities.GetExtensions() now returs all the classes which have been extended by the EntitiesFactory class;  
 * v 0.5.17: Created originalIntensity for Detectors, an immutable value, similar to "originalState" for Environment classes;  

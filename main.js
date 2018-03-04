@@ -684,7 +684,8 @@ function _InternalSerializeCurrentContext(){
 }
 
 /**
- * Adds an Extention plugin to the library
+ * Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
+ * makes the added module available from the "plugins" varible, and adds its functions to t-motion-detector;
  * @param {Object} ext_module is the actual module we are extending.
  * @return {boolean} True the plugin was successfully added.
  */

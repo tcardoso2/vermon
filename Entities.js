@@ -309,19 +309,24 @@ class BaseNotifier{
     if (!force && !(detector instanceof MotionDetector)){
       throw new Error("detector is not of MotionDetector type.");
     }
-
-    let n = this;
-    if (!template)
-    {
-      template = `'${this.name}' received Notification received from: '${detector.name}'`;    
-    }
-    console.log(`Binding Notifier '${this.name}' to detector '${detector.name}'...`);
-    detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
-      if (n) { // Testing if the notifier is still there because it might be removed anytime
-        n.notify(template, currentIntensity, newState, environment, detector);
+    //Safeguard in case force = true and detector does not exits
+    if(detector){
+      let n = this;
+      if (!template)
+      {
+        template = `'${this.name}' received Notification received from: '${detector.name}'`;    
       }
-    });
-    this.detectors.push(detector);
+      console.log(`Binding Notifier '${this.name}' to detector '${detector.name}'...`);
+      detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
+        if (n) { // Testing if the notifier is still there because it might be removed anytime
+          n.notify(template, currentIntensity, newState, environment, detector);
+        }
+      });
+      this.detectors.push(detector);      
+    } else {
+      //Safeguard in case 
+      console.log("WARN: No detector was found? Ignoring...");
+    }
   }
 
   bindToDetectors(detectors, template, force = false){
