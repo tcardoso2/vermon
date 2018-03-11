@@ -75,6 +75,48 @@ class SystemEnvironment extends ent.Environment {
   }
 }
 
+/**
+ * An Environment which stores several sub-environments
+ */
+class MultiEnvironment extends ent.Environment {
+  constructor(){
+    super();
+    this.currentState = {};
+  }
+
+  /*
+  * Stacks (adds as object member) the states in an object instead of overriding the state
+  * @param {Object} the value to add.
+  */
+  addChange(intensity)
+  { 
+    if(intensity instanceof ent.Environment){
+      let value = this.getCurrentState();
+      value[intensity.name] = intensity;
+      return super.addChange(value);      
+    }
+    else
+    {
+      console.warn("addChange detected intensity of not type Environment. Ignoring silently...");
+      this.emit("ignoredChange", this.currentState, intensity);
+      console.log("Emmited 'ignoredChange'...");
+      this.propagateToSubEnvironments(intensity);
+    }
+  }
+
+  /*
+   * calls the 'addchange' method of the sub-Environments with the given intensity
+   * @param {Object} the intensity to add to propagate to the sub-environments.
+   */
+  propagateToSubEnvironments(intensity)
+  {
+    let _this = this;
+    Object.keys(this.currentState).forEach(function(key) {
+      _this.currentState[key].addChange(intensity);
+    });
+  }
+}
+
 //A concrete MotionDetector for detecting files in a folder
 class FileDetector extends MotionDetector{
   
@@ -311,3 +353,4 @@ exports.PIRMotionDetector = PIRMotionDetector;
 exports.SlackNotifier = SlackNotifier;
 exports.RaspistillNotifier = RaspistillNotifier;
 exports.SystemEnvironment = SystemEnvironment;
+exports.MultiEnvironment = MultiEnvironment;

@@ -10,6 +10,10 @@ let chalk = require('chalk');
 /**
  * @class: Entities.Environment
  * @classDesc: Defines the environment to be monitored
+ * IMPORTANT: By detault the internal currentValue of the Environment will default to 0 (integer). 
+ * If you wish to keep an internal state of a String notice that it will be appended to the state meaning the
+ * initial string is "0". If you which to not include a "0" you must call the object via new Environment({ state: ""})
+ * @param {Object} params to add, you can add a "name" and a "state".
  * @public
  */
 class Environment{
@@ -30,7 +34,7 @@ class Environment{
       this.name = params.name;
       //This is kept for serialization purpose, TODO: improve
       this.params = params;
-      if (params.state){
+      if (params.state != undefined){
         this.currentState = params.state;
       }
     }

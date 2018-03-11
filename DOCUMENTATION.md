@@ -2,10 +2,12 @@
 
 ### Table of Contents
 
+-   [SystemEnvironment](#systemenvironment)
+-   [MultiEnvironment](#multienvironment)
 -   [Environment](#environment)
     -   [motionDetectors](#motiondetectors)
 -   [MotionDetector](#motiondetector)
--   [SystemEnvironment](#systemenvironment)
+    -   [getOriginalIntensity](#getoriginalintensity)
 -   [BaseFilter](#basefilter)
 -   [\_InternalAddFilter](#_internaladdfilter)
 -   [\_InternalAddEnvironment](#_internaladdenvironment)
@@ -42,24 +44,7 @@
 -   [Entities](#entities)
 -   [Extensions](#extensions)
 -   [Cmd](#cmd)
-
-## Environment
-
-**Parameters**
-
--   `params`  
-
-### motionDetectors
-
-: Contains the motion detectors attached to the current environment.
-
-## MotionDetector
-
-: Test
-
-**Parameters**
-
--   `name`  
+-   [Cli](#cli)
 
 ## SystemEnvironment
 
@@ -76,6 +61,35 @@ System additional info such as memory used, free memory and cpu usage
 -   `killAfter`   (optional, default `0`)
 -   `an` **int** interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
 -   `an` **int** killAfter will clear the interval and stop the command after specified number of times.
+
+## MultiEnvironment
+
+**Extends ent.Environment**
+
+An Environment which stores several sub-environments
+
+## Environment
+
+**Parameters**
+
+-   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** to add, you can add a "name" and a "state".
+
+### motionDetectors
+
+: Contains the motion detectors attached to the current environment.
+
+## MotionDetector
+
+: Test
+
+**Parameters**
+
+-   `name`  
+-   `initialIntensity`  
+
+### getOriginalIntensity
+
+Gets the Intensity of the signal when the detector was originally created
 
 ## BaseFilter
 
@@ -392,7 +406,8 @@ Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 
 ## AddPlugin
 
-Adds an Extention plugin to the library
+Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
+makes the added module available from the "plugins" varible, and adds its functions to t-motion-detector;
 
 **Parameters**
 
@@ -427,3 +442,7 @@ Exposes the Extensions accessible
 ## Cmd
 
 Exposes the command line library (node-cmd) accessible
+
+## Cli
+
+Exposes a CLI tool based on 'commander' node package
