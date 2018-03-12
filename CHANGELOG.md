@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.22 :WIP: Continuing Unit tests on MultiEnvronment, Adding Detectors and Notifiers to specific sub-environments;  
 * v 0.5.21 :WIP: Working on MultiEnvironment;   
 * v 0.5.20: Added check to see if detector exists in case AddDetector = false (safeguard);  
 * v 0.5.19: Substituted log module with tracer which provides better output (colors and file location);  

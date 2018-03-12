@@ -151,10 +151,39 @@ describe("When a MultiEnvironment is added, ", function() {
     e.addChange(new ent.Environment({name: "Environment 2"}));
   });
 
-  it('should be possible to add detectors and notifiers to specific sub-environments', function () {
+  it('should be possible to add detectors and notifiers to specific sub-environments and receive changes propagated to these.', function (done) {
     //Prepare
-    //should.fail();
-    //TODO: Continue in next versions
+    let e = new ext.MultiEnvironment();
+    main.Start({
+      environment: e
+    });
+    e.addChange(new ent.Environment({name: "Environment 1"}));
+    e.addChange(new ent.Environment({name: "Environment 2"}));
+
+    main.AddDetector(new ent.MotionDetector("Detector 1"), false, e.getCurrentState()["Environment 2"]);
+    main.AddNotifier(new ent.BaseNotifier("Notifier 1"), e.getCurrentState()["Environment 2"]);
+    main.AddDetector(new ent.MotionDetector("Detector 2"), false, e.getCurrentState()["Environment 1"]);
+    main.AddNotifier(new ent.BaseNotifier("Notifier 2"), e.getCurrentState()["Environment 1"]);
+
+    e.getCurrentState()["Environment 2"].motionDetectors.length.should.equal(1);
+    e.getCurrentState()["Environment 1"].motionDetectors.length.should.equal(1);
+    (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+
+    main.GetMotionDetectors().length.should.equal(2);
+    main.GetNotifiers().length.should.equal(2);
+    (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+
+    let _resultCount = 0;
+    let noti_function = function(message, text){
+      //console.log("A new notification has arrived!", message, text);
+      console.log("Notification received, _resultCount will be increased...");
+      _resultCount++;
+      if(_resultCount == 2) done();
+    };
+
+    main.GetNotifiers()[0].on('pushedNotification', noti_function);
+    main.GetNotifiers()[1].on('pushedNotification', noti_function);
+    e.addChange(1);
   });
 });
 

@@ -103,23 +103,57 @@ function AddNotifier(notifier, template, force = false){
  * @returns {Boolean} true if the detector is successfully created.
  * @public
  */
-function AddDetector(detector, force = false){
+function AddDetector(detector, force = false, subEnvironment){
   if (force || (detector instanceof ent.MotionDetector))
   {
+    log.info(`Pushing detector "${detector.name}"" to main...`);
     motionDetectors.push(detector);
-    if (environment)
-    {
-      environment.bindDetector(detector, notifiers, force);
-      detector.startMonitoring();
+    if (AddDetectorToSubEnvironment(detector, force, subEnvironment)){
       return true;
-    } else {
-      throw new Error("No environment was detected, please add one first.");
+    }
+    else {
+      if (environment)
+      {
+        log.info(`Binding detector to environment ${environment.constructor.name}...`);
+        environment.bindDetector(detector, notifiers, force);
+        detector.startMonitoring();
+        return true;
+      } else {
+        throw new Error("No environment was detected, please add one first.");
+      }
     }
   } else {
     log.warning(`${detector} object is not of type MotionDetector`);
   }
   return false;
 }
+
+/**
+ * Adds a detector to a SubEnvironment. Assumes that the main Environment is a MultiEnvironment.
+ * @param {object} detector is the MotionDetector object to add.
+ * @param {boolean} force can be set to true to push the detector even if not of {MotionDetector} instance
+ * @param {string} subEnvironment is the Environment to add  to, within the MultiEnvironment
+ * @returns {Boolean} true if the detector is successfully created.
+ * @public
+ */
+function AddDetectorToSubEnvironment(detector, force = false, subEnvironment){
+  if (subEnvironment && subEnvironment instanceof ent.Environment)
+  {
+    if (environment && environment instanceof ext.MultiEnvironment){
+      let subEnv = environment.getCurrentState()[subEnvironment.name];
+      log.info(`Binding detector to sub-environment ${subEnv.constructor.name}...`);
+      subEnv.bindDetector(detector, notifiers, force);
+      detector.startMonitoring();
+      return true;
+    } else {
+      throw new Error("No MultiEnvironment exists, please add one first.");
+    }
+  } else {
+    log.warning(`Sub-Environment ${subEnvironment} object is not of type Environment, ignoring...`);
+  }
+  return false;
+}
+
 
 /**
  * Deactivates an existing detector by name.
@@ -765,6 +799,7 @@ function GetPlugins(){
 
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
+exports.AddDetectorToSubEnvironment = AddDetectorToSubEnvironment;
 exports.ActivateDetector = ActivateDetector;
 exports.DeactivateDetector = DeactivateDetector;
 exports.RemoveNotifier = RemoveNotifier;
