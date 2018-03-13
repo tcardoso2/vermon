@@ -185,6 +185,62 @@ describe("When a MultiEnvironment is added, ", function() {
     main.GetNotifiers()[1].on('pushedNotification', noti_function);
     e.addChange(1);
   });
+
+  it('The constructor should allow taking state as an Array', function (done) {
+    //Prepare
+    main.Reset();
+    //Assert
+    try{
+      new ext.MultiEnvironment({ state: 333 });
+    } catch(e){
+      e.message.should.equal("MultiEnvironment expects a state of type Array.");
+    }
+    should.fail();
+  });
+
+  it('The constructor should allow taking state as an Array of Environment types', function (done) {
+    //Prepare
+    main.Reset();
+    //Assert
+    try{
+      new ext.MultiEnvironment({ state: ["a", "b"] });
+    } catch(e){
+      e.message.should.equal("MultiEnvironment expects a state of type Array of type Environment, found 'String'");
+    }
+    should.fail();
+  });
+
+  it('The constructor should allow taking Environment types as arguments via { state: [Environment]}', function (done) {
+    //Prepare
+    main.Reset();
+
+    let args = [];
+    args.push(new ent.Environment({name: "Environment 1"}));
+    args.push(new ent.Environment({name: "Environment 2"}));
+    //Assert
+    let e = new ext.MultiEnvironment({ state: args });
+
+    main.AddDetectorToSubEnvironment(new ent.MotionDetector("Detector 1"), false, e.getCurrentState()["Environment 2"]);
+    main.AddNotifier(new ent.BaseNotifier("Notifier 1"), e.getCurrentState()["Environment 2"]);
+
+    e.getCurrentState()["Environment 2"].motionDetectors.length.should.equal(1);
+    (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+
+    main.GetMotionDetectors().length.should.equal(1);
+    main.GetNotifiers().length.should.equal(1);
+    (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+
+    let _resultCount = 0;
+    let noti_function = function(message, text){
+      //console.log("A new notification has arrived!", message, text);
+      console.log("Notification received, _resultCount will be increased...");
+      _resultCount++;
+      if(_resultCount == 2) done();
+    };
+
+    main.GetNotifiers()[0].on('pushedNotification', noti_function);
+    e.addChange(1);
+  });
 });
 
 describe("When a MultiEnvironment is added via config file, ", function() {

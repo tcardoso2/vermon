@@ -79,8 +79,8 @@ class SystemEnvironment extends ent.Environment {
  * An Environment which stores several sub-environments
  */
 class MultiEnvironment extends ent.Environment {
-  constructor(){
-    super();
+  constructor(params){
+    super(params);
     this.currentState = {};
   }
 
