@@ -81,7 +81,36 @@ class SystemEnvironment extends ent.Environment {
 class MultiEnvironment extends ent.Environment {
   constructor(params){
     super(params);
-    this.currentState = {};
+    if(this.currentState == 0){
+      this.currentState = {};
+    }
+    if(params){
+      this.isParameterValid(params);
+      this.convertStateToDictionary();
+    }
+  }
+  isParameterValid(params)
+  {
+    if (params && params.state){
+      if (!Array.isArray(params.state)){
+        throw new Error("MultiEnvironment expects a state of type Array.");
+      }
+      this.validateState();
+    }
+  }
+  validateState()
+  {
+    for(let i=0;i<this.currentState.length;i++){
+      if(!(this.currentState[i] instanceof ent.Environment)){
+        throw new Error(`MultiEnvironment expects a state of type Array of type Environment, found '${typeof(this.currentState[i])}'`);
+      }
+    }
+  }
+
+  convertStateToDictionary(){
+    while (this.currentState.length > 0){
+      this.addChange(this.currentState.pop());
+    }
   }
 
   /*

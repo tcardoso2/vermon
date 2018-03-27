@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.24 :Validating arguments of MultiEnvironment constructor (WIP);  
 * v 0.5.23 :WIP: Allow adding sub-environment as argument of MultiEnvironment constructor, adding unit tests first;  
 * v 0.5.22 :WIP: Continuing Unit tests on MultiEnvronment, Adding Detectors and Notifiers to specific sub-environments;  
 * v 0.5.21 :WIP: Working on MultiEnvironment;   

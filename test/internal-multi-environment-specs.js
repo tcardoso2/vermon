@@ -186,7 +186,7 @@ describe("When a MultiEnvironment is added, ", function() {
     e.addChange(1);
   });
 
-  it('The constructor should allow taking state as an Array', function (done) {
+  it('The constructor should allow taking state as an Array', function () {
     //Prepare
     main.Reset();
     //Assert
@@ -194,18 +194,20 @@ describe("When a MultiEnvironment is added, ", function() {
       new ext.MultiEnvironment({ state: 333 });
     } catch(e){
       e.message.should.equal("MultiEnvironment expects a state of type Array.");
+      return;
     }
     should.fail();
   });
 
-  it('The constructor should allow taking state as an Array of Environment types', function (done) {
+  it('The constructor should allow taking state as an Array of Environment types', function () {
     //Prepare
     main.Reset();
     //Assert
     try{
       new ext.MultiEnvironment({ state: ["a", "b"] });
     } catch(e){
-      e.message.should.equal("MultiEnvironment expects a state of type Array of type Environment, found 'String'");
+      e.message.should.equal("MultiEnvironment expects a state of type Array of type Environment, found 'string'");
+      return;
     }
     should.fail();
   });
@@ -219,7 +221,8 @@ describe("When a MultiEnvironment is added, ", function() {
     args.push(new ent.Environment({name: "Environment 2"}));
     //Assert
     let e = new ext.MultiEnvironment({ state: args });
-
+    main.Start({environment: e});
+    console.log("%%%%%%%%%% ", e.currentState);
     main.AddDetectorToSubEnvironment(new ent.MotionDetector("Detector 1"), false, e.getCurrentState()["Environment 2"]);
     main.AddNotifier(new ent.BaseNotifier("Notifier 1"), e.getCurrentState()["Environment 2"]);
 
