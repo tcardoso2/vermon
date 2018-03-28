@@ -92,6 +92,28 @@ function AddNotifier(notifier, template, force = false){
 }
 
 /**
+ * Adds a Notifier to the sub-environment (binds to existing Detectors in the sub-environment).
+ * Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
+ * of the correct type, by setting force = true
+ * @param {object} notifier is the Notifier object to add.
+ * @param {object} template is the template message for the notifier, in case it triggers.
+ * @param {boolean} force can be set to true to push the notifier even if not of {BaseNotifier} instance
+ * @returns {Boolean} true if the notifier is successfully created.
+ * @public
+ */
+function AddNotifierToSubEnvironment(notifier, template, force = false, subEnvironmentName){
+  if (force || (notifier instanceof ent.BaseNotifier))
+  {
+    notifier.bindToDetectors(motionDetectors, template);
+    notifiers.push(notifier);
+    return true;
+  } else {
+    log.warning("'notifier' object is not of type BaseNotifier");
+  }
+  return false;
+}
+
+/**
  * Adds a detector or detectors (in form of array) to the {Environment} in the {motionDetectors} 
  * internal variable.
  * Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
@@ -108,7 +130,7 @@ function AddDetector(detector, force = false, subEnvironment){
   {
     log.info(`Pushing detector "${detector.name}"" to main...`);
     motionDetectors.push(detector);
-    if (AddDetectorToSubEnvironment(detector, force, subEnvironment)){
+    if (AddDetectorToSubEnvironmentOnly(detector, force, subEnvironment)){
       return true;
     }
     else {
@@ -136,15 +158,19 @@ function AddDetector(detector, force = false, subEnvironment){
  * @returns {Boolean} true if the detector is successfully created.
  * @public
  */
-function AddDetectorToSubEnvironment(detector, force = false, subEnvironment){
-  if (subEnvironment && subEnvironment instanceof ent.Environment)
+function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironmentName){
+  if (subEnvironmentName)
   {
     if (environment && environment instanceof ext.MultiEnvironment){
-      let subEnv = environment.getCurrentState()[subEnvironment.name];
-      log.info(`Binding detector to sub-environment ${subEnv.constructor.name}...`);
-      subEnv.bindDetector(detector, notifiers, force);
-      detector.startMonitoring();
-      return true;
+      let subEnv = environment.getCurrentState()[subEnvironmentName];
+      if (subEnv instanceof ent.Environment){
+        log.info(`Binding detector to sub-environment ${subEnv.constructor.name}...`);
+        subEnv.bindDetector(detector, notifiers, force);
+        detector.startMonitoring();
+        return true;
+      } else {
+        throw new Error("Sub-Environment is not valid.");
+      }
     } else {
       throw new Error("No MultiEnvironment exists, please add one first.");
     }
@@ -238,6 +264,22 @@ function GetEnvironment()
     throw new Error('Environment does not exist. Please run the Start() function first or one of its overrides.');
   }
   return environment; 
+}
+
+/**
+ * Gets the object which represents the current sub-Environments of the context.
+ * throws an Error if MultiEnvironment does not exist in the context.
+ * @returns a list of Environment object.
+ * @public
+ */
+function GetSubEnvironments()
+{
+  let e = GetEnvironment();
+
+  if (!(e instanceof ext.MultiEnvironment)) {
+    throw new Error('MultiEnvironment was not found');
+  }
+  return e.getCurrentState; 
 }
 
 /**
@@ -799,11 +841,12 @@ function GetPlugins(){
 
 exports.AddNotifier = AddNotifier;
 exports.AddDetector = AddDetector;
-exports.AddDetectorToSubEnvironment = AddDetectorToSubEnvironment;
+exports.AddDetectorToSubEnvironmentOnly = AddDetectorToSubEnvironmentOnly;
 exports.ActivateDetector = ActivateDetector;
 exports.DeactivateDetector = DeactivateDetector;
 exports.RemoveNotifier = RemoveNotifier;
 exports.GetEnvironment = GetEnvironment;
+exports.GetSubEnvironments = GetSubEnvironments;
 exports.GetFilters = GetFilters;
 exports.GetNotifiers = GetNotifiers;
 exports.GetMotionDetectors = GetMotionDetectors;

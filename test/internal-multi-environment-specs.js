@@ -160,9 +160,9 @@ describe("When a MultiEnvironment is added, ", function() {
     e.addChange(new ent.Environment({name: "Environment 1"}));
     e.addChange(new ent.Environment({name: "Environment 2"}));
 
-    main.AddDetector(new ent.MotionDetector("Detector 1"), false, e.getCurrentState()["Environment 2"]);
+    main.AddDetector(new ent.MotionDetector("Detector 1"), false, "Environment 2");
     main.AddNotifier(new ent.BaseNotifier("Notifier 1"), e.getCurrentState()["Environment 2"]);
-    main.AddDetector(new ent.MotionDetector("Detector 2"), false, e.getCurrentState()["Environment 1"]);
+    main.AddDetector(new ent.MotionDetector("Detector 2"), false, "Environment 1");
     main.AddNotifier(new ent.BaseNotifier("Notifier 2"), e.getCurrentState()["Environment 1"]);
 
     e.getCurrentState()["Environment 2"].motionDetectors.length.should.equal(1);
@@ -212,7 +212,7 @@ describe("When a MultiEnvironment is added, ", function() {
     should.fail();
   });
 
-  it('The constructor should allow taking Environment types as arguments via { state: [Environment]}', function (done) {
+  it('should result in error if attempting to Add a detector to an inexisting sub-environment', function () {
     //Prepare
     main.Reset();
 
@@ -222,15 +222,56 @@ describe("When a MultiEnvironment is added, ", function() {
     //Assert
     let e = new ext.MultiEnvironment({ state: args });
     main.Start({environment: e});
-    console.log("%%%%%%%%%% ", e.currentState);
-    main.AddDetectorToSubEnvironment(new ent.MotionDetector("Detector 1"), false, e.getCurrentState()["Environment 2"]);
-    main.AddNotifier(new ent.BaseNotifier("Notifier 1"), e.getCurrentState()["Environment 2"]);
+    (e.getCurrentState()["Environment 2"] instanceof ent.Environment).should.equal(true);
+    (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
+    try{
+      main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Detector 1"), false, "Environment 3");
+    }catch(e){
+      e.message.should.equal("Sub-Environment is not valid.");
+    }
+  });
 
-    e.getCurrentState()["Environment 2"].motionDetectors.length.should.equal(1);
+  it('GetSubEnvironments gets the list of sub-environments', function (done) {
+    //Prepare
+    main.Reset();
+
+    //Prepare
+    main.Reset();
+
+    let args = [];
+    args.push(new ent.Environment({name: "Environment 1"}));
+    args.push(new ent.Environment({name: "Environment 2"}));
+    //Assert
+    let e = new ext.MultiEnvironment({ state: args });
+    main.Start({environment: e});
+    let subEnv = main.GetSubEnvironments();
+    (subEnv["Environment 2"] instanceof ent.Environment).should.equal(true);
+    (subEnv["Environment 1"] instanceof ent.Environment).should.equal(true);
+  });
+
+  it('Notifiers added to main environment do not trigger on sub-environment detectors and vice-versa.', function () {
+    //Prepare
+    main.Reset();
+
+    let args = [];
+    args.push(new ent.Environment({name: "Environment 1"}));
+    args.push(new ent.Environment({name: "Environment 2"}));
+    //Assert
+    let e = new ext.MultiEnvironment({ state: args });
+    main.Start({environment: e});
+    (e.getCurrentState()["Environment 2"] instanceof ent.Environment).should.equal(true);
+    (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
+
+    main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Detector 1"), false, "Environment 2");
+    main.AddDetector(new ent.MotionDetector("Detector 2"), false, "Environment 2");
+    main.AddNotifier(new ent.BaseNotifier("Notifier 1"));
+    main.AddNotifier(new ent.BaseNotifier("Notifier 2"), "Environment 2");
+
+    e.getCurrentState()["Environment 2"].motionDetectors.length.should.equal(2);
     (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
 
     main.GetMotionDetectors().length.should.equal(1);
-    main.GetNotifiers().length.should.equal(1);
+    main.GetNotifiers().length.should.equal(2);
     (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
 
     let _resultCount = 0;
@@ -238,10 +279,11 @@ describe("When a MultiEnvironment is added, ", function() {
       //console.log("A new notification has arrived!", message, text);
       console.log("Notification received, _resultCount will be increased...");
       _resultCount++;
-      if(_resultCount == 2) done();
+      if(_resultCount == 2) should.fail();
     };
 
     main.GetNotifiers()[0].on('pushedNotification', noti_function);
+    main.GetNotifiers()[1].on('pushedNotification', noti_function);
     e.addChange(1);
   });
 });
