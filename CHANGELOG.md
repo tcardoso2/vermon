@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.26 :Plugins: added a requirement for plugins to have a "ShouldStart" function which returns true if the plugin should start when StartWithConfig is called;  
 * v 0.5.25 :Adding function for getting Sub-Environments and Adding Detectors / Notifiers to main or sub-environments;  
 * v 0.5.24 :Validating arguments of MultiEnvironment constructor (WIP);  
 * v 0.5.23 :WIP: Allow adding sub-environment as argument of MultiEnvironment constructor, adding unit tests first;  

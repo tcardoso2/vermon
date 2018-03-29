@@ -437,12 +437,16 @@ function Start(params, silent = false){
  * @param {f} The current Filters.
  */
 function _StartPlugins(e,m,n,f){
+  log.info(`Checking if any plugin exists which should be started, count is: ${plugins.length}`);
   Object.keys(plugins).forEach(function(key) {
     let p = plugins[key];
-    log.info(`  Attempting to start ${p.id}...`);
+    log.info(`  Plugin found. Attempting to start ${p.id}...`);
+    if(!p.ShouldStart) throw new Error("A plugin must have a 'ShouldStart' method implemented.");
     if(!p.Start) throw new Error("A plugin must have a 'Start' method implemented.");
     //TODO, add a way to call StartWithConfig
-    p.Start(e,m,n,f,config);
+    if(p.ShouldStart()){
+      p.Start(e,m,n,f,config);
+    }
     console.log("ok.");
   });
 }
