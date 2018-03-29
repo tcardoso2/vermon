@@ -101,10 +101,12 @@ function AddNotifier(notifier, template, force = false){
  * @returns {Boolean} true if the notifier is successfully created.
  * @public
  */
-function AddNotifierToSubEnvironment(notifier, template, force = false, subEnvironmentName){
+function AddNotifierToSubEnvironment(notifier, subEnvironmentName, template, force = false){
+  log.info(`Attempting to bind ${notifier.name} to sub-environment ${subEnvironmentName}...`)
   if (force || (notifier instanceof ent.BaseNotifier))
   {
-    notifier.bindToDetectors(motionDetectors, template);
+    let subEnv = GetSubEnvironment(subEnvironmentName);
+    notifier.bindToDetectors(subEnv.motionDetectors, template);
     notifiers.push(notifier);
     return true;
   } else {
@@ -175,7 +177,7 @@ function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironment
       throw new Error("No MultiEnvironment exists, please add one first.");
     }
   } else {
-    log.warning(`Sub-Environment ${subEnvironment} object is not of type Environment, ignoring...`);
+    log.warning(`Sub-Environment ${subEnvironmentName} object is not of type Environment, ignoring...`);
   }
   return false;
 }
@@ -279,7 +281,24 @@ function GetSubEnvironments()
   if (!(e instanceof ext.MultiEnvironment)) {
     throw new Error('MultiEnvironment was not found');
   }
-  return e.getCurrentState; 
+  return e.getCurrentState(); 
+}
+
+/**
+ * Gets a particular sub-Environments of the context, raises error if it's not of type Environment.
+ * @returns Environment object.
+ * @public
+ */
+function GetSubEnvironment(subEnvironmentName)
+{
+  let e = GetSubEnvironments()[subEnvironmentName];
+  if(!e){
+    throw new Error('SubEnvironment does not exist.');    
+  }
+  if (!(e instanceof ent.Environment)) {
+    throw new Error('SubEnvironment is invalid.');
+  }
+  return e;
 }
 
 /**
@@ -840,6 +859,7 @@ function GetPlugins(){
 }
 
 exports.AddNotifier = AddNotifier;
+exports.AddNotifierToSubEnvironment = AddNotifierToSubEnvironment;
 exports.AddDetector = AddDetector;
 exports.AddDetectorToSubEnvironmentOnly = AddDetectorToSubEnvironmentOnly;
 exports.ActivateDetector = ActivateDetector;

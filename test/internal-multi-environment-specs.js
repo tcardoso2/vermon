@@ -231,7 +231,7 @@ describe("When a MultiEnvironment is added, ", function() {
     }
   });
 
-  it('GetSubEnvironments gets the list of sub-environments', function (done) {
+  it('GetSubEnvironments gets the list of sub-environments', function () {
     //Prepare
     main.Reset();
 
@@ -245,46 +245,49 @@ describe("When a MultiEnvironment is added, ", function() {
     let e = new ext.MultiEnvironment({ state: args });
     main.Start({environment: e});
     let subEnv = main.GetSubEnvironments();
+    console.log(subEnv);
+
     (subEnv["Environment 2"] instanceof ent.Environment).should.equal(true);
     (subEnv["Environment 1"] instanceof ent.Environment).should.equal(true);
   });
 
-  it('Notifiers added to main environment do not trigger on sub-environment detectors and vice-versa.', function () {
+  it('Notifiers added to main environment do not trigger on sub-environment detectors and vice-versa.', function (done) {
     //Prepare
     main.Reset();
 
     let args = [];
-    args.push(new ent.Environment({name: "Environment 1"}));
-    args.push(new ent.Environment({name: "Environment 2"}));
+    args.push(new ent.Environment({name: "Sub-Environment 1"}));
+    args.push(new ent.Environment({name: "Sub-Environment 2"}));
     //Assert
     let e = new ext.MultiEnvironment({ state: args });
     main.Start({environment: e});
-    (e.getCurrentState()["Environment 2"] instanceof ent.Environment).should.equal(true);
-    (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
+    (e.getCurrentState()["Sub-Environment 2"] instanceof ent.Environment).should.equal(true);
+    (e.getCurrentState()["Sub-Environment 1"] instanceof ent.Environment).should.equal(true);
 
-    main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Detector 1"), false, "Environment 2");
-    main.AddDetector(new ent.MotionDetector("Detector 2"), false, "Environment 2");
-    main.AddNotifier(new ent.BaseNotifier("Notifier 1"));
-    main.AddNotifier(new ent.BaseNotifier("Notifier 2"), "Environment 2");
+    main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Sub-Detector only 1"), false, "Sub-Environment 2");
+    main.AddDetector(new ent.MotionDetector("Detector 2 for both"), false, "Sub-Environment 2");
+    main.AddNotifier(new ent.BaseNotifier("Notifier 1")); //Will bind to Detector 2 only
+    main.AddNotifierToSubEnvironment(new ent.BaseNotifier("Notifier 2"), "Sub-Environment 2"); //Will bind to Sub-detector only
 
-    e.getCurrentState()["Environment 2"].motionDetectors.length.should.equal(2);
-    (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+    e.getCurrentState()["Sub-Environment 2"].motionDetectors.length.should.equal(2);
+    (e.getCurrentState()["Sub-Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
 
     main.GetMotionDetectors().length.should.equal(1);
     main.GetNotifiers().length.should.equal(2);
-    (e.getCurrentState()["Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+    (e.getCurrentState()["Sub-Environment 2"].motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
 
     let _resultCount = 0;
     let noti_function = function(message, text){
       //console.log("A new notification has arrived!", message, text);
-      console.log("Notification received, _resultCount will be increased...");
+      console.log(`${text}, _resultCount will be increased to ${_resultCount + 1}...`);
       _resultCount++;
-      if(_resultCount == 2) should.fail();
+      if(_resultCount == 3) done();
+      if(_resultCount == 4) should.fail();
     };
 
     main.GetNotifiers()[0].on('pushedNotification', noti_function);
     main.GetNotifiers()[1].on('pushedNotification', noti_function);
-    e.addChange(1);
+    e.addChange(1); //Change gets propagated to sub environments
   });
 });
 

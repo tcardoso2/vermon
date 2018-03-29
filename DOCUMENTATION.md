@@ -2,22 +2,26 @@
 
 ### Table of Contents
 
--   [SystemEnvironment](#systemenvironment)
--   [MultiEnvironment](#multienvironment)
 -   [Environment](#environment)
     -   [motionDetectors](#motiondetectors)
 -   [MotionDetector](#motiondetector)
     -   [getOriginalIntensity](#getoriginalintensity)
+-   [SystemEnvironment](#systemenvironment)
+-   [MultiEnvironment](#multienvironment)
 -   [BaseFilter](#basefilter)
 -   [\_InternalAddFilter](#_internaladdfilter)
 -   [\_InternalAddEnvironment](#_internaladdenvironment)
 -   [AddNotifier](#addnotifier)
+-   [AddNotifierToSubEnvironment](#addnotifiertosubenvironment)
 -   [AddDetector](#adddetector)
+-   [AddDetectorToSubEnvironmentOnly](#adddetectortosubenvironmentonly)
 -   [DeactivateDetector](#deactivatedetector)
 -   [ActivateDetector](#activatedetector)
 -   [RemoveNotifier](#removenotifier)
 -   [RemoveDetector](#removedetector)
 -   [GetEnvironment](#getenvironment)
+-   [GetSubEnvironments](#getsubenvironments)
+-   [GetSubEnvironment](#getsubenvironment)
 -   [GetNotifiers](#getnotifiers)
 -   [GetMotionDetectors](#getmotiondetectors)
 -   [GetMotionDetector](#getmotiondetector)
@@ -46,28 +50,6 @@
 -   [Cmd](#cmd)
 -   [Cli](#cli)
 
-## SystemEnvironment
-
-**Extends ent.Environment**
-
-A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
-and propagates the stdout result to the notifier. It uses node-cmd under the hood. Also provides
-System additional info such as memory used, free memory and cpu usage
-
-**Parameters**
-
--   `command` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is a command to execute
--   `interval`   (optional, default `0`)
--   `killAfter`   (optional, default `0`)
--   `an` **int** interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
--   `an` **int** killAfter will clear the interval and stop the command after specified number of times.
-
-## MultiEnvironment
-
-**Extends ent.Environment**
-
-An Environment which stores several sub-environments
-
 ## Environment
 
 **Parameters**
@@ -90,6 +72,32 @@ An Environment which stores several sub-environments
 ### getOriginalIntensity
 
 Gets the Intensity of the signal when the detector was originally created
+
+## SystemEnvironment
+
+**Extends ent.Environment**
+
+A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
+and propagates the stdout result to the notifier. It uses node-cmd under the hood. Also provides
+System additional info such as memory used, free memory and cpu usage
+
+**Parameters**
+
+-   `command` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is a command to execute
+-   `interval`   (optional, default `0`)
+-   `killAfter`   (optional, default `0`)
+-   `an` **int** interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
+-   `an` **int** killAfter will clear the interval and stop the command after specified number of times.
+
+## MultiEnvironment
+
+**Extends ent.Environment**
+
+An Environment which stores several sub-environments
+
+**Parameters**
+
+-   `params`  
 
 ## BaseFilter
 
@@ -135,6 +143,21 @@ of the correct type, by setting force = true
 
 Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the notifier is successfully created.
 
+## AddNotifierToSubEnvironment
+
+Adds a Notifier to the sub-environment (binds to existing Detectors in the sub-environment).
+Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
+of the correct type, by setting force = true
+
+**Parameters**
+
+-   `notifier` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the Notifier object to add.
+-   `subEnvironmentName`  
+-   `template` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the template message for the notifier, in case it triggers.
+-   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
+
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the notifier is successfully created.
+
 ## AddDetector
 
 Adds a detector or detectors (in form of array) to the {Environment} in the {motionDetectors} 
@@ -148,6 +171,20 @@ Fails hard (throws an Error) if there is no existing {Environment} set in the co
 
 -   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector object to add.
 -   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironment`  
+
+Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the detector is successfully created.
+
+## AddDetectorToSubEnvironmentOnly
+
+Adds a detector to a SubEnvironment. Assumes that the main Environment is a MultiEnvironment.
+
+**Parameters**
+
+-   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector object to add.
+-   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironmentName`  
+-   `subEnvironment` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the Environment to add  to, within the MultiEnvironment
 
 Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the detector is successfully created.
 
@@ -199,6 +236,23 @@ Gets the object which represents the current Environment of the context.
 throws an Error if an environment does not exist in the context.
 
 Returns **any** a Environment object.
+
+## GetSubEnvironments
+
+Gets the object which represents the current sub-Environments of the context.
+throws an Error if MultiEnvironment does not exist in the context.
+
+Returns **any** a list of Environment object.
+
+## GetSubEnvironment
+
+Gets a particular sub-Environments of the context, raises error if it's not of type Environment.
+
+**Parameters**
+
+-   `subEnvironmentName`  
+
+Returns **any** Environment object.
 
 ## GetNotifiers
 
