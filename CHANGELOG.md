@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.28 :Plugins: Bug fixes, improve logs on Adding Detectors;  
 * v 0.5.27 :Plugins: Bug fixes;  
 * v 0.5.26 :Plugins: added a requirement for plugins to have a "ShouldStart" function which returns true if the plugin should start when StartWithConfig is called;  
 * v 0.5.25 :Adding function for getting Sub-Environments and Adding Detectors / Notifiers to main or sub-environments;  

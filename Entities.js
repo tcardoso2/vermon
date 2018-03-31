@@ -432,7 +432,9 @@ class EntitiesFactory
 
   extend(newClasses)
   {
+    console.log("Extending classes...");
     for (let prop in newClasses) {
+      console.log(`  ${prop}`);
       classes[prop] = newClasses[prop];
     }
     return classes;

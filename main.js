@@ -128,6 +128,7 @@ function AddNotifierToSubEnvironment(notifier, subEnvironmentName, template, for
  * @public
  */
 function AddDetector(detector, force = false, subEnvironment){
+  log.info(`Attempting to add detector ${detector.name} with force=${force}...`);
   if (force || (detector instanceof ent.MotionDetector))
   {
     log.info(`Pushing detector "${detector.name}"" to main...`);
