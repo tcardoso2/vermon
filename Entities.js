@@ -6,6 +6,7 @@ let events = require("events");
 let filters = require("./Filters.js");
 let ko = require("knockout");
 let chalk = require('chalk');
+let log = require('tracer').colorConsole();
 
 /**
  * @class: Entities.Environment
@@ -424,10 +425,27 @@ class EntitiesFactory
     //converts params object to an array of it's values
     console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(params)}.`);
     for (let p in params) {
-      _p.push(params[p])
+      _p.push(this.handle_parameters(params[p]));
     }
     //Will attempt to instanciate the object via rest parameters
     return new o(..._p);
+  }
+
+  //Handles parameters by identifying keywords:
+  //$new$: Interprets the key as being the name of the class
+  handle_parameters(params){
+    let k;
+    for (let p in params) {
+      for(var prop in params[p]) 
+      {
+        if(prop.startsWith("$new$")){
+          let c = prop.split("$")[2];
+          log.info(`Found a $new$ keypattern, instanciating ${c}(${params[p][prop]})...`);
+          params[p] = this.instanciate(c, params[p]);
+        }
+      }
+    }
+    return params;
   }
 
   extend(newClasses)

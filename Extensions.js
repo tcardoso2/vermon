@@ -12,6 +12,8 @@ const Raspistill = require('node-raspistill').Raspistill;
 let chokidar = require('chokidar');
 let node_cmd = require('node-cmd');
 let moment = require('moment');
+let log = require('tracer').colorConsole();
+
 
 /**
  * A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
@@ -80,7 +82,11 @@ class SystemEnvironment extends ent.Environment {
  */
 class MultiEnvironment extends ent.Environment {
   constructor(params){
+    console.log("!!!!", params);
     super(params);
+    if(params && !params.state){
+      log.warn("Seems you instantiated MultiEnvironment with parameters but not in the form of { state: [...] }. Hope you know what you're doing...");
+    }
     if(this.currentState == 0){
       this.currentState = {};
     }
@@ -88,6 +94,7 @@ class MultiEnvironment extends ent.Environment {
       this.isParameterValid(params);
       this.convertStateToDictionary();
     }
+    console.log("!!", this.getCurrentState());
   }
   isParameterValid(params)
   {
@@ -373,7 +380,7 @@ class RaspistillNotifier extends BaseNotifier{
 //Extending Factory methods
 
 //Extending Entities Factory
-const classes = { FileDetector, PIRMotionDetector, SystemEnvironment, SlackNotifier, RaspistillNotifier }
+const classes = { FileDetector, PIRMotionDetector, SystemEnvironment, SlackNotifier, RaspistillNotifier, MultiEnvironment }
 
 new ent.EntitiesFactory().extend(classes);
 

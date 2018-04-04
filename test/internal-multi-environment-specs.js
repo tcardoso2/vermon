@@ -186,6 +186,19 @@ describe("When a MultiEnvironment is added, ", function() {
     e.addChange(1);
   });
 
+  it('If arguments are passed on the constructor, these should be passed via state key.', function () {
+    //Prepare
+    main.Reset();
+    //Assert
+    try{
+      new ext.MultiEnvironment(333);
+    } catch(e){
+      e.message.should.equal("If args are passed into the constructor of MultiEnvironment, there should be a state property.");
+      return;
+    }
+    should.fail();
+  });
+
   it('The constructor should allow taking state as an Array', function () {
     //Prepare
     main.Reset();
@@ -292,4 +305,44 @@ describe("When a MultiEnvironment is added, ", function() {
 });
 
 describe("When a MultiEnvironment is added via config file, ", function() {
+  it('it should be possible to declare/instanciate the MultiEnvironment via the config file', function (done) {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test18.js");
+
+     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+       (e instanceof ext.MultiEnvironment).should.equal(true);
+       done();
+    });
+  });
+  it('EntitiesFactory should be able to convert from $new$Environment to the actual object', function () {
+    //Prepare
+    let f = new ent.EntitiesFactory();
+    let e = f.handle_parameters([
+        { $new$Environment: {name: "Environment 1"}},
+        { $new$Environment: {name: "Environment 2"}}     
+      ]);
+    console.log(e[0]);
+    (e[0] instanceof ent.Environment).should.equal(true);
+    (e[1] instanceof ent.Environment).should.equal(true);
+    e[0].name.should.equal("Environment 1");
+    e[1].name.should.equal("Environment 2");
+    e[0].getCurrentState().should.equal(1);
+    e[1].getCurrentState().should.equal(3);
+  });
+  it('it should be possible to declare/add Sub-environments via the config file by specifying constructors via appending $new$ to the key-value pair', function (done) {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test19.js");
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      (e instanceof ext.MultiEnvironment).should.equal(true);
+      e.getCurrentState().should.eql(0);
+      e.getCurrentState().length.should.equal(2);
+      (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
+      e.getCurrentState()["Environment 1"].name.should.equal("Environment 1");
+      e.getCurrentState()["Environment 2"].name.should.equal("Environment 2");
+    });
+    //Assert
+  });
 });
