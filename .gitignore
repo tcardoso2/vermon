@@ -47,3 +47,6 @@ test/*_test_my_saved_config*
 
 # Packages
 *.tgz
+
+# SFTP configuration
+sftp-config.json
