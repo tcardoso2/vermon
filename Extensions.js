@@ -82,10 +82,12 @@ class SystemEnvironment extends ent.Environment {
  */
 class MultiEnvironment extends ent.Environment {
   constructor(params){
-    console.log("!!!!", params);
     super(params);
     if(params && !params.state){
-      log.warn("Seems you instantiated MultiEnvironment with parameters but not in the form of { state: [...] }. Hope you know what you're doing...");
+      if (typeof(params) != "object"){
+        throw new Error("If args are passed into the constructor of MultiEnvironment, there should be a state property.");
+      }
+      log.warn("Seems you instantiated MultiEnvironment with parameters but did not include an initial state. Proceeding.");
     }
     if(this.currentState == 0){
       this.currentState = {};
@@ -94,7 +96,6 @@ class MultiEnvironment extends ent.Environment {
       this.isParameterValid(params);
       this.convertStateToDictionary();
     }
-    console.log("!!", this.getCurrentState());
   }
   isParameterValid(params)
   {

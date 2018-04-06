@@ -423,29 +423,40 @@ class EntitiesFactory
     let _p = [];
     let o = this.create(name);
     //converts params object to an array of it's values
-    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(params)}.`);
     for (let p in params) {
-      _p.push(this.handle_parameters(params[p]));
+      _p.push(this.handle_any_declarative_parameters(params[p]));
     }
     //Will attempt to instanciate the object via rest parameters
+    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(_p)}.`);
     return new o(..._p);
   }
 
   //Handles parameters by identifying keywords:
-  //$new$: Interprets the key as being the name of the class
-  handle_parameters(params){
+  //$new$: Interprets the key as a declarative pattern being the name of the class
+  handle_any_declarative_parameters(params){
+    log.info(`Handling parameters: ${JSON.stringify(params)}...`);
     let k;
     for (let p in params) {
       for(var prop in params[p]) 
       {
-        if(prop.startsWith("$new$")){
-          let c = prop.split("$")[2];
-          log.info(`Found a $new$ keypattern, instanciating ${c}(${params[p][prop]})...`);
-          params[p] = this.instanciate(c, params[p]);
+        if(this.is_declarative_pattern(prop)){
+          params[p] = this.convert_pattern_to_instance(prop, params[p]);
         }
       }
     }
+    log.info(`Returning result to caller: ${JSON.stringify(params)}`);
     return params;
+  }
+
+  is_declarative_pattern(prop){
+    return prop.startsWith("$new$");
+  }
+
+  //For now handles only $new$ pattern, if later other patterns are added this should be handled, e.g. via a switch statement?
+  convert_pattern_to_instance(prop, values){
+    let class_name = prop.split("$")[2];
+    log.info(`Found a $new$ keypattern, instanciating class ${class_name}...`);
+    return this.instanciate(class_name, values);
   }
 
   extend(newClasses)

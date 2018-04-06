@@ -315,14 +315,27 @@ describe("When a MultiEnvironment is added via config file, ", function() {
        done();
     });
   });
-  it('EntitiesFactory should be able to convert from $new$Environment to the actual object', function () {
+  it('EntitiesFactory should be able to convert from array of $new$Environment to the actual array of objects', function () {
     //Prepare
     let f = new ent.EntitiesFactory();
-    let e = f.handle_parameters([
-        { $new$Environment: {name: "Environment 1"}},
-        { $new$Environment: {name: "Environment 2"}}     
+    let e = f.handle_any_declarative_parameters([
+        { $new$Environment: {name: "Environment 1", state: 1}},
+        { $new$Environment: {name: "Environment 2", state: 3}}     
       ]);
-    console.log(e[0]);
+    (e[0] instanceof ent.Environment).should.equal(true);
+    (e[1] instanceof ent.Environment).should.equal(true);
+    e[0].name.should.equal("Environment 1");
+    e[1].name.should.equal("Environment 2");
+    e[0].getCurrentState().should.equal(1);
+    e[1].getCurrentState().should.equal(3);
+  });
+  it('EntitiesFactory should be able to instanciate a MultiEnvironment with Sub-Environments', function () {
+    //Prepare
+    let f = new ent.EntitiesFactory();
+    let e = f.instanciate("MultiEnvironment", { name: "MyMulti", state: [
+        { $new$Environment: {name: "Environment 1", state: 1}},
+        { $new$Environment: {name: "Environment 2", state: 3}}     
+      ]});
     (e[0] instanceof ent.Environment).should.equal(true);
     (e[1] instanceof ent.Environment).should.equal(true);
     e[0].name.should.equal("Environment 1");
@@ -337,7 +350,6 @@ describe("When a MultiEnvironment is added via config file, ", function() {
 
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
       (e instanceof ext.MultiEnvironment).should.equal(true);
-      e.getCurrentState().should.eql(0);
       e.getCurrentState().length.should.equal(2);
       (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
       e.getCurrentState()["Environment 1"].name.should.equal("Environment 1");

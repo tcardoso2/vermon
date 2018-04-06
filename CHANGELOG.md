@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.30 :WIP: Working on validating test cases (test-driven) for MultiEnvironment calls via config file;   
 * v 0.5.29 :WIP: Testing / Adding capability of calling a MultiEnvironemnt via config file;    
 * v 0.5.28 :Plugins: Bug fixes, improve logs on Adding Detectors;  
 * v 0.5.27 :Plugins: Bug fixes;  
