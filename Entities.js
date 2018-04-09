@@ -424,11 +424,14 @@ class EntitiesFactory
     let o = this.create(name);
     //converts params object to an array of it's values
     for (let p in params) {
+      //flats down the values into an array
       _p.push(this.handle_any_declarative_parameters(params[p]));
     }
     //Will attempt to instanciate the object via rest parameters
-    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(_p)}.`);
-    return new o(..._p);
+    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(..._p)}.`);
+    let result = new o(..._p);
+    log.debug(`Returning object of type/name: ${result.constructor ? result.constructor.name : typeof(result)}/'${result.name}', '${JSON.stringify(result)}`);
+    return result
   }
 
   //Handles parameters by identifying keywords:
@@ -437,10 +440,15 @@ class EntitiesFactory
     log.info(`Handling parameters: ${JSON.stringify(params)}...`);
     let k;
     for (let p in params) {
-      for(var prop in params[p]) 
+      log.debug(`Handling ${p}...`);
+      for(let prop in params[p]) 
       {
+        log.debug(`    Handling ${prop}...`);
         if(this.is_declarative_pattern(prop)){
           params[p] = this.convert_pattern_to_instance(prop, params[p]);
+        } else {
+          //recursive, checks if there are further parameters
+          //params[p] = this.handle_any_declarative_parameters(params[p]);
         }
       }
     }

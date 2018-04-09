@@ -1,20 +1,23 @@
 profiles = {
   default: {
     MultiEnvironment: {
-      state: [
-        { 
-          $new$Environment: {
-            name: "Environment 1",
-            state: 1
-          }
-        },
-        { 
-          $new$Environment: {
-            name: "Environment 2",
-            state: 3
-          }
-        }     
-      ]
+      params: {
+        name: "My MultiEnvironment",
+        state: [
+          { 
+            $new$Environment: {
+              name: "Environment 1",
+              state: 1
+            }
+          },
+          { 
+            $new$Environment: {
+              name: "Environment 2",
+              state: 3
+            }
+          }     
+        ]
+      }
     }
   }
 }
