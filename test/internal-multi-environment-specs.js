@@ -329,6 +329,20 @@ describe("When a MultiEnvironment is added via config file, ", function() {
     e[0].getCurrentState().should.equal(1);
     e[1].getCurrentState().should.equal(3);
   });
+
+  it('EntitiesFactory handle_any_declarative_parameters recursive function should ignore strings and numbers', function () {
+    //Prepare
+    let f = new ent.EntitiesFactory();
+    let o = f.handle_any_declarative_parameters({name: "Environment 1", state: 1});
+    o.should.be.eql({name: "Environment 1", state: 1});
+    f.is_array_or_object({ name: "test"}).should.equal(true);
+    f.is_array_or_object([ new ent.Environment() ]).should.equal(true);
+    f.is_array_or_object([ 3, 4, 5 ]).should.equal(true);
+    f.is_array_or_object(10).should.equal(false);    
+    f.is_array_or_object("Test").should.equal(false);
+    f.is_array_or_object(true).should.equal(false);
+  });
+
   it('EntitiesFactory should be able to instanciate a MultiEnvironment with Sub-Environments', function () {
     //Prepare
     let f = new ent.EntitiesFactory();

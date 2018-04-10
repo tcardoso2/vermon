@@ -394,6 +394,7 @@ class EntitiesFactory
     {
       return this.create(name);
     }
+    this.logIndentation = 0;
     //If reaches here the user can still use the same factory object and instiate using 'create'
   }
   
@@ -434,26 +435,32 @@ class EntitiesFactory
     return result
   }
 
-  //Handles parameters by identifying keywords:
+  //Handles parameters by identifying keywords recursively along the chain of objects and sub-objects:
   //$new$: Interprets the key as a declarative pattern being the name of the class
   handle_any_declarative_parameters(params){
     log.info(`Handling parameters: ${JSON.stringify(params)}...`);
     let k;
-    for (let p in params) {
-      log.debug(`Handling ${p}...`);
-      for(let prop in params[p]) 
-      {
-        log.debug(`    Handling ${prop}...`);
-        if(this.is_declarative_pattern(prop)){
-          params[p] = this.convert_pattern_to_instance(prop, params[p]);
+    if (this.is_array_or_object(params))
+    {
+      this.logIndentation += 2;
+      for (let p in params) {
+        log.debug(`${Array(this.logIndentation).join(">")} Handling '${p}'...`);
+        if(this.is_declarative_pattern(p)){
+          //The trick here is for the parameter to become the actual object and break the loop
+          params = this.convert_pattern_to_instance(p, params[p]);
+          break;
         } else {
-          //recursive, checks if there are further parameters
-          //params[p] = this.handle_any_declarative_parameters(params[p]);
+          params[p] = this.handle_any_declarative_parameters(params[p])
         }
       }
+      this.logIndentation -= 2;
     }
     log.info(`Returning result to caller: ${JSON.stringify(params)}`);
     return params;
+  }
+
+  is_array_or_object(o){
+    return Array.isArray(o) || typeof(o) == "object";
   }
 
   is_declarative_pattern(prop){
@@ -463,7 +470,7 @@ class EntitiesFactory
   //For now handles only $new$ pattern, if later other patterns are added this should be handled, e.g. via a switch statement?
   convert_pattern_to_instance(prop, values){
     let class_name = prop.split("$")[2];
-    log.info(`Found a $new$ keypattern, instanciating class ${class_name}...`);
+    log.debug(`Found a $new$ keypattern, instanciating class ${class_name} with parameters ${JSON.stringify(values)}...`);
     return this.instanciate(class_name, values);
   }
 

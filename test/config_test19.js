@@ -6,14 +6,18 @@ profiles = {
         state: [
           { 
             $new$Environment: {
-              name: "Environment 1",
-              state: 1
+              params: {
+                name: "Environment 1",
+                state: 1
+              }
             }
           },
           { 
             $new$Environment: {
-              name: "Environment 2",
-              state: 3
+              params: {
+                name: "Environment 2",
+                state: 3
+              }
             }
           }     
         ]
