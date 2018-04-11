@@ -20,6 +20,7 @@ let log = require('tracer').colorConsole();
 class Environment{
 
   constructor(params){
+    log.debug(`Base Environment constructor started with params: ${JSON.stringify(params)}`);
     this.currentState = 0;
     /**
     * @type: Entities.MotionDetector
@@ -56,6 +57,7 @@ class Environment{
   	    this.motionDetectors[m].send(newState, this);
       }
     });
+    log.debug(`Base Environment constructor finished with current state: ${JSON.stringify(this.currentState)}`);
   }
 
   //Gets the current state of the environment
@@ -97,6 +99,7 @@ class Environment{
   //Emits a changedState event
   addChange(intensity)
   {
+    log.debug(`Environment base is adding a new change ${JSON.stringify(intensity)}, current state is ${JSON.stringify(this.currentState)}...`)
     //will filter if there are any filters
     for (let i in this.filters)
     {
@@ -109,6 +112,7 @@ class Environment{
     }
     let oldState = this.currentState;
   	this.currentState = typeof(intensity) === "object" ? intensity : this.currentState + intensity;
+    log.debug(`Will emit a 'changedState', oldState and this.currentState are: ${JSON.stringify(oldState)} ====> ${JSON.stringify(this.currentState)}`)
     this.emit("changedState", oldState, this.currentState);
   }
 
@@ -196,10 +200,12 @@ class MotionDetector{
       //will filter if there are any filters
       for (let i in this.filters)
       {
+        log.debug(`Found a filter ${this.filters[i].constructor.name}. filtering...`)
         newState = this.filters[i].filter(newState, source, this);
         if(!newState)
         {
           //No newState any longer, then the Motion treats this as something which should not be notified
+          log.debug("No new state, I will not send this to the notifier...");
           return;
         }
       }
@@ -476,9 +482,9 @@ class EntitiesFactory
 
   extend(newClasses)
   {
-    console.log("Extending classes...");
+    log.info("Extending classes...");
     for (let prop in newClasses) {
-      console.log(`  ${prop}`);
+      log.debug(`  ${prop}`);
       classes[prop] = newClasses[prop];
     }
     return classes;

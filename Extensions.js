@@ -87,7 +87,7 @@ class MultiEnvironment extends ent.Environment {
       if (typeof(params) != "object"){
         throw new Error("If args are passed into the constructor of MultiEnvironment, there should be a state property.");
       }
-      log.warn("Seems you instantiated MultiEnvironment with parameters but did not include an initial state. Proceeding.");
+      log.warn("Seems you instantiated MultiEnvironment with parameters but did not include an initial state, I hope you know what you're doing. Proceeding...");
     }
     if(this.currentState == 0){
       this.currentState = {};
@@ -108,17 +108,33 @@ class MultiEnvironment extends ent.Environment {
   }
   validateState()
   {
-    for(let i=0;i<this.currentState.length;i++){
-      if(!(this.currentState[i] instanceof ent.Environment)){
-        throw new Error(`MultiEnvironment expects a state of type Array of type Environment, found '${typeof(this.currentState[i])}'`);
+    log.info(`validating environment current state...`);
+    if (this.currentState){
+      for(let i=0;i<this.currentState.length;i++){
+        if(!(this.currentState[i] instanceof ent.Environment)){
+          throw new Error(`MultiEnvironment expects a state of type Array of type Environment, found '${typeof(this.currentState[i])}'`);
+        }
       }
+    } else {
+      log.info(`State is empty. Nothing to validate, ignoring...`);
     }
   }
 
   convertStateToDictionary(){
+    log.debug(`Converting current state to Dictionary, state is ${JSON.stringify(this.currentState)}...`);
+    let envs = [];
     while (this.currentState.length > 0){
-      this.addChange(this.currentState.pop());
+      envs.push(this.currentState.pop());
     }
+    this.currentState = {}; //Conversion happens here. Current state was an Array and it is now a Dictionary
+    for(let ei in envs){
+      this.addChange(envs[ei]);
+      //This is made jus to ensure that the expected property is really there
+      if (!this.currentState[envs[ei].name]){
+        throw new Error(`Conciliation Error: The object has not been correctly turned into a property: '${envs[ei].name}'`);
+      }
+    }
+    log.debug(`Done converting current state to Dictionary, state now is ${JSON.stringify(this.currentState)}...`);
   }
 
   /*
@@ -127,16 +143,18 @@ class MultiEnvironment extends ent.Environment {
   */
   addChange(intensity)
   { 
+    log.debug(`Attempting to add sub-environment ${intensity.name}...`);
     if(intensity instanceof ent.Environment){
-      let value = this.getCurrentState();
-      value[intensity.name] = intensity;
-      return super.addChange(value);      
+      let s = this.currentState;
+      s[intensity.name] = intensity;
+      let result = super.addChange(s);
+      return result;
     }
     else
     {
-      console.warn("addChange detected intensity of not type Environment. Ignoring silently...");
+      log.warn("addChange detected intensity of not type Environment. Ignoring silently...");
       this.emit("ignoredChange", this.currentState, intensity);
-      console.log("Emmited 'ignoredChange'...");
+      log.debug("Emmited 'ignoredChange'...");
       this.propagateToSubEnvironments(intensity);
     }
   }

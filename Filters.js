@@ -63,10 +63,10 @@ class BaseFilter{
   _applyToDetectorNames(motionDetectors, dName){
     for (let i in motionDetectors)
     {
-      console.log(`Filter to be applied to items of name: "${dName}". Searching current motion detectors...`);
+      log.debug(`Filter to be applied to items of name: "${dName}". Searching current motion detectors...`);
       if (dName.indexOf(motionDetectors[i].name) >= 0)
       {
-        console.log("Found. Applying filter.")
+        log.debug("Found. Applying filter.")
         motionDetectors[i].applyFilter(this);
       }
     }

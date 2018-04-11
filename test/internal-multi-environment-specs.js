@@ -258,7 +258,6 @@ describe("When a MultiEnvironment is added, ", function() {
     let e = new ext.MultiEnvironment({ state: args });
     main.Start({environment: e});
     let subEnv = main.GetSubEnvironments();
-    console.log(subEnv);
 
     (subEnv["Environment 2"] instanceof ent.Environment).should.equal(true);
     (subEnv["Environment 1"] instanceof ent.Environment).should.equal(true);
@@ -319,9 +318,10 @@ describe("When a MultiEnvironment is added via config file, ", function() {
     //Prepare
     let f = new ent.EntitiesFactory();
     let e = f.handle_any_declarative_parameters([
-        { $new$Environment: {name: "Environment 1", state: 1}},
-        { $new$Environment: {name: "Environment 2", state: 3}}     
+        { $new$Environment: { params: { name: "Environment 1", state: 1}} },
+        { $new$Environment: { params: { name: "Environment 2", state: 3}} }     
       ]);
+    console.log("!!!!!!!!!!!", e);
     (e[0] instanceof ent.Environment).should.equal(true);
     (e[1] instanceof ent.Environment).should.equal(true);
     e[0].name.should.equal("Environment 1");
@@ -346,16 +346,22 @@ describe("When a MultiEnvironment is added via config file, ", function() {
   it('EntitiesFactory should be able to instanciate a MultiEnvironment with Sub-Environments', function () {
     //Prepare
     let f = new ent.EntitiesFactory();
-    let e = f.instanciate("MultiEnvironment", { name: "MyMulti", state: [
-        { $new$Environment: {name: "Environment 1", state: 1}},
-        { $new$Environment: {name: "Environment 2", state: 3}}     
-      ]});
-    (e[0] instanceof ent.Environment).should.equal(true);
-    (e[1] instanceof ent.Environment).should.equal(true);
-    e[0].name.should.equal("Environment 1");
-    e[1].name.should.equal("Environment 2");
-    e[0].getCurrentState().should.equal(1);
-    e[1].getCurrentState().should.equal(3);
+    let e = f.instanciate("MultiEnvironment", { params:
+      { 
+        name: "MyMulti", 
+        state: [
+          { $new$Environment: { params: { name: "Environment 1", state: 1}} },
+          { $new$Environment: { params: { name: "Environment 2", state: 3}} }
+        ]
+      }
+    });
+    (e instanceof ext.MultiEnvironment).should.equal(true);
+    (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
+    (e.getCurrentState()["Environment 2"] instanceof ent.Environment).should.equal(true);
+    e.getCurrentState()["Environment 1"].name.should.equal("Environment 1");
+    e.getCurrentState()["Environment 2"].name.should.equal("Environment 2");
+    e.getCurrentState()["Environment 1"].getCurrentState().should.equal(1);
+    e.getCurrentState()["Environment 2"].getCurrentState().should.equal(3);
   });
   it('it should be possible to declare/add Sub-environments via the config file by specifying constructors via appending $new$ to the key-value pair', function (done) {
     //Prepare
@@ -364,10 +370,12 @@ describe("When a MultiEnvironment is added via config file, ", function() {
 
     main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
       (e instanceof ext.MultiEnvironment).should.equal(true);
-      e.getCurrentState().length.should.equal(2);
       (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
       e.getCurrentState()["Environment 1"].name.should.equal("Environment 1");
       e.getCurrentState()["Environment 2"].name.should.equal("Environment 2");
+      e.getCurrentState()["Environment 1"].getCurrentState().should.equal(1);
+      e.getCurrentState()["Environment 2"].getCurrentState().should.equal(3);
+      done();
     });
     //Assert
   });
