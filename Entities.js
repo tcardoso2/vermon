@@ -437,8 +437,16 @@ class EntitiesFactory
     //Will attempt to instanciate the object via rest parameters
     console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(..._p)}.`);
     let result = new o(..._p);
-    log.debug(`Returning object of type/name: ${result.constructor ? result.constructor.name : typeof(result)}/'${result.name}', '${JSON.stringify(result)}`);
-    return result
+    log.debug(`Returning object of type/name: ${result.constructor ? result.constructor.name : typeof(result)}/'${result.name}', value is:`);
+    try{
+      log.debug(JSON.stringify(result));
+    }catch(e){
+      //Attempting to catch circular reference
+      if(e instanceof TypeError){
+        log.warn(`Error occured while attempting to convert circular reference. Proceeding, but there could be problems...`);
+      }
+    }
+    return result;
   }
 
   //Handles parameters by identifying keywords recursively along the chain of objects and sub-objects:
