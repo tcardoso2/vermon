@@ -21,7 +21,7 @@ let JSONCircular = require('circular-json');
 class Environment{
 
   constructor(params){
-    log.debug(`Base Environment constructor started with params: ${JSON.stringify(params)}`);
+    log.debug(`Base Environment constructor started with params: ${JSONCircular.stringify(params)}`);
     this.currentState = 0;
     /**
     * @type: Entities.MotionDetector
@@ -58,7 +58,7 @@ class Environment{
   	    this.motionDetectors[m].send(newState, this);
       }
     });
-    log.debug(`Base Environment constructor finished with current state: ${JSON.stringify(this.currentState)}`);
+    log.debug(`Base Environment constructor finished with current state: ${JSONCircular.stringify(this.currentState)}`);
   }
 
   //Gets the current state of the environment
@@ -444,7 +444,7 @@ class EntitiesFactory
     }catch(e){
       //Attempting to catch circular reference
       if(e instanceof TypeError){
-        log.warn(`Error occured while attempting to convert circular reference. Proceeding, but there could be problems...`);
+        log.warn(`Error occured while attempting to log message and convert circular reference. Proceeding, but there could be problems...`);
       }
     }
     return result;
