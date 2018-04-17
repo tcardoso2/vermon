@@ -7,6 +7,7 @@ let filters = require("./Filters.js");
 let ko = require("knockout");
 let chalk = require('chalk');
 let log = require('tracer').colorConsole();
+let JSONCircular = require('circular-json');
 
 /**
  * @class: Entities.Environment
@@ -99,7 +100,7 @@ class Environment{
   //Emits a changedState event
   addChange(intensity)
   {
-    log.debug(`Environment base is adding a new change ${JSON.stringify(intensity)}, current state is ${JSON.stringify(this.currentState)}...`)
+    log.debug(`Environment base is adding a new change ${JSONCircular.stringify(intensity)}, current state is ${JSONCircular.stringify(this.currentState)}...`)
     //will filter if there are any filters
     for (let i in this.filters)
     {
@@ -112,7 +113,7 @@ class Environment{
     }
     let oldState = this.currentState;
   	this.currentState = typeof(intensity) === "object" ? intensity : this.currentState + intensity;
-    log.debug(`Will emit a 'changedState', oldState and this.currentState are: ${JSON.stringify(oldState)} ====> ${JSON.stringify(this.currentState)}`)
+    log.debug(`Will emit a 'changedState', oldState and this.currentState are: ${JSONCircular.stringify(oldState)} ====> ${JSONCircular.stringify(this.currentState)}`)
     this.emit("changedState", oldState, this.currentState);
   }
 
@@ -435,7 +436,7 @@ class EntitiesFactory
       _p.push(this.handle_any_declarative_parameters(params[p]));
     }
     //Will attempt to instanciate the object via rest parameters
-    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(..._p)}.`);
+    console.log(`Instanciating via factory object ${name} with params ${JSONCircular.stringify(..._p)}.`);
     let result = new o(..._p);
     log.debug(`Returning object of type/name: ${result.constructor ? result.constructor.name : typeof(result)}/'${result.name}', value is:`);
     try{
@@ -452,7 +453,7 @@ class EntitiesFactory
   //Handles parameters by identifying keywords recursively along the chain of objects and sub-objects:
   //$new$: Interprets the key as a declarative pattern being the name of the class
   handle_any_declarative_parameters(params){
-    log.info(`Handling parameters: ${JSON.stringify(params)}...`);
+    log.info(`Handling parameters: ${JSONCircular.stringify(params)}...`);
     let k;
     if (this.is_array_or_object(params))
     {
@@ -469,7 +470,7 @@ class EntitiesFactory
       }
       this.logIndentation -= 2;
     }
-    log.info(`Returning result to caller: ${JSON.stringify(params)}`);
+    log.debug(`Returning result to caller: ${JSONCircular.stringify(params)}`);
     return params;
   }
 
@@ -484,7 +485,7 @@ class EntitiesFactory
   //For now handles only $new$ pattern, if later other patterns are added this should be handled, e.g. via a switch statement?
   convert_pattern_to_instance(prop, values){
     let class_name = prop.split("$")[2];
-    log.debug(`Found a $new$ keypattern, instanciating class ${class_name} with parameters ${JSON.stringify(values)}...`);
+    log.debug(`Found a $new$ keypattern, instanciating class ${class_name} with parameters ${JSONCircular.stringify(values)}...`);
     return this.instanciate(class_name, values);
   }
 
