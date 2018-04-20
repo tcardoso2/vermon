@@ -69,8 +69,9 @@ describe("When a new PIR Motion Detector is added", function() {
 });
 
 describe("When PIR Motion tests are done in a RaspberryPI (Please waive at the front of your RPi in the next 10 seconds)", function(done) {
-
-  it('when the user waves in front of the sensor it should trigger a notification', function (done) {
+  //Skipping this test, it can be done if the user wants to manual waive in front of the detector
+  //in a window frame of 10 seconds, but for automated tests is skipped
+  it.skip('when the user waves in front of the sensor it should trigger a notification', function (done) {
 
     if (process.platform != "linux" || process.arch != "arm"){
       done();

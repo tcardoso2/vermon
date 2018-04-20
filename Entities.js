@@ -436,7 +436,7 @@ class EntitiesFactory
       _p.push(this.handle_any_declarative_parameters(params[p]));
     }
     //Will attempt to instanciate the object via rest parameters
-    console.log(`Instanciating via factory object ${name} with params ${JSONCircular.stringify(..._p)}.`);
+    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(..._p)}.`);
     let result = new o(..._p);
     log.debug(`Returning object of type/name: ${result.constructor ? result.constructor.name : typeof(result)}/'${result.name}', value is:`);
     try{
@@ -444,7 +444,7 @@ class EntitiesFactory
     }catch(e){
       //Attempting to catch circular reference
       if(e instanceof TypeError){
-        log.warn(`Error occured while attempting to log message and convert circular reference. Proceeding, but there could be problems...`);
+        log.warn(`Error occured while attempting to convert circular reference. Proceeding, but there could be problems...`);
       }
     }
     return result;

@@ -6,6 +6,7 @@
 //But by defult it does nothing (pass-all), override the method
 //"filter" to change behaviour
 
+let log = require('tracer').colorConsole();
 /**
  * @class: Filters.BaseFilter
  * @classDesc: Creates a base filter to be applicable to a Motion Detector and attaches a value to it

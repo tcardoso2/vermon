@@ -242,8 +242,13 @@ class PIRMotionDetector extends MotionDetector{
     }
     if (this._isRPi()){
       Gpio = require('onoff').Gpio;
-      this.pir = new Gpio(pin, 'in', 'both');
-      this.log.info("Pin was set to: ", pin);
+      // The following requires elevated permissions
+      try{
+        this.pir = new Gpio(pin, 'in', 'both');
+        this.log.info("Pin was set to: ", pin);
+      } catch (e){
+        this.log.error(`Error initializing pin ${pin}, do you have sufficient privileges? ${e.message}`);
+      }
     } else {
       this.log.error("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
     }
