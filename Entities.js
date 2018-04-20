@@ -181,7 +181,7 @@ class MotionDetector{
 
     this.name = name ? name : "unnamed detector."
     if ((typeof this.name) != "string"){
-      throw new Error(`Motion detector first argument (name) is not of type string. Provided value was ${JSON.stringify(name)}`);
+      throw new Error(`Motion detector first argument (name) is not of type string. Provided value was ${JSONCircular.stringify(name)}`);
     }
     this.filters = [];
     events.EventEmitter.call(this);
