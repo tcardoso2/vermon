@@ -781,7 +781,7 @@ function _InternalSerializeCurrentContext(){
   serializeArray(GetNotifiers());
   serializeArray(GetFilters()); 
     
-  return JSON.stringify(profile);
+  return utils.JSON.stringify(profile);
 }
 
 /**

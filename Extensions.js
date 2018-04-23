@@ -13,7 +13,7 @@ let chokidar = require('chokidar');
 let node_cmd = require('node-cmd');
 let moment = require('moment');
 let log = require('tracer').colorConsole();
-let JSONCircular = require('circular-json');
+let utils = require("./utils.js");
 
 
 /**
@@ -122,7 +122,7 @@ class MultiEnvironment extends ent.Environment {
   }
 
   convertStateToDictionary(){
-    log.debug(`Converting current state to Dictionary, state is ${JSONCircular.stringify(this.currentState)}...`);
+    log.debug(`Converting current state to Dictionary, state is ${utils.JSON.stringify(this.currentState)}...`);
     let envs = [];
     while (this.currentState.length > 0){
       envs.push(this.currentState.pop());
@@ -135,7 +135,7 @@ class MultiEnvironment extends ent.Environment {
         throw new Error(`Conciliation Error: The object has not been correctly turned into a property: '${envs[ei].name}'`);
       }
     }
-    log.debug(`Done converting current state to Dictionary, state now is ${JSONCircular.stringify(this.currentState)}...`);
+    log.debug(`Done converting current state to Dictionary, state now is ${utils.JSON.stringify(this.currentState)}...`);
   }
 
   /*
@@ -325,7 +325,7 @@ class SlackNotifier extends BaseNotifier{
       this.slack.webhook({
         channel: '#general',
         icon_emoji: ":ghost:",
-        text: some_text + JSONCircular.stringify(this.newState),
+        text: some_text + utils.JSON.stringify(this.newState),
         username: this.name,
       }, function(err, response){
         if (!err)

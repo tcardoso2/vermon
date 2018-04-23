@@ -7,7 +7,7 @@ let filters = require("./Filters.js");
 let ko = require("knockout");
 let chalk = require('chalk');
 let log = require('tracer').colorConsole();
-let JSONCircular = require('circular-json');
+let utils = require("./utils.js");
 
 /**
  * @class: Entities.Environment
@@ -21,7 +21,7 @@ let JSONCircular = require('circular-json');
 class Environment{
 
   constructor(params){
-    log.debug(`Base Environment constructor started with params: ${JSONCircular.stringify(params)}`);
+    log.debug(`Base Environment constructor started with params: ${utils.JSON.stringify(params)}`);
     this.currentState = 0;
     /**
     * @type: Entities.MotionDetector
@@ -58,7 +58,7 @@ class Environment{
   	    this.motionDetectors[m].send(newState, this);
       }
     });
-    log.debug(`Base Environment constructor finished with current state: ${JSONCircular.stringify(this.currentState)}`);
+    log.debug(`Base Environment constructor finished with current state: ${utils.JSON.stringify(this.currentState)}`);
   }
 
   //Gets the current state of the environment
@@ -100,7 +100,7 @@ class Environment{
   //Emits a changedState event
   addChange(intensity)
   {
-    log.debug(`Environment base is adding a new change ${JSONCircular.stringify(intensity)}, current state is ${JSONCircular.stringify(this.currentState)}...`)
+    log.debug(`Environment base is adding a new change ${utils.JSON.stringify(intensity)}, current state is ${utils.JSON.stringify(this.currentState)}...`)
     //will filter if there are any filters
     for (let i in this.filters)
     {
@@ -113,7 +113,7 @@ class Environment{
     }
     let oldState = this.currentState;
   	this.currentState = typeof(intensity) === "object" ? intensity : this.currentState + intensity;
-    log.debug(`Will emit a 'changedState', oldState and this.currentState are: ${JSONCircular.stringify(oldState)} ====> ${JSONCircular.stringify(this.currentState)}`)
+    log.debug(`Will emit a 'changedState', oldState and this.currentState are: ${utils.JSON.stringify(oldState)} ====> ${utils.JSON.stringify(this.currentState)}`)
     this.emit("changedState", oldState, this.currentState);
   }
 
@@ -181,7 +181,7 @@ class MotionDetector{
 
     this.name = name ? name : "unnamed detector."
     if ((typeof this.name) != "string"){
-      throw new Error(`Motion detector first argument (name) is not of type string. Provided value was ${JSONCircular.stringify(name)}`);
+      throw new Error(`Motion detector first argument (name) is not of type string. Provided value was ${utils.JSON.stringify(name)}`);
     }
     this.filters = [];
     events.EventEmitter.call(this);
@@ -436,7 +436,7 @@ class EntitiesFactory
       _p.push(this.handle_any_declarative_parameters(params[p]));
     }
     //Will attempt to instanciate the object via rest parameters
-    console.log(`Instanciating via factory object ${name} with params ${JSON.stringify(..._p)}.`);
+    log.debug(`Instanciating via factory object ${name} with params ${utils.JSON.stringify(..._p)}.`);
     let result = new o(..._p);
     log.debug(`Returning object of type/name: ${result.constructor ? result.constructor.name : typeof(result)}/'${result.name}', value is:`);
     try{
@@ -453,7 +453,7 @@ class EntitiesFactory
   //Handles parameters by identifying keywords recursively along the chain of objects and sub-objects:
   //$new$: Interprets the key as a declarative pattern being the name of the class
   handle_any_declarative_parameters(params){
-    log.info(`Handling parameters: ${JSONCircular.stringify(params)}...`);
+    log.info(`Handling parameters: ${utils.JSON.stringify(params)}...`);
     let k;
     if (this.is_array_or_object(params))
     {
@@ -470,7 +470,7 @@ class EntitiesFactory
       }
       this.logIndentation -= 2;
     }
-    log.debug(`Returning result to caller: ${JSONCircular.stringify(params)}`);
+    log.debug(`Returning result to caller: ${utils.JSON.stringify(params)}`);
     return params;
   }
 
@@ -485,7 +485,7 @@ class EntitiesFactory
   //For now handles only $new$ pattern, if later other patterns are added this should be handled, e.g. via a switch statement?
   convert_pattern_to_instance(prop, values){
     let class_name = prop.split("$")[2];
-    log.debug(`Found a $new$ keypattern, instanciating class ${class_name} with parameters ${JSONCircular.stringify(values)}...`);
+    log.debug(`Found a $new$ keypattern, instanciating class ${class_name} with parameters ${utils.JSON.stringify(values)}...`);
     return this.instanciate(class_name, values);
   }
 
