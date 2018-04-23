@@ -14,7 +14,14 @@ exports = module.exports = {
         return JSON.stringify(str);
       } catch (e){
         if (e instanceof TypeError){
-          return JSONCircular.stringify(str);
+          log.debug(`Error in stringifying object (${e.message}), attempting with "circular-json"...`);
+          try{
+            return JSONCircular.stringify(str);
+          } catch(e){
+            let msg = `Error in stringifying object (${e.message})`;
+            log.warn(msg);
+            return msg;
+          }
         }
         //Unhandled, re-throw
         throw e;
