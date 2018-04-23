@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.32 :Creating utils general package, also accessible by main.utils
 * v 0.5.31 :Bug fixes;  
 * v 0.5.30 :Now possible to instantiate MultiEnvironment from config file; Added handling of circular references; 
 * v 0.5.29 :WIP: Testing / Adding capability of calling a MultiEnvironemnt via config file;    

@@ -30,6 +30,7 @@ log.warning = log.warn;
 let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
+let utils = require('./utils.js');
 
 
 /**
@@ -903,3 +904,5 @@ exports.Log = log;
 exports.AddPlugin = AddPlugin;
 exports.RemovePlugin = RemovePlugin;
 exports.GetPlugins = GetPlugins;
+//Utils
+exports.Utils = utils;
