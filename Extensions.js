@@ -130,7 +130,7 @@ class MultiEnvironment extends ent.Environment {
     this.currentState = {}; //Conversion happens here. Current state was an Array and it is now a Dictionary
     for(let ei in envs){
       this.addChange(envs[ei]);
-      //This is made jus to ensure that the expected property is really there
+      //This is made just to ensure that the expected property is really there
       if (!this.currentState[envs[ei].name]){
         throw new Error(`Conciliation Error: The object has not been correctly turned into a property: '${envs[ei].name}'`);
       }
@@ -139,17 +139,17 @@ class MultiEnvironment extends ent.Environment {
   }
 
   /*
-  * Stacks (adds as object member) the states in an object instead of overriding the state
+  * if the parameter is an Environment, stacks Sub-environments (adds as object member) 
+  * the states in an object instead of overriding the state. If the parameter is not of
+  * type Environment then it propagates the signal to the existing sub-Environments and
+  * emits an 'ignoredChange' event;
   * @param {Object} the value to add.
   */
   addChange(intensity)
   { 
     log.debug(`Attempting to add sub-environment ${intensity.name}...`);
     if(intensity instanceof ent.Environment){
-      let s = this.currentState;
-      s[intensity.name] = intensity;
-      let result = super.addChange(s);
-      return result;
+      return this.addSubEnvironment(intensity);
     }
     else
     {
@@ -160,8 +160,26 @@ class MultiEnvironment extends ent.Environment {
     }
   }
 
+  addSubEnvironment(subEnvironment){
+    let s = this.currentState;
+    this.addReverseReferenceTo(subEnvironment);
+    s[subEnvironment.name] = subEnvironment;
+    let result = super.addChange(s);
+    return result;
+  }
+
   /*
-   * calls the 'addchange' method of the sub-Environments with the given intensity
+   * Adds a reverse reference of the parent (MultiEnvironment) to the Sub-Environment
+   * so that it can communicate with other environments
+   * @param {Object} the subEnvironment where the reverse reference will be added..
+   */
+  addReverseReferenceTo(subEnvironment){
+    //overrides/implements the getParentEnvironment function
+    subEnvironment.getParentEnvironment = () => { return this };
+  }
+
+  /*
+   * Calls the 'addchange' method of the sub-Environments with the given intensity
    * @param {Object} the intensity to add to propagate to the sub-environments.
    */
   propagateToSubEnvironments(intensity)
@@ -173,7 +191,9 @@ class MultiEnvironment extends ent.Environment {
   }
 
   /*
-   * Short-hand for getting a sub-environemnt
+   * Short-hand for getting a sub-environment. There's not chacking if the value is really
+   * of Environment type of if the key exists for the moment. Consider adding if necessary
+   * later.
    * @param {String} the name of the sub-environment
    */
   getSubEnvironment(name){

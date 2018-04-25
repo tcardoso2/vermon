@@ -129,6 +129,22 @@ class Environment{
     }
   }
 
+  /*
+   * Gets the Parent environment it belongs to (if existing)
+   * @returns {Object} the Multienvironment parent if belongs to (if existing)..
+   */
+  getParentEnvironment(){
+    throw new Error("Not Implemented.");    
+  }
+
+  /*
+   * Gets any Environment by name under the same multiEnvironment.
+   * @returns {Object} the sibling Environment..
+   */
+  getSiblingEnvironment(environmentName){
+    return this.getParentEnvironment().getSubEnvironment(environmentName);    
+  }
+
   //Abstract methods, should be overriden by extender classes, cannot be used directly
   isActive()
   {
@@ -453,7 +469,7 @@ class EntitiesFactory
   //Handles parameters by identifying keywords recursively along the chain of objects and sub-objects:
   //$new$: Interprets the key as a declarative pattern being the name of the class
   handle_any_declarative_parameters(params){
-    log.info(`Handling parameters: ${utils.JSON.stringify(params)}...`);
+    log.debug(`Handling parameters: ${utils.JSON.stringify(params)}...`);
     let k;
     if (this.is_array_or_object(params))
     {

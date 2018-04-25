@@ -431,4 +431,44 @@ describe("When a MultiEnvironment is added via config file, ", function() {
     e.getSubEnvironment("Environment 2").motionDetectors.should.equal(0);
     (e.getSubEnvironment("Environment 1").motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
   });
+  it('A sub-Environment must be able to get a reference to its parent Multi-Environment', function () {
+    //Prepare
+    let f = new ent.EntitiesFactory();
+    let e = f.instanciate("MultiEnvironment", { params:
+      { 
+        name: "MyMulti", 
+        state: [
+          { 
+            $new$Environment: { params: { name: "Environment 1", state: 1}},
+          },
+          { 
+            $new$Environment: { params: { name: "Environment 2", state: 3}} 
+          }
+        ]
+      }
+    });
+    let parent = e.getSubEnvironment("Environment 2").getParentEnvironment();
+    (parent instanceof ext.MultiEnvironment).should.equal(true);
+    e.should.be.eql(parent);
+  });
+  it('A sub-Environment must be able to get a reference to its sibling Environments', function () {
+    //Prepare
+    let f = new ent.EntitiesFactory();
+    let e = f.instanciate("MultiEnvironment", { params:
+      { 
+        name: "MyMulti", 
+        state: [
+          { 
+            $new$Environment: { params: { name: "Environment 1", state: 1}},
+          },
+          { 
+            $new$Environment: { params: { name: "Environment 2", state: 3}} 
+          }
+        ]
+      }
+    });
+    let sibling = e.getSubEnvironment("Environment 2").getSiblingEnvironment("Environment 1");
+    (sibling instanceof ent.Environment).should.equal(true);
+    e.getSubEnvironment("Environment 1").should.be.eql(sibling);
+  });
 });
