@@ -171,6 +171,14 @@ class MultiEnvironment extends ent.Environment {
       _this.currentState[key].addChange(intensity);
     });
   }
+
+  /*
+   * Short-hand for getting a sub-environemnt
+   * @param {String} the name of the sub-environment
+   */
+  getSubEnvironment(name){
+    return this.currentState[name];
+  }
 }
 
 //A concrete MotionDetector for detecting files in a folder

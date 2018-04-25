@@ -462,16 +462,32 @@ class EntitiesFactory
         log.debug(`${Array(this.logIndentation).join(">")} Handling '${p}'...`);
         if(this.is_declarative_pattern(p)){
           //The trick here is for the parameter to become the actual object and break the loop
-          params = this.convert_pattern_to_instance(p, params[p]);
+          params = this.handle_declarative_pattern(p, params);
           break;
-        } else {
-          params[p] = this.handle_any_declarative_parameters(params[p])
+        } else{
+            params[p] = this.handle_any_declarative_parameters(params[p])
         }
       }
       this.logIndentation -= 2;
     }
     log.debug(`Returning result to caller: ${utils.JSON.stringify(params)}`);
     return params;
+  }
+
+  handle_declarative_pattern(prop, all){
+    switch(this.get_declarative_pattern(prop)){
+      case "$new$":
+        //The trick here is for the parameter to become the actual object and break the loop
+        all = this.convert_pattern_to_instance(prop, all[prop]);
+        break;
+      default:
+        break;
+    }
+    return all;  
+  }
+
+  get_declarative_pattern(prop){
+    return "$new$";
   }
 
   is_array_or_object(o){

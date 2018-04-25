@@ -363,7 +363,7 @@ describe("When a MultiEnvironment is added via config file, ", function() {
     e.getCurrentState()["Environment 1"].getCurrentState().should.equal(1);
     e.getCurrentState()["Environment 2"].getCurrentState().should.equal(3);
   });
-  it('it should be possible to declare/add Sub-environments via the config file by specifying constructors via appending $new$ to the key-value pair', function (done) {
+  it('should be possible to declare/add Sub-environments via the config file by specifying constructors via appending $new$ to the key-value pair', function (done) {
     //Prepare
     main.Reset();
     let alternativeConfig = new main.Config("/test/config_test19.js");
@@ -377,6 +377,58 @@ describe("When a MultiEnvironment is added via config file, ", function() {
       e.getCurrentState()["Environment 2"].getCurrentState().should.equal(3);
       done();
     });
-    //Assert
+  });
+  it('should be possible to add Detectors to sub-environments ', function (done) {
+    //Prepare
+    main.Reset();
+    let alternativeConfig = new main.Config("/test/config_test20.js");
+
+    main.StartWithConfig(alternativeConfig, (e, d, n, f)=>{
+      (e instanceof ext.MultiEnvironment).should.equal(true);
+      (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
+      e.getCurrentState()["Environment 1"].name.should.equal("Environment 1");
+      e.getCurrentState()["Environment 2"].name.should.equal("Environment 2");
+      e.getCurrentState()["Environment 1"].getCurrentState().should.equal(1);
+      e.getCurrentState()["Environment 2"].getCurrentState().should.equal(3);
+      let subDetectors = e.getCurrentState()["Environment 1"].motionDetectors;
+      subDetectors.length.should.equal(1);
+      (subDetectors[0] instanceof ent.MotionDetector).should.equal(true);
+      subDetectors[0].name.should.equal("My detector");
+      done();
+    });
+  });
+  it('EntitiesFactory should be able to instanciate a MultiEnvironment with Sub-Environments and Sub-Detectors', function () {
+    //Prepare
+    let f = new ent.EntitiesFactory();
+    let e = f.instanciate("MultiEnvironment", { params:
+      { 
+        name: "MyMulti", 
+        state: [
+          { 
+            $new$Environment: { params: { name: "Environment 1", state: 1}},
+            $detectors$: {
+              MotionDetector: {
+                name: "My Sub-Motion Detector",
+                initialIntensity: 10
+              }
+            }
+          },
+          { 
+            $new$Environment: { params: { name: "Environment 2", state: 3}} 
+          }
+        ]
+      }
+    });
+    (e instanceof ext.MultiEnvironment).should.equal(true);
+    (e.getSubEnvironment("Environment 1") instanceof ent.Environment).should.equal(true);
+    (e.getSubEnvironment("Environment 2") instanceof ent.Environment).should.equal(true);
+    e.getSubEnvironment("Environment 1").name.should.equal("Environment 1");
+    e.getSubEnvironment("Environment 2").name.should.equal("Environment 2");
+    e.getSubEnvironment("Environment 1").getCurrentState().should.equal(1);
+    e.getSubEnvironment("Environment 2").getCurrentState().should.equal(3);
+    e.getSubEnvironment("Environment 1").motionDetectors.length.should.equal(1);
+    e.motionDetectors.length.should.equal(0);
+    e.getSubEnvironment("Environment 2").motionDetectors.should.equal(0);
+    (e.getSubEnvironment("Environment 1").motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
   });
 });
