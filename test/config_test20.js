@@ -11,9 +11,11 @@ profiles = {
                 state: 1
               }
             },
-            MotionDetector: {
-              name: "My detector",
-            },
+            $detectors$: {
+              MotionDetector: {
+                name: "My detector",
+              }
+            }
           },
           { 
             $new$Environment: {
@@ -25,7 +27,7 @@ profiles = {
           }     
         ]
       }
-    },
+    }
   }
 }
 

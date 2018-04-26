@@ -53,38 +53,17 @@ function SetNotifiers(n)
  * Adds a detector to an existing SubEnvironment by name. Assumes that the main Environment is a MultiEnvironment.
  * @param {object} detector is the MotionDetector object to add.
  * @param {boolean} force can be set to true to push the detector even if not of {MotionDetector} instance
- * @param {string} subEnvironment is the Environment name to add  to, within the MultiEnvironment
+ * @param {object} subEnvironment is the Environment name to add  to, within the MultiEnvironment, if it is a string
+ * the system will search for an existing sub-environment. If it is an actual environment uses that instance.
+ * @param {boolean} if false, will not check if there is already an existing MultiEnvironment in the context;
  * @returns {Boolean} true if the detector is successfully created.
  * @public
  */
-function AddDetectorToSubEnvironmentOnlyByName(detector, force = false, subEnvironmentName){
-  if (subEnvironmentName)
+function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironment, checkMulti = true){
+  if (subEnvironment)
   {
-    if (GetEnvironment() && ent.IsInstanceOf(GetEnvironment(), "MultiEnvironment")){
-      let subEnv = GetEnvironment().getCurrentState()[subEnvironmentName];
-      if (subEnv instanceof ent.Environment){
-        log.info(`Binding detector to sub-environment ${subEnv.constructor.name}:${subEnv.name}...`);
-        subEnv.bindDetector(detector, notifiers, force);
-        detector.startMonitoring();
-        return true;
-      } else {
-        throw new Error("Sub-Environment is not valid.");
-      }
-    } else {
-      throw new Error("No MultiEnvironment exists, please add one first.");
-    }
-  } else {
-    log.warning(`Sub-Environment ${subEnvironmentName} object is not of type Environment, ignoring...`);
-  }
-  return false;
-}
-
-function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironment){
-  return;
-  if (subEnvironmentName)
-  {
-    if (GetEnvironment() && ent.IsInstanceOf(GetEnvironment(), "MultiEnvironment")){
-      let subEnv = GetEnvironment().getCurrentState()[subEnvironmentName];
+    if (!checkMulti || GetEnvironment() && ent.IsInstanceOf(GetEnvironment(), "MultiEnvironment")){
+      let subEnv = typeof(subEnvironment) == "string" ? GetEnvironment().getCurrentState()[subEnvironment] : subEnvironment;
       if (subEnv instanceof ent.Environment){
         log.info(`Binding detector to sub-environment ${subEnv.constructor.name}:${subEnv.name}...`);
         subEnv.bindDetector(detector, notifiers, force);
@@ -103,7 +82,6 @@ function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironment
 }
 
 exports.AddDetectorToSubEnvironmentOnly = AddDetectorToSubEnvironmentOnly;
-exports.AddDetectorToSubEnvironmentOnlyByName = AddDetectorToSubEnvironmentOnlyByName;
 exports.GetEnvironment = GetEnvironment;
 exports.SetEnvironment = SetEnvironment;
 exports.GetNotifiers = GetNotifiers;

@@ -131,7 +131,7 @@ function AddDetector(detector, force = false, subEnvironmentName){
   {
     log.info(`Pushing detector "${detector.name}"" to main...`);
     motionDetectors.push(detector);
-    if (AddDetectorToSubEnvironmentOnlyByName(detector, force, subEnvironmentName)){
+    if (AddDetectorToSubEnvironmentOnly(detector, force, subEnvironmentName)){
       return true;
     }
     else {
@@ -159,8 +159,8 @@ function AddDetector(detector, force = false, subEnvironmentName){
  * @returns {Boolean} true if the detector is successfully created.
  * @public
  */
-function AddDetectorToSubEnvironmentOnlyByName(detector, force = false, subEnvironmentName){
-  return em.AddDetectorToSubEnvironmentOnlyByName(detector, force, subEnvironmentName);
+function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironment){
+  return em.AddDetectorToSubEnvironmentOnly(detector, force, subEnvironment);
 }
 
 
@@ -846,7 +846,7 @@ function GetPlugins(){
 exports.AddNotifier = AddNotifier;
 exports.AddNotifierToSubEnvironment = AddNotifierToSubEnvironment;
 exports.AddDetector = AddDetector;
-exports.AddDetectorToSubEnvironmentOnlyByName = AddDetectorToSubEnvironmentOnlyByName;
+exports.AddDetectorToSubEnvironmentOnly = AddDetectorToSubEnvironmentOnly;
 exports.ActivateDetector = ActivateDetector;
 exports.DeactivateDetector = DeactivateDetector;
 exports.RemoveNotifier = RemoveNotifier;

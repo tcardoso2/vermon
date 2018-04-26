@@ -238,7 +238,7 @@ describe("When a MultiEnvironment is added, ", function() {
     (e.getCurrentState()["Environment 2"] instanceof ent.Environment).should.equal(true);
     (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
     try{
-      main.AddDetectorToSubEnvironmentOnlyByName(new ent.MotionDetector("Detector 1"), false, "Environment 3");
+      main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Detector 1"), false, "Environment 3");
     }catch(e){
       e.message.should.equal("Sub-Environment is not valid.");
     }
@@ -276,7 +276,7 @@ describe("When a MultiEnvironment is added, ", function() {
     (e.getCurrentState()["Sub-Environment 2"] instanceof ent.Environment).should.equal(true);
     (e.getCurrentState()["Sub-Environment 1"] instanceof ent.Environment).should.equal(true);
 
-    main.AddDetectorToSubEnvironmentOnlyByName(new ent.MotionDetector("Sub-Detector only 1"), false, "Sub-Environment 2");
+    main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Sub-Detector only 1"), false, "Sub-Environment 2");
     main.AddDetector(new ent.MotionDetector("Detector 2 for both"), false, "Sub-Environment 2");
     main.AddNotifier(new ent.BaseNotifier("Notifier 1")); //Will bind to Detector 2 only
     main.AddNotifierToSubEnvironment(new ent.BaseNotifier("Notifier 2"), "Sub-Environment 2"); //Will bind to Sub-detector only
@@ -428,7 +428,7 @@ describe("When a MultiEnvironment is added via config file, ", function() {
     e.getSubEnvironment("Environment 2").getCurrentState().should.equal(3);
     e.getSubEnvironment("Environment 1").motionDetectors.length.should.equal(1);
     e.motionDetectors.length.should.equal(0);
-    e.getSubEnvironment("Environment 2").motionDetectors.should.equal(0);
+    e.getSubEnvironment("Environment 2").motionDetectors.length.should.equal(0);
     (e.getSubEnvironment("Environment 1").motionDetectors[0] instanceof ent.MotionDetector).should.equal(true);
   });
   it('A sub-Environment must be able to get a reference to its parent Multi-Environment', function () {
@@ -452,6 +452,7 @@ describe("When a MultiEnvironment is added via config file, ", function() {
     e.should.be.eql(parent);
   });
   it('A sub-Environment must be able to get a reference to its sibling Environments', function () {
+    this.timeout(3000);
     //Prepare
     let f = new ent.EntitiesFactory();
     let e = f.instanciate("MultiEnvironment", { params:

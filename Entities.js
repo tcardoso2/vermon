@@ -521,10 +521,11 @@ class EntitiesFactory
   convertDetectorsToSubEnvironment(subEnvironment, detectors){
     let o;
     for(let d in detectors){
-      console.log(">>>>>>> FIX ME", d);
       o = this.instanciate(d, detectors[d]);
       console.log(">>>>>>> FIX ME", o);
-      em.AddDetectorToSubEnvironmentOnly(o, false, subEnvironment.name);
+      //We do not want a check if there is already a Multi-env because this is ran usually when
+      //The instances are being run, hence the 4th arg as false
+      em.AddDetectorToSubEnvironmentOnly(o, false, subEnvironment, false);
       console.log(">>>>>>> FIX ME", subEnvironment.motionDetectors.length);
     }
   }
