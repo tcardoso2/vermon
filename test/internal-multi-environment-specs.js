@@ -238,7 +238,7 @@ describe("When a MultiEnvironment is added, ", function() {
     (e.getCurrentState()["Environment 2"] instanceof ent.Environment).should.equal(true);
     (e.getCurrentState()["Environment 1"] instanceof ent.Environment).should.equal(true);
     try{
-      main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Detector 1"), false, "Environment 3");
+      main.AddDetectorToSubEnvironmentOnlyByName(new ent.MotionDetector("Detector 1"), false, "Environment 3");
     }catch(e){
       e.message.should.equal("Sub-Environment is not valid.");
     }
@@ -276,7 +276,7 @@ describe("When a MultiEnvironment is added, ", function() {
     (e.getCurrentState()["Sub-Environment 2"] instanceof ent.Environment).should.equal(true);
     (e.getCurrentState()["Sub-Environment 1"] instanceof ent.Environment).should.equal(true);
 
-    main.AddDetectorToSubEnvironmentOnly(new ent.MotionDetector("Sub-Detector only 1"), false, "Sub-Environment 2");
+    main.AddDetectorToSubEnvironmentOnlyByName(new ent.MotionDetector("Sub-Detector only 1"), false, "Sub-Environment 2");
     main.AddDetector(new ent.MotionDetector("Detector 2 for both"), false, "Sub-Environment 2");
     main.AddNotifier(new ent.BaseNotifier("Notifier 1")); //Will bind to Detector 2 only
     main.AddNotifierToSubEnvironment(new ent.BaseNotifier("Notifier 2"), "Sub-Environment 2"); //Will bind to Sub-detector only

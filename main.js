@@ -121,16 +121,17 @@ function AddNotifierToSubEnvironment(notifier, subEnvironmentName, template, for
  * Fails hard (throws an Error) if there is no existing {Environment} set in the context at the runtime.
  * @param {object} detector is the MotionDetector object to add.
  * @param {boolean} force can be set to true to push the detector even if not of {MotionDetector} instance
+ * @param {string} subEnvironmentName is the name of a Sub-Environment existing instance
  * @returns {Boolean} true if the detector is successfully created.
  * @public
  */
-function AddDetector(detector, force = false, subEnvironment){
+function AddDetector(detector, force = false, subEnvironmentName){
   log.info(`Attempting to add detector ${detector.name} with force=${force}...`);
   if (force || (detector instanceof ent.MotionDetector))
   {
     log.info(`Pushing detector "${detector.name}"" to main...`);
     motionDetectors.push(detector);
-    if (AddDetectorToSubEnvironmentOnly(detector, force, subEnvironment)){
+    if (AddDetectorToSubEnvironmentOnlyByName(detector, force, subEnvironmentName)){
       return true;
     }
     else {
@@ -158,27 +159,8 @@ function AddDetector(detector, force = false, subEnvironment){
  * @returns {Boolean} true if the detector is successfully created.
  * @public
  */
-function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironmentName){
-  return em.AddDetectorToSubEnvironmentOnly(detector, force, subEnvironmentName);
-  if (subEnvironmentName)
-  {
-    if (em.GetEnvironment() && em.GetEnvironment() instanceof ext.MultiEnvironment){
-      let subEnv = em.GetEnvironment().getCurrentState()[subEnvironmentName];
-      if (subEnv instanceof ent.Environment){
-        log.info(`Binding detector to sub-environment ${subEnv.constructor.name}...`);
-        subEnv.bindDetector(detector, em.GetNotifiers(), force);
-        detector.startMonitoring();
-        return true;
-      } else {
-        throw new Error("Sub-Environment is not valid.");
-      }
-    } else {
-      throw new Error("No MultiEnvironment exists, please add one first.");
-    }
-  } else {
-    log.warning(`Sub-Environment ${subEnvironmentName} object is not of type Environment, ignoring...`);
-  }
-  return false;
+function AddDetectorToSubEnvironmentOnlyByName(detector, force = false, subEnvironmentName){
+  return em.AddDetectorToSubEnvironmentOnlyByName(detector, force, subEnvironmentName);
 }
 
 
@@ -864,7 +846,7 @@ function GetPlugins(){
 exports.AddNotifier = AddNotifier;
 exports.AddNotifierToSubEnvironment = AddNotifierToSubEnvironment;
 exports.AddDetector = AddDetector;
-exports.AddDetectorToSubEnvironmentOnly = AddDetectorToSubEnvironmentOnly;
+exports.AddDetectorToSubEnvironmentOnlyByName = AddDetectorToSubEnvironmentOnlyByName;
 exports.ActivateDetector = ActivateDetector;
 exports.DeactivateDetector = DeactivateDetector;
 exports.RemoveNotifier = RemoveNotifier;
