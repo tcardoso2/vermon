@@ -6,8 +6,9 @@ let events = require("events");
 let filters = require("./Filters.js");
 let ko = require("knockout");
 let chalk = require('chalk');
-let log = require('tracer').colorConsole();
 let utils = require("./utils.js");
+let log = utils.log;
+let em = require("./EnvironmentManager.js");
 
 /**
  * @class: Entities.Environment
@@ -76,6 +77,7 @@ class Environment{
   //Expects a MotionDetector entity passed as arg
   bindDetector(md, notifiers, force = false){
     this.motionDetectors.push(md);
+    log.info(`Pushed a new detector "${md.name}" to environment "${this.name}". Environment has now ${this.motionDetectors.length} motion detectors(s).`);
     if (notifiers)
     {
       for (let n in notifiers)
@@ -507,7 +509,6 @@ class EntitiesFactory
         case reservedPatterns.DETECTORS:
           //Assumes that the Environment is already there
           this.convertDetectorsToSubEnvironment(subEnvironment, all[p])
-          //let o = this.instanciate(p, args);
           break;
         default:
           break;
@@ -520,8 +521,11 @@ class EntitiesFactory
   convertDetectorsToSubEnvironment(subEnvironment, detectors){
     let o;
     for(let d in detectors){
+      console.log(">>>>>>> FIX ME", d);
       o = this.instanciate(d, detectors[d]);
-      //utils.EnvironmentManager.addDetectorToSubEnvironmentOnly( , o, false, subEnvironment.name);
+      console.log(">>>>>>> FIX ME", o);
+      em.AddDetectorToSubEnvironmentOnly(o, false, subEnvironment.name);
+      console.log(">>>>>>> FIX ME", subEnvironment.motionDetectors.length);
     }
   }
 
@@ -566,6 +570,10 @@ function GetExtensions(){
   return classes;
 }
 
+function IsInstanceOf(o, instanceName){
+  return o instanceof classes[instanceName];
+}
+
 new EntitiesFactory().extend(filters.classes);
 
 Environment.prototype.__proto__ = events.EventEmitter.prototype;
@@ -578,3 +586,4 @@ exports.EntitiesFactory = EntitiesFactory;
 exports.Environment = Environment;
 exports.MotionDetector = MotionDetector;
 exports.BaseNotifier = BaseNotifier;
+exports.IsInstanceOf = IsInstanceOf;
