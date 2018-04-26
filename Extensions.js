@@ -12,8 +12,8 @@ const Raspistill = require('node-raspistill').Raspistill;
 let chokidar = require('chokidar');
 let node_cmd = require('node-cmd');
 let moment = require('moment');
-let log = require('tracer').colorConsole();
 let utils = require("./utils.js");
+let log = utils.log;
 
 
 /**

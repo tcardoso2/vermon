@@ -4,7 +4,7 @@
 // @author: Tiago Cardoso
 //
 let JSONCircular = require('circular-json');
-let log = require('tracer').colorConsole();//new Log('debug');//, fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
+let log = require('tracer').colorConsole({level:'warn'}); //trace level
 log.warning = log.warn;
 
 exports = module.exports = {
