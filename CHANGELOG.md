@@ -1,8 +1,9 @@
 # Change log:
 
 ***  
+* v 0.5.35: Moving Environment related functions from main to EnvironmentManager;   
 * v 0.5.34 :Adding Capability for Sub-Environment to have access to other sub-environments;  
-* v 0.5.33 :Adding Detectors via config file to MultiEnvironments...  
+* v 0.5.33 :(WIP) Adding Detectors via config file to MultiEnvironments...  
 * v 0.5.32 :Creating utils general package, also accessible by main.utils
 * v 0.5.31 :Bug fixes;  
 * v 0.5.30 :Now possible to instantiate MultiEnvironment from config file; Added handling of circular references; 

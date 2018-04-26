@@ -18,20 +18,16 @@ let cmd = require("node-cmd");
 let cli = require("commander");
 let filters = ent.Filters;
 let ext = require("./Extensions.js");
-let notifiers = [];
-let environment;
+let em = require("./EnvironmentManager.js");
 let motionDetectors = [];
 let config;
 let ko = require("knockout");
-let fs = require('fs')
-  , Log = require('log');
-var log = require('tracer').colorConsole();//new Log('debug');//, fs.createWriteStream('t-motion-detector.' + (new Date().getTime()) + '.log'));
-log.warning = log.warn;
+let fs = require('fs');
 let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
 let utils = require('./utils.js');
-
+var log = utils.log
 
 /**
  * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
@@ -62,7 +58,7 @@ function _InternalAddFilter(filter = new filters.BaseFilter()){
 function _InternalAddEnvironment(env = new ent.Environment()){
   if (env instanceof ent.Environment)
   {
-    environment = env;
+    em.SetEnvironment(env);
     return true;
   } else {
     log.warning("'environment' object is not of type Environment");
@@ -84,7 +80,7 @@ function AddNotifier(notifier, template, force = false){
   if (force || (notifier instanceof ent.BaseNotifier))
   {
     notifier.bindToDetectors(motionDetectors, template);
-    notifiers.push(notifier);
+    em.GetNotifiers().push(notifier);
     return true;
   } else {
     log.warning("'notifier' object is not of type BaseNotifier");
@@ -108,7 +104,7 @@ function AddNotifierToSubEnvironment(notifier, subEnvironmentName, template, for
   {
     let subEnv = GetSubEnvironment(subEnvironmentName);
     notifier.bindToDetectors(subEnv.motionDetectors, template);
-    notifiers.push(notifier);
+    em.GetNotifiers().push(notifier);
     return true;
   } else {
     log.warning("'notifier' object is not of type BaseNotifier");
@@ -138,10 +134,10 @@ function AddDetector(detector, force = false, subEnvironment){
       return true;
     }
     else {
-      if (environment)
+      if (em.GetEnvironment())
       {
-        log.info(`Binding detector to environment ${environment.constructor.name}...`);
-        environment.bindDetector(detector, notifiers, force);
+        log.info(`Binding detector to environment ${em.GetEnvironment().constructor.name}...`);
+        em.GetEnvironment().bindDetector(detector, em.GetNotifiers(), force);
         detector.startMonitoring();
         return true;
       } else {
@@ -163,13 +159,14 @@ function AddDetector(detector, force = false, subEnvironment){
  * @public
  */
 function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironmentName){
+  return em.AddDetectorToSubEnvironmentOnly(detector, force, subEnvironmentName);
   if (subEnvironmentName)
   {
-    if (environment && environment instanceof ext.MultiEnvironment){
-      let subEnv = environment.getCurrentState()[subEnvironmentName];
+    if (em.GetEnvironment() && em.GetEnvironment() instanceof ext.MultiEnvironment){
+      let subEnv = em.GetEnvironment().getCurrentState()[subEnvironmentName];
       if (subEnv instanceof ent.Environment){
         log.info(`Binding detector to sub-environment ${subEnv.constructor.name}...`);
-        subEnv.bindDetector(detector, notifiers, force);
+        subEnv.bindDetector(detector, em.GetNotifiers(), force);
         detector.startMonitoring();
         return true;
       } else {
@@ -220,13 +217,13 @@ function ActivateDetector(name)
  * @public
  */
 function RemoveNotifier(notifier, silent = false){
-  let index = notifiers.indexOf(notifier);
+  let index = em.GetNotifiers().indexOf(notifier);
   log.info("Removing Notifier...");
   if (index > -1) {
     if(!silent){
-      notifiers[index].notify("Removing Notifier...");
+      em.GetNotifiers()[index].notify("Removing Notifier...");
     }
-    notifiers.splice(index, 1);
+    em.GetNotifiers().splice(index, 1);
     return true;
   } else {
     log.info(chalk.yellow(`Notifier ${notifier} not found, ignoring and returning false...`));
@@ -245,10 +242,10 @@ function RemoveDetector(detector){
   let index = motionDetectors.indexOf(detector);
   log.info("Removing Detector...");
   if (index > -1) {
-    environment.unbindDetector(detector);
+    em.GetEnvironment().unbindDetector(detector);
     motionDetectors.splice(index, 1);
     //Redundant: Motion detectors are also copied to environment!
-    environment.motionDetectors.splice(index, 1);
+    em.GetEnvironment().motionDetectors.splice(index, 1);
     return true;
   } else {
     log.info(chalk.yellow(`Detector ${detector} not found, ignoring and returning false...`));
@@ -264,10 +261,10 @@ function RemoveDetector(detector){
  */
 function GetEnvironment()
 {
-  if (environment == undefined) {
+  if (em.GetEnvironment() == undefined) {
     throw new Error('Environment does not exist. Please run the Start() function first or one of its overrides.');
   }
-  return environment; 
+  return em.GetEnvironment();
 }
 
 /**
@@ -310,7 +307,7 @@ function GetSubEnvironment(subEnvironmentName)
  */
 function GetNotifiers()
 {
-  return notifiers;
+  return em.GetNotifiers();
 }
 
 /**
@@ -362,14 +359,14 @@ function Reset()
   for (let m in motionDetectors){
     RemoveDetector(motionDetectors[m]);
   }
-  for (let n in notifiers){
-    RemoveNotifier(notifiers[n], true);
+  for (let n in em.GetNotifiers()){
+    RemoveNotifier(em.GetNotifiers()[n], true);
   }
-  notifiers = [];
-  if (environment){
-    environment.removeAllListeners('changedState');
-    environment.exit();
-    environment = undefined;
+  em.SetNotifiers([]);
+  if (em.GetEnvironment()){
+    em.GetEnvironment().removeAllListeners('changedState');
+    em.GetEnvironment().exit();
+    em.SetEnvironment(undefined);
   }
   motionDetectors = [];
   Object.keys(plugins).forEach(function(key) {
@@ -400,7 +397,7 @@ function Start(params, silent = false){
   //Sets the parameters first if they exist
   if (params){
     if (params.environment){
-      environment = params.environment;
+      em.SetEnvironment(params.environment);
     }
     else
     {
@@ -415,17 +412,17 @@ function Start(params, silent = false){
   }
 
   //Will set a default Environment if does not exist;
-  if(!environment){
+  if(!em.GetEnvironment()){
     _InternalAddEnvironment();
-    //environment = new ent.Environment();
+    //em.GetEnvironment() = new ent.Environment();
   }
 
   if (!silent)
   {
     log.info("Notifying detector is starting...");
     //Pushes message to all notifiers
-    for (n in notifiers){
-      notifiers[n].notify("Started");
+    for (n in em.GetNotifiers()){
+      em.GetNotifiers()[n].notify("Started");
     }
   }
   log.info("ready.");
@@ -508,7 +505,7 @@ function StartWithConfig(configParams, callback){
       }
     }
   }
-  _StartPlugins(environment,GetMotionDetectors(),GetNotifiers(),GetFilters());
+  _StartPlugins(em.GetEnvironment(),GetMotionDetectors(),GetNotifiers(),GetFilters());
 
   log.info("ready. returning to callback...");
   if (callback) callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());

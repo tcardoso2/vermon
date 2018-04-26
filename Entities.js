@@ -408,6 +408,11 @@ BaseNotifier.prototype.toJSON = function() {
 const classes = { Environment, MotionDetector, BaseNotifier };
 //Keys 
 const reservedKeys = [ "slack", "raspistill" ]
+//Config Patterns (reserved words)
+const reservedPatterns = {
+  NEW: "$new$",
+  DETECTORS: "$detectors$"
+}
 
 class EntitiesFactory
 {
@@ -491,19 +496,42 @@ class EntitiesFactory
   }
 
   handle_declarative_pattern(prop, all){
-    switch(this.get_declarative_pattern(prop)){
-      case "$new$":
-        //The trick here is for the parameter to become the actual object and break the loop
-        all = this.convert_pattern_to_instance(prop, all[prop]);
-        break;
-      default:
-        break;
+    let subEnvironment;
+    for (let p in all) {
+      log.info(`Handling declarative pattern ${p}...`);
+      switch(this.get_declarative_pattern(p)){
+        case reservedPatterns.NEW:
+          //The trick here is for the parameter to become the actual object and break the loop
+          subEnvironment = this.convert_pattern_to_instance(p, all[p]);
+          break;
+        case reservedPatterns.DETECTORS:
+          //Assumes that the Environment is already there
+          this.convertDetectorsToSubEnvironment(subEnvironment, all[p])
+          //let o = this.instanciate(p, args);
+          break;
+        default:
+          break;
+      }
     }
-    return all;  
+    return subEnvironment;  
   }
 
+  //Converts detectors pattern to detectors and adds to subEnvironment
+  convertDetectorsToSubEnvironment(subEnvironment, detectors){
+    let o;
+    for(let d in detectors){
+      o = this.instanciate(d, detectors[d]);
+      //utils.EnvironmentManager.addDetectorToSubEnvironmentOnly( , o, false, subEnvironment.name);
+    }
+  }
+
+  //returns the declarative pattern used in the property
   get_declarative_pattern(prop){
-    return "$new$";
+    if (prop.startsWith(reservedPatterns.NEW))
+      return reservedPatterns.NEW;
+    if (prop == reservedPatterns.DETECTORS)
+      return reservedPatterns.DETECTORS;
+    return;
   }
 
   is_array_or_object(o){

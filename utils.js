@@ -8,6 +8,7 @@ let log = require('tracer').colorConsole();//new Log('debug');//, fs.createWrite
 log.warning = log.warn;
 
 exports = module.exports = {
+
   JSON: {
     stringify: (str) => {
       try{
@@ -26,7 +27,8 @@ exports = module.exports = {
         //Unhandled, re-throw
         throw e;
       }
-    },
-    log: log //Log is supposed in future to be used via utils
-  }
+    }
+  },
+
+  log: log, //Log is supposed in future to be used via utils
 }
