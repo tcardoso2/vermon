@@ -321,7 +321,6 @@ describe("When a MultiEnvironment is added via config file, ", function() {
         { $new$Environment: { params: { name: "Environment 1", state: 1}} },
         { $new$Environment: { params: { name: "Environment 2", state: 3}} }     
       ]);
-    console.log("!!!!!!!!!!!", e);
     (e[0] instanceof ent.Environment).should.equal(true);
     (e[1] instanceof ent.Environment).should.equal(true);
     e[0].name.should.equal("Environment 1");
