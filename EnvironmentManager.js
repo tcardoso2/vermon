@@ -76,7 +76,7 @@ function AddDetectorToSubEnvironmentOnly(detector, force = false, subEnvironment
       throw new Error("No MultiEnvironment exists, please add one first.");
     }
   } else {
-    log.warning(`Sub-Environment ${subEnvironmentName} object is not of type Environment, ignoring...`);
+    log.warning(`Sub-Environment ${subEnvironment} object is not of type Environment, ignoring...`);
   }
   return false;
 }
