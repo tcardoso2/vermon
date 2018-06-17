@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.37: Adding logs for easier debugging of Plugin codes;  
 * v 0.5.36: Finishing adding Detectors via config file to SubEnvironments;  
 * v 0.5.35: Moving Environment related functions from main to EnvironmentManager;   
 * v 0.5.34 :Adding Capability for Sub-Environment to have access to other sub-environments;  

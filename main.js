@@ -421,12 +421,16 @@ function _StartPlugins(e,m,n,f){
   log.info(`Checking if any plugin exists which should be started...`);
   Object.keys(plugins).forEach(function(key) {
     let p = plugins[key];
-    log.info(`  Plugin found. Attempting to start ${key}...`);
+    log.info(`  Plugin found. Checking plugin signature methods ShouldStart and Start for plugin ${key}...`);
     if(!p.ShouldStart) throw new Error("A plugin must have a 'ShouldStart' method implemented.");
     if(!p.Start) throw new Error("A plugin must have a 'Start' method implemented.");
     //TODO, add a way to call StartWithConfig
+    log.info("  Checking if plugin should start..."); 
     if(p.ShouldStart(e,m,n,f,config)){
+      log.info("Plugin should start = true. Starting plugin...");
       p.Start(e,m,n,f,config);
+    }else{
+      log.info("Plugin will not start because returned false when asked if it should start.");
     }
     console.log("ok.");
   });
