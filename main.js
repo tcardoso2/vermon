@@ -27,7 +27,7 @@ let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
 let utils = require('./utils.js');
-var log = utils.log
+var log = utils.log;
 
 /**
  * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
@@ -883,6 +883,7 @@ exports.StartWithConfig = StartWithConfig;
 exports.SaveAllToConfig = SaveAllToConfig;
 exports.Config = Config;
 exports.Log = log;
+exports.SetTraceLevel = utils.setLog;
 //Plugin management functions
 exports.AddPlugin = AddPlugin;
 exports.RemovePlugin = RemovePlugin;

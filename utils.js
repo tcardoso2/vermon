@@ -4,7 +4,8 @@
 // @author: Tiago Cardoso
 //
 let JSONCircular = require('circular-json');
-let log = require('tracer').colorConsole({level:'warn'}); //trace level
+let tracer = require('tracer');
+let log = tracer.colorConsole({level:'warn'}); //trace level
 log.warning = log.warn;
 
 exports = module.exports = {
@@ -29,6 +30,9 @@ exports = module.exports = {
       }
     }
   },
-
-  log: log, //Log is supposed in future to be used via utils
+  log: log,
+  setLog: (traceLevel = 'warn') => {
+    log = tracer.colorConsole({level: traceLevel});
+    log.warning = log.warn;
+  } //Log is supposed in future to be used via utils
 }
