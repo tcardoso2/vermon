@@ -27,7 +27,7 @@ let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
 let utils = require('./utils.js');
-var log = utils.setLevel('info');
+var log = utils.setLevel('warn');
 
 /**
  * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
