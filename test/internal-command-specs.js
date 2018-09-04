@@ -175,7 +175,8 @@ describe("When a new Simple Command is created for an environment,", function() 
       .option('-b, --bbq-sauce', 'Add bbq sauce')
       .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
       .parse(process.argv);
-    main.Cli.testcli.should.equal(true);
+    console.log(main.Cli);
+    JSON.stringify(main.Cli).should.eql(true);
     done();
   });  
 });

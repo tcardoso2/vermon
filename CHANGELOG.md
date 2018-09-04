@@ -1,7 +1,8 @@
 # Change log:
 
 ***  
-* v 0.5.38, 0.5.39: Changed log to be a function, so that log level can be configured. Use tmd.
+* v 0.5.40: Documenting more functions;  
+* v 0.5.38, 0.5.39: Changed log to be a function, so that log level can be configured. Use tmd;  
 * v 0.5.37: Adding logs for easier debugging of Plugin codes;  
 * v 0.5.36: Finishing adding Detectors via config file to SubEnvironments;  
 * v 0.5.35: Moving Environment related functions from main to EnvironmentManager;   

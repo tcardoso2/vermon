@@ -62,19 +62,32 @@ class Environment{
     log.debug(`Base Environment constructor finished with current state: ${utils.JSON.stringify(this.currentState)}`);
   }
 
-  //Gets the current state of the environment
+  /*
+   * Gets the current state of the environment. When state changes, every Detector
+   * binded to the Environment will receive a change event.
+   * @returns {Object} the value of the current state of the Environment.
+   */
   getCurrentState()
   {
   	return this.currentState;
   }
 
-  //Gets the original state of the environment (should be immutable)
+  /*
+   * Gets the original state of the environment whe this was first created
+   * @returns {Object} the value of the original current state of the Environment.
+   */
   getOriginalState()
   {
     return this.originalState;
   }
 
-  //Expects a MotionDetector entity passed as arg
+/**
+ * Binds and adds {MotionDetector} object to the Environment. an environment can have many Detectors.
+ * Once binded, the Detector will receive change events in case the Environment value changes.
+ * @param {object} md is the MotionDetector object type to bind to this environment
+ * @param {Array} notifiers is an optional array of Notifier objects which will be binded to the detector. 
+ * @param {Boolean} if force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+ */
   bindDetector(md, notifiers, force = false){
     this.motionDetectors.push(md);
     log.info(`Pushed a new detector "${md.name}" to environment "${this.name}". Environment has now ${this.motionDetectors.length} motion detectors(s).`);
@@ -87,7 +100,11 @@ class Environment{
     }
   }
 
-  //Expects a MotionDetector entity passed as arg, also removes listener
+
+/**
+ * Unbinds and removes an existing {MotionDetector} object from the Environment, and its listeners;
+ * @param {object} md is the MotionDetector object type to remove from this environment
+ */
   unbindDetector(md){
     if (md.removeAllListeners) {
       md.removeAllListeners('hasDetected');
@@ -98,8 +115,12 @@ class Environment{
     }
   }
 
-  //Adds some sort of change to the Environment a change is measured in terms of intensity
-  //Emits a changedState event
+/**
+ * Changes the value of the current state of the environment, causing a propagation of change events (called 'changedState' envent) to the binded detectors.
+ * The value if the state is also affected by the existence of Filters. See {Filter} object and {applyFilter} function.
+ * @param {object} intensity is the value which will change the state. If it is a Number, will add to the current state, if it is an object will replace it;
+ * @example //TODO: Add an example
+ */
   addChange(intensity)
   {
     log.debug(`Environment base is adding a new change ${utils.JSON.stringify(intensity)}, current state is ${utils.JSON.stringify(this.currentState)}...`)
@@ -119,6 +140,14 @@ class Environment{
     this.emit("changedState", oldState, this.currentState);
   }
 
+/**
+ * Adds a filter to the environment. Filters only do one thing: Prevent changes in the Environment to propagate
+ * to the Detectors via affecting the {addChange} function behaviour.
+ * For instance if an Environment is only supposed to accept integer values, one can create a filter which ignores attempts on adding changes which are not Numbers;
+ * Only after the filter is added, will affect the {addChange} function
+ * @param {object} filter is the Filter object;
+ * @example //TODO: Need to add an example
+ */
   applyFilter(filter){
     if (filter instanceof filters.BaseFilter)
     {
@@ -132,7 +161,10 @@ class Environment{
   }
 
   /*
-   * Gets the Parent environment it belongs to (if existing)
+   * Abstract method (not implemented). Should be overriden by children classes.
+   * Intent is to get the Parent environment it belongs to (if existing). 
+   * This is applicable e.g. for MultiEnvironments where there is always a parent environment and 
+   * children environments;
    * @returns {Object} the Multienvironment parent if belongs to (if existing)..
    */
   getParentEnvironment(){
@@ -147,15 +179,21 @@ class Environment{
     return this.getParentEnvironment().getSubEnvironment(environmentName);    
   }
 
-  //Abstract methods, should be overriden by extender classes, cannot be used directly
+  /*
+   * Abstract method (not implemented). Should be overriden by children classes to show whether an environment is active or not.
+   * @returns {Object} the sibling Environment.
+   */
   isActive()
   {
     throw new Error("Not Implemented.");
   }
   
-  //Do any exit procedures required here (e.g. releasing memory, etc...)
+  /*
+   * Called when main.Reset() function is used, as a step to do extra cleanup actions if required.
+   * To be used in case you need to do any exit steps, like cleaning up procedures, etc...
+   */
   exit()
-  {  
+  {
   }
 }
 
@@ -179,9 +217,10 @@ Environment.prototype.toJSON = function() {
 
 /**
  * @class: Entities.MotionDetector
- * @classDesc: A generic base class which creates a motion detector for surrounding environments \n
+ * A generic base class which creates a motion detector for surrounding environments \n
  * Collaborator: Environment
- * @desc: Test
+ * @param {String} name of the Motion Detector, will show up in logs and messages
+ * @param {object} initialIntensity is the Motion Detector state. Motion Detectors record the last state which triggered them, which is passed from the environment to the detectors when there is a change.
  * @public
  */
 class MotionDetector{
@@ -205,12 +244,20 @@ class MotionDetector{
     events.EventEmitter.call(this);
   }
 
-  //Returns the current Active state
+  /*
+   * Returns if the current Detector is active. Detectors are NOT active by default. They are only activated
+   * once they are added to an Environment. Detectors which are not active won't propagate their signals to
+   * Notifiers.
+   * @returns {Boolean} true if the Motion Detector is active.
+   */
   isActive(){
   	return this._isActive;
   }
 
-  //Sends a signal to the motion detector
+  /*
+   * Sends a signal to a Notifier if the Motion Detector is active and if there are no Filters which filter out that value
+   * @returns {Boolean} true if the Motion Detector is active.
+   */
   send(newState, source)
   {
     //Does not do anything with the env. Maybe deprecate it?
@@ -233,42 +280,65 @@ class MotionDetector{
     }
   }
 
-  //Returns the number of movement detections happened since it Started monitoring
+  /*
+   * Each time a change happens, an internal counter increases. This function gets that value.
+   * @returns {Integer} the number of times a detector changed value
+   */
   getCount()
   {
     return this.count;  	
   }
 
-  //Returns the number of movement detections happened since it Started monitoring
+  /*
+   * Gets the current state (for Motion Detectors it's called intensity)
+   * @returns {Object} the current value of the intensity
+   */
   getIntensity()
   {
     return this.currentIntensity;  	
   }
 
-/**
- * Gets the Intensity of the signal when the detector was originally created
- */
+  /*
+   * Gets the original state (for Motion Detectors it's called intensity), of the instance, when it was created.
+   * @returns {Object} the original value of the intensity
+   */
   getOriginalIntensity()
   {
     return this.originalIntensity;   
   }
 
-  //Starts monitoring any movement
+   /*
+   * Starts monitoring an environment by activating it. Also resets the internal count to 0 (see getCount)
+   * @returns {Object} the original value of the intensity
+   */
   startMonitoring(){
     this.activate();
     this.count = 0;
   }
 
+
+   /*
+   * Sets the active flag to false, disabling any further propagations to the notifier.
+   */
   deactivate()
   {
     this._isActive = false;
   }
-
+   
+  /*
+   * Sets the active flag to true, enabling any further propagations to the notifier.
+   */
   activate()
   {
     this._isActive = true;
   }
 
+/**
+ * Adds a filter to the Motion Detector. Filters on the Detectors only do one thing: prevent changes to propagate to the notifiers.
+ * Only after the filter is added, will affect the {addChange} function
+ * @param {object} filter is the Filter object;
+ * @example //TODO: Need to add an example
+ */
   applyFilter(filter){
     if (filter instanceof filters.BaseFilter)
     {
@@ -281,11 +351,16 @@ class MotionDetector{
     }
   }
 
-  //Resets the state to initial (StartMonitoring)
+/**
+ * Resets to the original state
+ */
   reset(){
     this.startMonitoring();
   }
 
+/**
+ * Add any cleanup code here. For the Base MotionDetector class it does nothing.
+ */
   exit()
   {
 
@@ -308,7 +383,16 @@ MotionDetector.prototype.toJSON = function() {
   return copy; //return the copy to be serialized
 };
 
-//A Base Notifier object for sending notifications
+/**
+ * @class: Entities.BaseNotifier
+ * BaseNotifier class is responsible for picking MotionDetectors changes. Only Notifiers which are binded
+ * to Detectors will receive changes. Changes are pushed from the Detector to the Notifier and not pulled.
+ * Notifiers have then the misison to "communicate" those changes to the outer world.
+ * In order to implement specific Notifiers, extend this class. See for intance examples of a specific class
+ * {SlackNotifier}
+ * @param {String} name of the Notifier. This is important as it will show up in the template message of the notification.
+ * @public
+ */
 class BaseNotifier{
 
   constructor(name)
@@ -319,6 +403,16 @@ class BaseNotifier{
     this.internalObj;
   }
 
+/**
+ * Emits a 'pushedNotification' event. To Receive this you can subscribe to this event, or simply use the 
+ * Notifier class for the communication means you intent to use.
+ * @param {String} text is the contents of the notified message
+ * @param {object} oldState is the previous state preceeding the change
+ * @param {object} newState is the new state after the change happens as detected by the Change Detector
+ * @param {object} environment is also propagated for convenience
+ * @param {object} detector is the MotionDetector instance which has detected the related change
+ * @example //TODO: Need to add an example
+ */
   notify(text, oldState, newState, environment, detector){
     this.emit('pushedNotification', this.name, text, { 
       "oldState": oldState,
@@ -328,12 +422,20 @@ class BaseNotifier{
     });
   }
 
+  //WIP
   hasInternalObj()
   {
     return this.internalObj !== undefined;
   }
 
-  //It's the notifier who has the responsibility to bind to existing detectors
+/**
+ * Although it the detector which pushes the messages to Notifiers, it's the notifier who has the responsibility to bind to existing detectors.
+ * After binding, the underlyig detector's Changes will be propagated to this Notifier, so long the Detector is active and the changes are not filtered out.
+ * @param {object} detector is the MotionDetector instance to bind this Notifier to.
+ * @param {String} template is the skeleton of the message for the notifier
+ * @param {Boolean} if force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+ * @example //TODO: Need to add an example
+ */
   bindToDetector(detector, template, force = false){
     //Find a better way since it is not possible to unbind?
     if (!force && !(detector instanceof MotionDetector)){
@@ -359,6 +461,13 @@ class BaseNotifier{
     }
   }
 
+/**
+ * Same as {bindToDetector} but bind the same Notifier to more Detectors
+ * @param {object} detectors is an Array of MotionDetector instance to bind this Notifier to.
+ * @param {String} template is the skeleton of the message for the notifier
+ * @param {Boolean} if force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+ * @example //TODO: Need to add an example
+ */
   bindToDetectors(detectors, template, force = false){
     //Find a better way since it is not possible to unbind?
     for (let d in detectors)
@@ -367,11 +476,16 @@ class BaseNotifier{
     }
   }
 
-  //Extensibility methods
+ /**
+ * TODO: Needs documentation - Extensibility methods
+ */
   useIn(){
     throw new Error("Needs to be implemented by sub-classes");
   }
 
+ /**
+ * TODO: Needs documentation - Extensibility methods
+ */
   use(_extension){
     //TODO: Implement, should use Dependency injection techniques / late binding
     throw new Error("Needs to be implemented by sub-classes");
@@ -379,6 +493,9 @@ class BaseNotifier{
     //Don't like the coupling here.
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   stop(){
     //Not implemented
   }
@@ -416,6 +533,9 @@ const reservedPatterns = {
   DETECTORS: "$detectors$"
 }
 
+ /**
+ * TODO: Needs documentation
+ */
 class EntitiesFactory
 {
   constructor(name)
@@ -428,10 +548,16 @@ class EntitiesFactory
     //If reaches here the user can still use the same factory object and instiate using 'create'
   }
   
+ /**
+ * TODO: Needs documentation
+ */
   isReserved(name)
   {
     return reservedKeys.indexOf(name) >= 0;
   }
+ /**
+ * TODO: Needs documentation
+ */
   //Just creates the object, does not instanciate
   create(name)
   {
@@ -448,6 +574,9 @@ class EntitiesFactory
     return result;    
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   //Takes a key and value pair, key is the object name and value are the params
   instanciate(name, params)
   {
@@ -473,6 +602,9 @@ class EntitiesFactory
     return result;
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   //Handles parameters by identifying keywords recursively along the chain of objects and sub-objects:
   //$new$: Interprets the key as a declarative pattern being the name of the class
   handle_any_declarative_parameters(params){
@@ -497,7 +629,10 @@ class EntitiesFactory
     return params;
   }
 
-  handle_declarative_pattern(prop, all){
+ /**
+ * TODO: Needs documentation
+ */
+handle_declarative_pattern(prop, all){
     let subEnvironment;
     for (let p in all) {
       log.info(`Handling declarative pattern ${p}...`);
@@ -517,19 +652,23 @@ class EntitiesFactory
     return subEnvironment;  
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   //Converts detectors pattern to detectors and adds to subEnvironment
   convertDetectorsToSubEnvironment(subEnvironment, detectors){
     let o;
     for(let d in detectors){
       o = this.instanciate(d, detectors[d]);
-      console.log(">>>>>>> FIX ME", o);
       //We do not want a check if there is already a Multi-env because this is ran usually when
       //The instances are being run, hence the 4th arg as false
       em.AddDetectorToSubEnvironmentOnly(o, false, subEnvironment, false);
-      console.log(">>>>>>> FIX ME", subEnvironment.motionDetectors.length);
     }
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   //returns the declarative pattern used in the property
   get_declarative_pattern(prop){
     if (prop.startsWith(reservedPatterns.NEW))
@@ -539,14 +678,23 @@ class EntitiesFactory
     return;
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   is_array_or_object(o){
     return Array.isArray(o) || typeof(o) == "object";
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   is_declarative_pattern(prop){
     return prop.startsWith("$new$");
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   //For now handles only $new$ pattern, if later other patterns are added this should be handled, e.g. via a switch statement?
   convert_pattern_to_instance(prop, values){
     let class_name = prop.split("$")[2];
@@ -554,6 +702,9 @@ class EntitiesFactory
     return this.instanciate(class_name, values);
   }
 
+ /**
+ * TODO: Needs documentation
+ */
   extend(newClasses)
   {
     log.info("Extending classes...");
@@ -565,12 +716,17 @@ class EntitiesFactory
   }
 }
 
-
+ /**
+ * TODO: Needs documentation
+ */
 //Extending Factory methods
 function GetExtensions(){
   return classes;
 }
 
+ /**
+ * TODO: Needs documentation
+ */
 function IsInstanceOf(o, instanceName){
   return o instanceof classes[instanceName];
 }
