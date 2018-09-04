@@ -2,76 +2,497 @@
 
 ### Table of Contents
 
--   [Environment](#environment)
-    -   [motionDetectors](#motiondetectors)
--   [MotionDetector](#motiondetector)
-    -   [getOriginalIntensity](#getoriginalintensity)
--   [SystemEnvironment](#systemenvironment)
--   [MultiEnvironment](#multienvironment)
--   [BaseFilter](#basefilter)
--   [\_InternalAddFilter](#_internaladdfilter)
--   [\_InternalAddEnvironment](#_internaladdenvironment)
--   [AddNotifier](#addnotifier)
--   [AddNotifierToSubEnvironment](#addnotifiertosubenvironment)
--   [AddDetector](#adddetector)
--   [AddDetectorToSubEnvironmentOnly](#adddetectortosubenvironmentonly)
--   [DeactivateDetector](#deactivatedetector)
--   [ActivateDetector](#activatedetector)
--   [RemoveNotifier](#removenotifier)
--   [RemoveDetector](#removedetector)
--   [GetEnvironment](#getenvironment)
--   [GetSubEnvironments](#getsubenvironments)
--   [GetSubEnvironment](#getsubenvironment)
--   [GetNotifiers](#getnotifiers)
--   [GetMotionDetectors](#getmotiondetectors)
--   [GetMotionDetector](#getmotiondetector)
--   [GetFilters](#getfilters)
--   [Reset](#reset)
--   [Start](#start)
--   [\_StartPlugins](#_startplugins)
--   [StartWithConfig](#startwithconfig)
--   [\_AddInstance](#_addinstance)
--   [Config](#config)
-    -   [mapToFile](#maptofile)
-    -   [isFallback](#isfallback)
-    -   [profile](#profile)
-    -   [getProperty](#getproperty)
-    -   [slackHook](#slackhook)
-    -   [slackAuth](#slackauth)
-    -   [raspistillOptions](#raspistilloptions)
-    -   [toString](#tostring)
--   [SaveAllToConfig](#savealltoconfig)
--   [\_InternalSerializeCurrentContext](#_internalserializecurrentcontext)
--   [AddPlugin](#addplugin)
--   [RemovePlugin](#removeplugin)
--   [GetPlugins](#getplugins)
--   [Entities](#entities)
--   [Extensions](#extensions)
--   [Cmd](#cmd)
--   [Cli](#cli)
+-   [Environment][1]
+    -   [Parameters][2]
+    -   [motionDetectors][3]
+    -   [bindDetector][4]
+        -   [Parameters][5]
+    -   [unbindDetector][6]
+        -   [Parameters][7]
+    -   [addChange][8]
+        -   [Parameters][9]
+        -   [Examples][10]
+    -   [applyFilter][11]
+        -   [Parameters][12]
+        -   [Examples][13]
+-   [MotionDetector][14]
+    -   [Parameters][15]
+    -   [applyFilter][16]
+        -   [Parameters][17]
+        -   [Examples][18]
+    -   [reset][19]
+    -   [exit][20]
+-   [BaseNotifier][21]
+    -   [Parameters][22]
+    -   [notify][23]
+        -   [Parameters][24]
+        -   [Examples][25]
+    -   [bindToDetector][26]
+        -   [Parameters][27]
+        -   [Examples][28]
+    -   [bindToDetectors][29]
+        -   [Parameters][30]
+        -   [Examples][31]
+    -   [useIn][32]
+    -   [use][33]
+        -   [Parameters][34]
+    -   [stop][35]
+-   [isReserved][36]
+    -   [Parameters][37]
+-   [create][38]
+    -   [Parameters][39]
+-   [instanciate][40]
+    -   [Parameters][41]
+-   [handle_any_declarative_parameters][42]
+    -   [Parameters][43]
+-   [handle_declarative_pattern][44]
+    -   [Parameters][45]
+-   [convertDetectorsToSubEnvironment][46]
+    -   [Parameters][47]
+-   [get_declarative_pattern][48]
+    -   [Parameters][49]
+-   [is_array_or_object][50]
+    -   [Parameters][51]
+-   [is_declarative_pattern][52]
+    -   [Parameters][53]
+-   [convert_pattern_to_instance][54]
+    -   [Parameters][55]
+-   [extend][56]
+    -   [Parameters][57]
+-   [GetExtensions][58]
+-   [IsInstanceOf][59]
+    -   [Parameters][60]
+-   [GetEnvironment][61]
+-   [GetEnvironment][62]
+-   [SetEnvironment][63]
+    -   [Parameters][64]
+-   [GetNotifiers][65]
+-   [GetNotifiers][66]
+-   [SetNotifiers][67]
+    -   [Parameters][68]
+-   [AddDetectorToSubEnvironmentOnly][69]
+    -   [Parameters][70]
+-   [AddDetectorToSubEnvironmentOnly][71]
+    -   [Parameters][72]
+-   [SystemEnvironment][73]
+    -   [Parameters][74]
+-   [MultiEnvironment][75]
+    -   [Parameters][76]
+-   [IOBrokerDetector][77]
+    -   [Parameters][78]
+    -   [startMonitoring][79]
+-   [BaseFilter][80]
+    -   [Parameters][81]
+-   [\_InternalAddFilter][82]
+    -   [Parameters][83]
+-   [\_InternalAddEnvironment][84]
+    -   [Parameters][85]
+-   [AddNotifier][86]
+    -   [Parameters][87]
+-   [AddNotifierToSubEnvironment][88]
+    -   [Parameters][89]
+-   [AddDetector][90]
+    -   [Parameters][91]
+-   [DeactivateDetector][92]
+    -   [Parameters][93]
+-   [ActivateDetector][94]
+    -   [Parameters][95]
+-   [RemoveNotifier][96]
+    -   [Parameters][97]
+-   [RemoveDetector][98]
+    -   [Parameters][99]
+-   [GetSubEnvironments][100]
+-   [GetSubEnvironment][101]
+    -   [Parameters][102]
+-   [GetMotionDetectors][103]
+-   [GetMotionDetector][104]
+    -   [Parameters][105]
+-   [GetFilters][106]
+-   [Reset][107]
+-   [Start][108]
+    -   [Parameters][109]
+-   [\_StartPlugins][110]
+    -   [Parameters][111]
+-   [StartWithConfig][112]
+    -   [Parameters][113]
+    -   [Examples][114]
+-   [\_AddInstance][115]
+    -   [Parameters][116]
+-   [Config][117]
+    -   [Parameters][118]
+    -   [Examples][119]
+    -   [mapToFile][120]
+        -   [Parameters][121]
+    -   [isFallback][122]
+    -   [profile][123]
+        -   [Parameters][124]
+    -   [getProperty][125]
+        -   [Parameters][126]
+    -   [slackHook][127]
+        -   [Parameters][128]
+    -   [slackAuth][129]
+        -   [Parameters][130]
+    -   [raspistillOptions][131]
+        -   [Parameters][132]
+    -   [toString][133]
+-   [SaveAllToConfig][134]
+    -   [Parameters][135]
+-   [\_InternalSerializeCurrentContext][136]
+-   [AddPlugin][137]
+    -   [Parameters][138]
+-   [RemovePlugin][139]
+    -   [Parameters][140]
+-   [GetPlugins][141]
+-   [Entities][142]
+-   [Extensions][143]
+-   [Cmd][144]
+-   [Cli][145]
 
 ## Environment
 
-**Parameters**
+### Parameters
 
--   `params` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** to add, you can add a "name" and a "state".
+-   `params` **[Object][146]** to add, you can add a "name" and a "state".
 
 ### motionDetectors
 
 : Contains the motion detectors attached to the current environment.
 
+### bindDetector
+
+Binds and adds {MotionDetector} object to the Environment. an environment can have many Detectors.
+Once binded, the Detector will receive change events in case the Environment value changes.
+
+#### Parameters
+
+-   `md` **[object][146]** is the MotionDetector object type to bind to this environment
+-   `notifiers` **[Array][147]** is an optional array of Notifier objects which will be binded to the detector.
+-   `force`   (optional, default `false`)
+-   `if` **[Boolean][148]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+
+### unbindDetector
+
+Unbinds and removes an existing {MotionDetector} object from the Environment, and its listeners;
+
+#### Parameters
+
+-   `md` **[object][146]** is the MotionDetector object type to remove from this environment
+
+### addChange
+
+Changes the value of the current state of the environment, causing a propagation of change events (called 'changedState' envent) to the binded detectors.
+The value if the state is also affected by the existence of Filters. See {Filter} object and {applyFilter} function.
+
+#### Parameters
+
+-   `intensity` **[object][146]** is the value which will change the state. If it is a Number, will add to the current state, if it is an object will replace it;
+
+#### Examples
+
+```javascript
+//TODO: Add an example
+```
+
+### applyFilter
+
+Adds a filter to the environment. Filters only do one thing: Prevent changes in the Environment to propagate
+to the Detectors via affecting the {addChange} function behaviour.
+For instance if an Environment is only supposed to accept integer values, one can create a filter which ignores attempts on adding changes which are not Numbers;
+Only after the filter is added, will affect the {addChange} function
+
+#### Parameters
+
+-   `filter` **[object][146]** is the Filter object;
+
+#### Examples
+
+```javascript
+//TODO: Need to add an example
+```
+
 ## MotionDetector
 
-: Test
+### Parameters
 
-**Parameters**
+-   `name` **[String][149]** of the Motion Detector, will show up in logs and messages
+-   `initialIntensity` **[object][146]** is the Motion Detector state. Motion Detectors record the last state which triggered them, which is passed from the environment to the detectors when there is a change.
+
+### applyFilter
+
+Adds a filter to the Motion Detector. Filters on the Detectors only do one thing: prevent changes to propagate to the notifiers.
+Only after the filter is added, will affect the {addChange} function
+
+#### Parameters
+
+-   `filter` **[object][146]** is the Filter object;
+
+#### Examples
+
+```javascript
+//TODO: Need to add an example
+```
+
+### reset
+
+Resets to the original state
+
+### exit
+
+Add any cleanup code here. For the Base MotionDetector class it does nothing.
+
+## BaseNotifier
+
+### Parameters
+
+-   `name` **[String][149]** of the Notifier. This is important as it will show up in the template message of the notification.
+
+### notify
+
+Emits a 'pushedNotification' event. To Receive this you can subscribe to this event, or simply use the 
+Notifier class for the communication means you intent to use.
+
+#### Parameters
+
+-   `text` **[String][149]** is the contents of the notified message
+-   `oldState` **[object][146]** is the previous state preceeding the change
+-   `newState` **[object][146]** is the new state after the change happens as detected by the Change Detector
+-   `environment` **[object][146]** is also propagated for convenience
+-   `detector` **[object][146]** is the MotionDetector instance which has detected the related change
+
+#### Examples
+
+```javascript
+//TODO: Need to add an example
+```
+
+### bindToDetector
+
+Although it the detector which pushes the messages to Notifiers, it's the notifier who has the responsibility to bind to existing detectors.
+After binding, the underlyig detector's Changes will be propagated to this Notifier, so long the Detector is active and the changes are not filtered out.
+
+#### Parameters
+
+-   `detector` **[object][146]** is the MotionDetector instance to bind this Notifier to.
+-   `template` **[String][149]** is the skeleton of the message for the notifier
+-   `force`   (optional, default `false`)
+-   `if` **[Boolean][148]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+
+#### Examples
+
+```javascript
+//TODO: Need to add an example
+```
+
+### bindToDetectors
+
+Same as {bindToDetector} but bind the same Notifier to more Detectors
+
+#### Parameters
+
+-   `detectors` **[object][146]** is an Array of MotionDetector instance to bind this Notifier to.
+-   `template` **[String][149]** is the skeleton of the message for the notifier
+-   `force`   (optional, default `false`)
+-   `if` **[Boolean][148]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+
+#### Examples
+
+```javascript
+//TODO: Need to add an example
+```
+
+### useIn
+
+TODO: Needs documentation - Extensibility methods
+
+### use
+
+TODO: Needs documentation - Extensibility methods
+
+#### Parameters
+
+-   `_extension`  
+
+### stop
+
+TODO: Needs documentation
+
+## 
+
+TODO: Needs documentation
+
+## isReserved
+
+TODO: Needs documentation
+
+### Parameters
 
 -   `name`  
--   `initialIntensity`  
 
-### getOriginalIntensity
+## create
 
-Gets the Intensity of the signal when the detector was originally created
+TODO: Needs documentation
+
+### Parameters
+
+-   `name`  
+
+## instanciate
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `name`  
+-   `params`  
+
+## handle_any_declarative_parameters
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `params`  
+
+## handle_declarative_pattern
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `prop`  
+-   `all`  
+
+## convertDetectorsToSubEnvironment
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `subEnvironment`  
+-   `detectors`  
+
+## get_declarative_pattern
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `prop`  
+
+## is_array_or_object
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `o`  
+
+## is_declarative_pattern
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `prop`  
+
+## convert_pattern_to_instance
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `prop`  
+-   `values`  
+
+## extend
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `newClasses`  
+
+## GetExtensions
+
+TODO: Needs documentation
+
+## IsInstanceOf
+
+TODO: Needs documentation
+
+### Parameters
+
+-   `o`  
+-   `instanceName`  
+
+## GetEnvironment
+
+Gets the object which represents the current Environment of the context.
+
+Returns **any** a Environment object.
+
+## GetEnvironment
+
+Gets the object which represents the current Environment of the context.
+throws an Error if an environment does not exist in the context.
+
+Returns **any** a Environment object.
+
+## SetEnvironment
+
+Sets the object which represents the current Environment of the context.
+
+### Parameters
+
+-   `env` **[object][146]** is the Environemnt object to set.
+
+## GetNotifiers
+
+Gets the object which represents the current Notifiers of the context.
+
+Returns **any** an Array of Notifier objects.
+
+## GetNotifiers
+
+Gets the notifiers array present in the context.
+
+Returns **any** an Array of Notifier objects.
+
+## SetNotifiers
+
+Sets the object which represents the current Notifiers of the context.
+
+### Parameters
+
+-   `n`  
+-   `env` **[object][146]** is the array of notifiers.
+
+## AddDetectorToSubEnvironmentOnly
+
+Adds a detector to an existing SubEnvironment by name. Assumes that the main Environment is a MultiEnvironment.
+
+### Parameters
+
+-   `detector` **[object][146]** is the MotionDetector object to add.
+-   `force` **[boolean][148]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironment` **[object][146]** is the Environment name to add  to, within the MultiEnvironment, if it is a string
+    the system will search for an existing sub-environment. If it is an actual environment uses that instance.
+-   `checkMulti`   (optional, default `true`)
+-   `if` **[boolean][148]** false, will not check if there is already an existing MultiEnvironment in the context;
+
+Returns **[Boolean][148]** true if the detector is successfully created.
+
+## AddDetectorToSubEnvironmentOnly
+
+Adds a detector to a SubEnvironment. Assumes that the main Environment is a MultiEnvironment.
+
+### Parameters
+
+-   `detector` **[object][146]** is the MotionDetector object to add.
+-   `force` **[boolean][148]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironment` **[string][149]** is the Environment to add  to, within the MultiEnvironment
+
+Returns **[Boolean][148]** true if the detector is successfully created.
 
 ## SystemEnvironment
 
@@ -81,9 +502,9 @@ A Simple Command line wrapper, it executes the command mentioned after a change 
 and propagates the stdout result to the notifier. It uses node-cmd under the hood. Also provides
 System additional info such as memory used, free memory and cpu usage
 
-**Parameters**
+### Parameters
 
--   `command` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is a command to execute
+-   `command` **[String][149]** is a command to execute
 -   `interval`   (optional, default `0`)
 -   `killAfter`   (optional, default `0`)
 -   `an` **int** interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
@@ -95,13 +516,36 @@ System additional info such as memory used, free memory and cpu usage
 
 An Environment which stores several sub-environments
 
-**Parameters**
+### Parameters
 
 -   `params`  
 
+## IOBrokerDetector
+
+**Extends MotionDetector**
+
+Concrete MotionDetector class which monitors changes on the "iobroker" daemon
+via executing commands on the command line
+In order to work requires iobroker (see iobroker.net) to be installed, otherwise
+the executed commands will result in error. The constructor checks if the iobroker
+daemon exists. For more information on the iobroker commands visit:
+[https://github.com/ioBroker/ioBroker/wiki/Console-commands][150]
+For the NPM package and installation details visit:
+[https://www.npmjs.com/package/iobroker][151]
+
+### Parameters
+
+-   `callback` **[Function][152]** is the function to execute after initialization, it passes
+    the list of items as the first argument (equivalent to doing "iobroker list" in command
+    line).
+
+### startMonitoring
+
+Starts the iobroker daemon on the background
+
 ## BaseFilter
 
-**Parameters**
+### Parameters
 
 -   `val`  
 -   `applyTo`  
@@ -112,22 +556,22 @@ Adds a Filter into the current Detectors in {motionDetectors}. If the filter is 
 it fails silently (logs a warning message into the logger) and returns false. If there are no Detectors still
 returns true.
 
-**Parameters**
+### Parameters
 
--   `filter` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** object to add. This function is internal (optional, default `new filters.BaseFilter()`)
+-   `filter` **[object][146]** object to add. This function is internal (optional, default `new filters.BaseFilter()`)
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the filters were binded to the existing detectors.
+Returns **[Boolean][148]** true if the filters were binded to the existing detectors.
 
 ## \_InternalAddEnvironment
 
 Adds an Environment into the current context. The environment needs to be if instance Environment, if not
 if fails silently, logs the error in the logger and returns false.
 
-**Parameters**
+### Parameters
 
--   `env` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the Environment object to add. This function is internal (optional, default `new ent.Environment()`)
+-   `env` **[object][146]** is the Environment object to add. This function is internal (optional, default `new ent.Environment()`)
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the environment is successfully created.
+Returns **[Boolean][148]** true if the environment is successfully created.
 
 ## AddNotifier
 
@@ -135,13 +579,13 @@ Adds a Notifier to the current environment (binds to existing Detectors in {moti
 Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
 of the correct type, by setting force = true
 
-**Parameters**
+### Parameters
 
--   `notifier` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the Notifier object to add.
--   `template` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the template message for the notifier, in case it triggers.
--   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
+-   `notifier` **[object][146]** is the Notifier object to add.
+-   `template` **[object][146]** is the template message for the notifier, in case it triggers.
+-   `force` **[boolean][148]** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the notifier is successfully created.
+Returns **[Boolean][148]** true if the notifier is successfully created.
 
 ## AddNotifierToSubEnvironment
 
@@ -149,14 +593,14 @@ Adds a Notifier to the sub-environment (binds to existing Detectors in the sub-e
 Checks that the notifier is of {BaseNotifier} instance. Allows to force adding a notifier event if not
 of the correct type, by setting force = true
 
-**Parameters**
+### Parameters
 
--   `notifier` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the Notifier object to add.
+-   `notifier` **[object][146]** is the Notifier object to add.
 -   `subEnvironmentName`  
--   `template` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the template message for the notifier, in case it triggers.
--   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
+-   `template` **[object][146]** is the template message for the notifier, in case it triggers.
+-   `force` **[boolean][148]** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the notifier is successfully created.
+Returns **[Boolean][148]** true if the notifier is successfully created.
 
 ## AddDetector
 
@@ -167,53 +611,40 @@ of the correct type, by setting force = true.
 Fails silently (returns false) if the detector is not of {MotionDetector} type, and logs the occurence.
 Fails hard (throws an Error) if there is no existing {Environment} set in the context at the runtime.
 
-**Parameters**
+### Parameters
 
--   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector object to add.
--   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
--   `subEnvironment`  
+-   `detector` **[object][146]** is the MotionDetector object to add.
+-   `force` **[boolean][148]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironmentName` **[string][149]** is the name of a Sub-Environment existing instance
 
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the detector is successfully created.
-
-## AddDetectorToSubEnvironmentOnly
-
-Adds a detector to a SubEnvironment. Assumes that the main Environment is a MultiEnvironment.
-
-**Parameters**
-
--   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector object to add.
--   `force` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
--   `subEnvironmentName`  
--   `subEnvironment` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the Environment to add  to, within the MultiEnvironment
-
-Returns **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the detector is successfully created.
+Returns **[Boolean][148]** true if the detector is successfully created.
 
 ## DeactivateDetector
 
 Deactivates an existing detector by name.
 Fails hard (throws an Error) if a {MotionDetector} with that name is not found at the runtime.
 
-**Parameters**
+### Parameters
 
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the name of the {MotionDetector} to deactivate.
+-   `name` **[string][149]** is the name of the {MotionDetector} to deactivate.
 
 ## ActivateDetector
 
 Activates an existing detector by name.
 Fails hard (throws an Error) if a {MotionDetector} with that name is not found at the runtime.
 
-**Parameters**
+### Parameters
 
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the name of the {MotionDetector} to deactivate.
+-   `name` **[string][149]** is the name of the {MotionDetector} to deactivate.
 
 ## RemoveNotifier
 
 Removes an existing notifier from the context.
 Does not fail if the notifier is not found.
 
-**Parameters**
+### Parameters
 
--   `notifier` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the notifier instance to remove.
+-   `notifier` **[object][146]** is the notifier instance to remove.
 -   `silent`   (optional, default `false`)
 -   `sileng` **booleal** states if = true the removal should not send a notification
 
@@ -224,18 +655,11 @@ Returns **any** true if the notifier was found (and subsequently removed).
 Removes an existing MotionDetector from the context, including its event listeners.
 Does not fail if the detector is not found.
 
-**Parameters**
+### Parameters
 
--   `detector` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the MotionDetector instance to remove.
+-   `detector` **[object][146]** is the MotionDetector instance to remove.
 
 Returns **any** true if the detector was found (and subsequently removed).
-
-## GetEnvironment
-
-Gets the object which represents the current Environment of the context.
-throws an Error if an environment does not exist in the context.
-
-Returns **any** a Environment object.
 
 ## GetSubEnvironments
 
@@ -248,17 +672,11 @@ Returns **any** a list of Environment object.
 
 Gets a particular sub-Environments of the context, raises error if it's not of type Environment.
 
-**Parameters**
+### Parameters
 
 -   `subEnvironmentName`  
 
 Returns **any** Environment object.
-
-## GetNotifiers
-
-Gets the notifiers array present in the context.
-
-Returns **any** an Array of Notifier objects.
 
 ## GetMotionDetectors
 
@@ -271,9 +689,9 @@ Returns **any** an Array of MotionDetector objects.
 Gets the Motion Detectors with the given name.
 Will throw an exception if there is no Motion detector with such name.
 
-**Parameters**
+### Parameters
 
--   `name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the name of the MotionDetector instance to get.
+-   `name` **[string][149]** is the name of the MotionDetector instance to get.
 
 Returns **any** a MotionDetector objects.
 
@@ -281,7 +699,7 @@ Returns **any** a MotionDetector objects.
 
 Gets all the existing Filters present in the current context.
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** an Array of Filter objects.
+Returns **[object][146]** an Array of Filter objects.
 
 ## Reset
 
@@ -292,20 +710,20 @@ Resets the current context environment, notifiers and motion detectors.
 Starts the current environment given a set of parameters (Old way of starting - it is preferrable)
 to use {StartWithConfig} instead.
 
-**Parameters**
+### Parameters
 
--   `params` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is a parameters object, any object which contains the following attributes: \\n
+-   `params` **[object][146]** is a parameters object, any object which contains the following attributes: \\n
     (1) an "environment" attribute with the {Environment} object to set; \\n
     (2) an "initialMotionDetector" attribute with one {MotionDetector} object to set (does not allow several motion detectors); \\n
     (3) an "initialNotifier" attribute with the {Notifier} object to set (does not allow several notifiers); \\n
--   `silent` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** if set to true will not send an initial notification to notifiers when starting up (by default is set to false). (optional, default `false`)
+-   `silent` **[string][149]** if set to true will not send an initial notification to notifiers when starting up (by default is set to false). (optional, default `false`)
 
 ## \_StartPlugins
 
 Internal function which Starts all the Plugins, ran when StartWithConfir is called.
 Throws an Error if any of the plugins does not implement the "Start" method.
 
-**Parameters**
+### Parameters
 
 -   `e`  
 -   `m`  
@@ -322,14 +740,14 @@ Starts the current environment based on existing configuration. Use this method 
 If there are any plugins added to the environment, it calls their respective "Start" functions as well.
 In the end executes a callback.
 
-**Parameters**
+### Parameters
 
--   `configParams` **[Config](#config)** a parameter object of the {Config} instance.
--   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is a function which will be called after all initialization is done.\\n
+-   `configParams` **[Config][153]** a parameter object of the {Config} instance.
+-   `callback` **[Function][152]** is a function which will be called after all initialization is done.\\n
     args passed to that callback function, are: Environment, MotionDetectors, Notifiers and Filters objects.
     The correct way of initializing the program is by puting the main code inside that callback.
 
-**Examples**
+### Examples
 
 ```javascript
 let myConfig = new main.Config("/test/config_test6.js");
@@ -347,36 +765,36 @@ Internal function. Given a factory and an entity name (One of {Environment},
 {MotionDetector}, {Notifier}, or {Filter}) and arguments adds this instance
 to the current context
 
-**Parameters**
+### Parameters
 
--   `f` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the factory instance.
--   `p` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is an object name to instanciate.
--   `args` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** is an array of arguments for the constructor invoke..
+-   `f` **[object][146]** is the factory instance.
+-   `p` **[object][146]** is an object name to instanciate.
+-   `args` **[Array][147]** is an array of arguments for the constructor invoke..
 
 ## Config
 
 A generic base class which creates a motion detector for surrounding environments \\n
 Collaborator: Environment
 
-**Parameters**
+### Parameters
 
--   `profile` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the path of the config file to use
--   `prepend_cwd` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** tells if the config class should prepend CWD to the profile path or not (optional, default `true`)
--   `forceAdds` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** if true means that all Entities in config should be added forcibly independent of being of the correct type. (optional, default `false`)
+-   `profile` **[String][149]** is the path of the config file to use
+-   `prepend_cwd` **[boolean][148]** tells if the config class should prepend CWD to the profile path or not (optional, default `true`)
+-   `forceAdds` **[boolean][148]** if true means that all Entities in config should be added forcibly independent of being of the correct type. (optional, default `false`)
 
-**Examples**
+### Examples
 
 ```javascript
 let alternativeConfig = new main.Config("config_test1.js");
 ```
 
-Returns **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the config object itself
+Returns **[Object][146]** the config object itself
 
 ### mapToFile
 
 TODO:
 
-**Parameters**
+#### Parameters
 
 -   `file_name`  
 -   `prepend_cwd`   (optional, default `true`)
@@ -389,7 +807,7 @@ TODO:
 
 TODO:
 
-**Parameters**
+#### Parameters
 
 -   `name`  
 
@@ -397,38 +815,38 @@ TODO:
 
 TODO:
 
-**Parameters**
+#### Parameters
 
 -   `profile_name`  
 -   `prop`  
 
-Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the
+Returns **[String][149]** the
 
 ### slackHook
 
 Direct assessor to the slackHook ({SlackMotionDetector}), if that exists on the config file
 
-**Parameters**
+#### Parameters
 
--   `profile_name` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** , the name of the profile to lookup into (default is "default")
+-   `profile_name` **[String][149]** , the name of the profile to lookup into (default is "default")
 
-Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the slackhook string
+Returns **[String][149]** the slackhook string
 
 ### slackAuth
 
 Direct assessor to the slackAuth ({SlackMotionDetector}), if that exists on the config file
 
-**Parameters**
+#### Parameters
 
--   `profile_name` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** , the name of the profile to lookup into (default is "default")
+-   `profile_name` **[String][149]** , the name of the profile to lookup into (default is "default")
 
-Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** profile_name, the slackhook string
+Returns **[String][149]** profile_name, the slackhook string
 
 ### raspistillOptions
 
 TODO:
 
-**Parameters**
+#### Parameters
 
 -   `profile_name`  
 
@@ -436,54 +854,54 @@ TODO:
 
 Returns the string path of the Config file the current object points to.
 
-Returns **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the string representation, in this case the file record pointing to
+Returns **[String][149]** the string representation, in this case the file record pointing to
 
 ## SaveAllToConfig
 
 Saves all the Environment, Detector, Notifiers and Filters information into a config file
 
-**Parameters**
+### Parameters
 
--   `src` **[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the path of the config file to use
--   `callback` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** is the callback function to call once the Save is all done, it passes
+-   `src` **[String][149]** is the path of the config file to use
+-   `callback` **[Function][152]** is the callback function to call once the Save is all done, it passes
     status and message as arguments to the function: \\m
     status = 0: Successfully has performed the action.
     status = 1: Error: File exists already.
--   `force` **[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** true if the user wants to overwrite an already existing file. (optional, default `false`)
+-   `force` **[Boolean][148]** true if the user wants to overwrite an already existing file. (optional, default `false`)
 
 ## \_InternalSerializeCurrentContext
 
 Internal function which serializes the current Context into the format matching the "profile" object 
 of the config file.
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Returns a "profile" object in JSON.stringify format
+Returns **[object][146]** Returns a "profile" object in JSON.stringify format
 
 ## AddPlugin
 
 Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
 makes the added module available from the "plugins" varible, and adds its functions to t-motion-detector;
 
-**Parameters**
+### Parameters
 
--   `ext_module` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** is the actual module we are extending.
+-   `ext_module` **[Object][146]** is the actual module we are extending.
 
-Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True the plugin was successfully added.
+Returns **[boolean][148]** True the plugin was successfully added.
 
 ## RemovePlugin
 
 Removes an existing Extention plugin from the library
 
-**Parameters**
+### Parameters
 
--   `ext_module_id` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** is the id of the module to remove.
+-   `ext_module_id` **[string][149]** is the id of the module to remove.
 
-Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True the plugin was successfully removed.
+Returns **[boolean][148]** True the plugin was successfully removed.
 
 ## GetPlugins
 
 Gets the existing extension plugins added to the library
 
-Returns **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the plugins object;
+Returns **[object][146]** the plugins object;
 
 ## Entities
 
@@ -500,3 +918,309 @@ Exposes the command line library (node-cmd) accessible
 ## Cli
 
 Exposes a CLI tool based on 'commander' node package
+
+[1]: #environment
+
+[2]: #parameters
+
+[3]: #motiondetectors
+
+[4]: #binddetector
+
+[5]: #parameters-1
+
+[6]: #unbinddetector
+
+[7]: #parameters-2
+
+[8]: #addchange
+
+[9]: #parameters-3
+
+[10]: #examples
+
+[11]: #applyfilter
+
+[12]: #parameters-4
+
+[13]: #examples-1
+
+[14]: #motiondetector
+
+[15]: #parameters-5
+
+[16]: #applyfilter-1
+
+[17]: #parameters-6
+
+[18]: #examples-2
+
+[19]: #reset
+
+[20]: #exit
+
+[21]: #basenotifier
+
+[22]: #parameters-7
+
+[23]: #notify
+
+[24]: #parameters-8
+
+[25]: #examples-3
+
+[26]: #bindtodetector
+
+[27]: #parameters-9
+
+[28]: #examples-4
+
+[29]: #bindtodetectors
+
+[30]: #parameters-10
+
+[31]: #examples-5
+
+[32]: #usein
+
+[33]: #use
+
+[34]: #parameters-11
+
+[35]: #stop
+
+[36]: #isreserved
+
+[37]: #parameters-12
+
+[38]: #create
+
+[39]: #parameters-13
+
+[40]: #instanciate
+
+[41]: #parameters-14
+
+[42]: #handle_any_declarative_parameters
+
+[43]: #parameters-15
+
+[44]: #handle_declarative_pattern
+
+[45]: #parameters-16
+
+[46]: #convertdetectorstosubenvironment
+
+[47]: #parameters-17
+
+[48]: #get_declarative_pattern
+
+[49]: #parameters-18
+
+[50]: #is_array_or_object
+
+[51]: #parameters-19
+
+[52]: #is_declarative_pattern
+
+[53]: #parameters-20
+
+[54]: #convert_pattern_to_instance
+
+[55]: #parameters-21
+
+[56]: #extend
+
+[57]: #parameters-22
+
+[58]: #getextensions
+
+[59]: #isinstanceof
+
+[60]: #parameters-23
+
+[61]: #getenvironment
+
+[62]: #getenvironment-1
+
+[63]: #setenvironment
+
+[64]: #parameters-24
+
+[65]: #getnotifiers
+
+[66]: #getnotifiers-1
+
+[67]: #setnotifiers
+
+[68]: #parameters-25
+
+[69]: #adddetectortosubenvironmentonly
+
+[70]: #parameters-26
+
+[71]: #adddetectortosubenvironmentonly-1
+
+[72]: #parameters-27
+
+[73]: #systemenvironment
+
+[74]: #parameters-28
+
+[75]: #multienvironment
+
+[76]: #parameters-29
+
+[77]: #iobrokerdetector
+
+[78]: #parameters-30
+
+[79]: #startmonitoring
+
+[80]: #basefilter
+
+[81]: #parameters-31
+
+[82]: #_internaladdfilter
+
+[83]: #parameters-32
+
+[84]: #_internaladdenvironment
+
+[85]: #parameters-33
+
+[86]: #addnotifier
+
+[87]: #parameters-34
+
+[88]: #addnotifiertosubenvironment
+
+[89]: #parameters-35
+
+[90]: #adddetector
+
+[91]: #parameters-36
+
+[92]: #deactivatedetector
+
+[93]: #parameters-37
+
+[94]: #activatedetector
+
+[95]: #parameters-38
+
+[96]: #removenotifier
+
+[97]: #parameters-39
+
+[98]: #removedetector
+
+[99]: #parameters-40
+
+[100]: #getsubenvironments
+
+[101]: #getsubenvironment
+
+[102]: #parameters-41
+
+[103]: #getmotiondetectors
+
+[104]: #getmotiondetector
+
+[105]: #parameters-42
+
+[106]: #getfilters
+
+[107]: #reset-1
+
+[108]: #start
+
+[109]: #parameters-43
+
+[110]: #_startplugins
+
+[111]: #parameters-44
+
+[112]: #startwithconfig
+
+[113]: #parameters-45
+
+[114]: #examples-6
+
+[115]: #_addinstance
+
+[116]: #parameters-46
+
+[117]: #config
+
+[118]: #parameters-47
+
+[119]: #examples-7
+
+[120]: #maptofile
+
+[121]: #parameters-48
+
+[122]: #isfallback
+
+[123]: #profile
+
+[124]: #parameters-49
+
+[125]: #getproperty
+
+[126]: #parameters-50
+
+[127]: #slackhook
+
+[128]: #parameters-51
+
+[129]: #slackauth
+
+[130]: #parameters-52
+
+[131]: #raspistilloptions
+
+[132]: #parameters-53
+
+[133]: #tostring
+
+[134]: #savealltoconfig
+
+[135]: #parameters-54
+
+[136]: #_internalserializecurrentcontext
+
+[137]: #addplugin
+
+[138]: #parameters-55
+
+[139]: #removeplugin
+
+[140]: #parameters-56
+
+[141]: #getplugins
+
+[142]: #entities
+
+[143]: #extensions
+
+[144]: #cmd
+
+[145]: #cli
+
+[146]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[147]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[148]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[149]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[150]: https://github.com/ioBroker/ioBroker/wiki/Console-commands
+
+[151]: https://www.npmjs.com/package/iobroker
+
+[152]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[153]: #config

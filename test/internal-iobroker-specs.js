@@ -7,6 +7,10 @@
  * For all others, the test should obviously include
  * something like:
  * var md = require('t-motion-detector');
+ * 
+ * IMPORTANT: For these tests to work the iobroker suite needs to be installed
+ *            on the current path of where the installation is run. You might
+ *            have to simlink to the actual command or install it globally
  *****************************************************/
 
 let chai = require('chai');
@@ -18,9 +22,6 @@ let ent = require('../Entities.js');
 let ext = require('../Extensions.js');
 let filters = require('../Filters.js');
 let main = require('../main.js');
-let events = require('events');
-var os = require('os');
-var client = require('ssh2').Client;
 
 before(function(done) {
   done();
@@ -33,9 +34,17 @@ after(function(done) {
 });
 
 describe("When a new IOBrokerDetector instance is created,", function() {
-  it('Class should exist.', function (done) {
-    //Prepare
-    let iobrokerDetector = new ent.IOBrokerDetector();
-    //should.fail();
-  });  
+  it('Class should exist.', function () {
+    //Basic test
+    let iobrokerDetector = new ext.IOBrokerDetector();
+    (iobrokerDetector == undefined).should.equal(false);
+  });
+  it('Should return a callback with a list of items (assumes iobroker is up).', function (done) {
+    this.timeout(4000);
+    let iobrokerDetector = new ext.IOBrokerDetector((listOfItems)=>{
+      console.log(listOfItems);
+      Array.isArray(listOfItems).should.equal(true);
+      done();
+    });
+  });
 });

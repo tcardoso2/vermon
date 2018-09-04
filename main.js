@@ -14,8 +14,12 @@
 //
 
 let ent = require("./Entities.js");
-let cmd = require("node-cmd");
+// Simple commandline or terminal interface to allow 
+// you to run cli or bash style commands as if you 
+// were in the terminal. Do not mistake with node-cmd,
+// which allows the current script to be run as a command
 let cli = require("commander");
+let cmd = require("node-cmd");
 let filters = ent.Filters;
 let ext = require("./Extensions.js");
 let em = require("./EnvironmentManager.js");

@@ -50,3 +50,11 @@ test/*_test_my_saved_config*
 
 # SFTP configuration
 sftp-config.json
+
+# iobroker stuff
+sftp-config.json
+install.sh
+iobroker
+iobroker-data/
+killall.sh
+reinstall.sh

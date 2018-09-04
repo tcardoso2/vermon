@@ -319,6 +319,58 @@ class PIRMotionDetector extends MotionDetector{
   }
 }
 
+/**
+ * Concrete MotionDetector class which monitors changes on the "iobroker" daemon
+ * via executing commands on the command line
+ * In order to work requires iobroker (see iobroker.net) to be installed, otherwise
+ * the executed commands will result in error. The constructor checks if the iobroker
+ * daemon exists. For more information on the iobroker commands visit:
+ * https://github.com/ioBroker/ioBroker/wiki/Console-commands
+ * For the NPM package and installation details visit:
+ * https://www.npmjs.com/package/iobroker
+ * 
+ * @param {Function} callback is the function to execute after initialization, it passes
+ * the list of items as the first argument (equivalent to doing "iobroker list" in command
+ * line).
+ */
+class IOBrokerDetector extends MotionDetector{
+  
+  constructor(callback){
+    //log = utils.setLevel('info');
+    super("PIR Motion detector");
+    if (callback){
+      let d = this;
+      log.info("Executing iobroker command...");
+      node_cmd.get(
+        "./iobroker list instances",
+        function(err, data, stderr){
+          log.info("Received response...");
+          d.currentIntensity = {
+            instances: data
+          }
+          //Remove last item bcs it's an empty string
+          callback(data.split('\n').slice(0,-1)); 
+        }
+      );
+    }
+  }
+ 
+/**
+ * Starts the iobroker daemon on the background
+ */
+  //Starts monitoring any movement
+  startMonitoring(){
+    super.startMonitoring();
+    //      m.send(value);
+  }
+
+  exit()
+  {
+    super.exit();
+    //kills the iobroker service?
+  }
+}
+
 class SlackNotifier extends BaseNotifier{
   
   constructor(name, key, auth){
@@ -433,12 +485,13 @@ class RaspistillNotifier extends BaseNotifier{
 //Extending Factory methods
 
 //Extending Entities Factory
-const classes = { FileDetector, PIRMotionDetector, SystemEnvironment, SlackNotifier, RaspistillNotifier, MultiEnvironment }
+const classes = { FileDetector, PIRMotionDetector, PIRMotionDetector, SystemEnvironment, SlackNotifier, RaspistillNotifier, MultiEnvironment }
 
 new ent.EntitiesFactory().extend(classes);
 
 exports.FileDetector = FileDetector;
 exports.PIRMotionDetector = PIRMotionDetector;
+exports.IOBrokerDetector = IOBrokerDetector;
 exports.SlackNotifier = SlackNotifier;
 exports.RaspistillNotifier = RaspistillNotifier;
 exports.SystemEnvironment = SystemEnvironment;

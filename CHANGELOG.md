@@ -1,6 +1,7 @@
 # Change log:
 
 ***  
+* v 0.5.41: Started first tests for the IOBrokerDetector, created the first version of the constructor;  
 * v 0.5.40: Started working on IOBrokerDetector class (WIP), added some more missing documentation;  
 * v 0.5.38, 0.5.39: Changed log to be a function, so that log level can be configured. Use tmd.
 * v 0.5.37: Adding logs for easier debugging of Plugin codes;  
