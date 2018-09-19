@@ -5,10 +5,6 @@
     "circular-json": "^0.5.3",
     "commander": "^2.13.0",
     "extend": "^3.0.1",
-    "iobroker": "^1.1.2",
-    "iobroker.admin": "^3.5.10",
-    "iobroker.discovery": "^1.2.1",
-    "iobroker.js-controller": "^1.4.2",
     "knockout": "^3.4.2",
     "lodash": "^4.17.11",
     "log": "^1.4.0",
@@ -53,5 +49,5 @@
   "name": "t-motion-detector",
   "main": "main",
   "readmeFilename": "README.md",
-  "version": "0.5.42"
+  "version": "0.5.43"
 }
