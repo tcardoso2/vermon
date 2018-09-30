@@ -176,7 +176,7 @@ describe("When a new Simple Command is created for an environment,", function() 
       .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
       .parse(process.argv);
     console.log(main.Cli);
-    JSON.stringify(main.Cli).should.eql(true);
+    main.Cli.options.length.should.eql(5);
     done();
   });  
 });

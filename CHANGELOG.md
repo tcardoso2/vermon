@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.5.44: Minor fixes;   
 * v 0.5.43: Removed unecessary iobroker dependencies;  
 * v 0.5.42: Added convenience script to sync time due to issues with ntp servers;  
 * v 0.5.41: Started first tests for the IOBrokerDetector, created the first version of the constructor;  
