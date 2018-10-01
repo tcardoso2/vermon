@@ -36,7 +36,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     try{
       main.StartWithConfig();
     } catch(e){
-      e.message.should.equal("Requires a Config type object as first argument.");
+      e.name.should.equal("MissingConfigError");
       return;
     }
     should.fail("Should have caught exception.");
@@ -47,7 +47,7 @@ describe("When a new t-motion-detector instance is started from main, ", functio
     try{
       main.StartWithConfig({ other: "object" });
     } catch(e){
-      e.message.should.equal("Requires a Config type object as first argument.");
+      e.name.should.equal("TypeConfigError");
       return;
     }
     should.fail("Should have caught exception.");;

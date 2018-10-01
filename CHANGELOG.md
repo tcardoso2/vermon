@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.1: Continuing with syntax simplification and further testing; changed a few more references from old t-motion-detector to vermon;  
 * v 0.6.0: Implementing syntax-specific vermon tests. Introducing promisses. Introducing Custom Error Types;  
 * v 0.5.45, v0.5.46: Changing name of npm package to vermon;  
 * v 0.5.44: Minor fixes;   

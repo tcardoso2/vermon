@@ -278,7 +278,7 @@ class PIRMotionDetector extends MotionDetector{
         this.log.error(`Error initializing pin ${pin}, do you have sufficient privileges? ${e.message}`);
       }
     } else {
-      this.log.error("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
+      this.log.warn("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
     }
   }
  

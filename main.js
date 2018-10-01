@@ -342,7 +342,7 @@ function GetFilters()
  */
 function Reset()
 {
-  console.log("Reseting environment...");
+  log.info("Reseting environment...");
   for (let m in motionDetectors){
     RemoveDetector(motionDetectors[m]);
   }
@@ -366,7 +366,7 @@ function Reset()
   });
   plugins = {};
   config = {};
-  console.log("Done Reseting environment.");
+  log.info("Done Reseting environment.");
 }
 
 /**
@@ -380,7 +380,7 @@ function Reset()
  * @public
  */
 function Start(params, silent = false){
-  log.info("Starting t-motion-detector with parameters...");
+  log.info("Starting vermon with parameters...");
   //Sets the parameters first if they exist
   if (params){
     if (params.environment){
@@ -460,39 +460,34 @@ function _StartPlugins(e,m,n,f){
  * @deprecated Use "watch instead"
  */
 function StartWithConfig(configParams, callback){
-  log.info("Starting t-motion-detector with config parameters...");
-  //Sets the parameters first if they exist
-  if (!configParams 
-    || !(configParams instanceof Config))
-  {
-    throw new errors.MissingConfigError("Requires a Config type object as first argument.");
+  log.info("Starting vermon with config parameters...");
+
+  if(configParams){
+    configure(configParams);
   }
-  //Should now instanciate the objects if they exist in the default profile
-  config = configParams;
-  let profileObj = config.profile();
 
   //Iterates all items given in the config file
   //It is only supposed to add if the object is of the expected type
   let factory = new ent.EntitiesFactory();
-  for(let p in profileObj)
+  for(let p in profile())
   {
-    if (profileObj.hasOwnProperty(p)) {
+    if (profile().hasOwnProperty(p)) {
 
       //Will ignore reserved keywords
       if (!factory.isReserved(p))
       {
         //We always assume that if the object found is an array then it is an array of objects instead
-        if (Array.isArray(profileObj[p])){
+        if (Array.isArray(profile()[p])){
           log.info("Object provided in config is an array, instanciating each object...");
-          for (let i in profileObj[p])
+          for (let i in profile()[p])
           {
             //instanciates each object
-            _AddInstance(factory, p, profileObj[p][i]);
+            _AddInstance(factory, p, profile()[p][i]);
           }
         }
         else{
           //Single instance (not an array), ok instanciate directly
-          _AddInstance(factory, p, profileObj[p]);
+          _AddInstance(factory, p, profile()[p]);
         }
       }
     }
@@ -500,7 +495,11 @@ function StartWithConfig(configParams, callback){
   _StartPlugins(em.GetEnvironment(),GetMotionDetectors(),GetNotifiers(),GetFilters());
 
   log.info("ready. returning to callback...");
-  if (callback) callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());
+  if (callback){ 
+    callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());
+  } else {
+    log.warn("No callback was provided, ignoring...");
+  }
 }
 
 function watch(callback)
@@ -514,6 +513,31 @@ function watch(callback)
       reject(e);
     }
   });
+}
+
+function configure(configParams = new Config())
+{
+  log.info("Configuring vermon...");
+
+  if(!(configParams instanceof Config))
+  {
+    throw new errors.TypeConfigError("vernon.configure() requires a Config type object as first argument.");
+  }
+  //Should now instanciate the objects if they exist in the default profile, config is a singleton
+  config = configParams;
+  return config.profile();
+}
+
+function profile(){
+  if(config && config.profile){
+    return config.profile();
+  } else {
+    throw new errors.MissingConfigError("Config profile is missing. Run vernon.configure() first.");
+  }
+}
+
+function setLogLevel(level){
+  log = utils.setLevel(level);
 }
 
 //Internal function, given a factory, class name and arguments, instanciates it
@@ -788,7 +812,7 @@ function _InternalSerializeCurrentContext(){
 
 /**
  * Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
- * makes the added module available from the "plugins" varible, and adds its functions to t-motion-detector;
+ * makes the added module available from the "plugins" varible, and adds its functions to vermon;
  * @param {Object} ext_module is the actual module we are extending.
  * @return {boolean} True the plugin was successfully added.
  */
@@ -913,4 +937,9 @@ exports.Utils = utils;
 //New Syntax / Alias replacers of old functions
 
 exports.use = AddPlugin;
+exports.configure = configure;
+exports.profile = profile;
 exports.watch = watch;
+exports.reset = Reset;
+exports.logger = log;
+exports.setLogLevel = setLogLevel;
