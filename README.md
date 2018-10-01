@@ -1,7 +1,7 @@
-[![NPM info](https://nodei.co/npm/t-motion-detector.png?downloads=true)](https://nodei.co/npm/t-motion-detector.png?downloads=true)
+[![NPM info](https://nodei.co/npm/vermon.png?downloads=true)](https://nodei.co/npm/vermon.png?downloads=true)
 
-[![Travis build status](https://travis-ci.org/tcardoso2/vermon.png?branch=master)](https://travis-ci.org/tcardoso2/t-motion-detector)
-[![dependencies](https://david-dm.org/tcardoso2/t-motion-detector.svg)](https://david-dm.org/tcardoso2/t-motion-detector.svg)
+[![Travis build status](https://travis-ci.org/tcardoso2/vermon.png?branch=master)](https://travis-ci.org/tcardoso2/vermon)
+[![dependencies](https://david-dm.org/tcardoso2/vermon.svg)](https://david-dm.org/tcardoso2/tvermon.svg)
 
 
 [![Unit tests](https://github.com/tcardoso2/vermon/blob/master/badge.svg)](https://github.com/tcardoso2/vermon/blob/master/badge.svg) 
