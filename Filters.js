@@ -34,7 +34,7 @@ class BaseFilter{
     switch(typeof this.applyToName)
     {
       case "undefined":
-        console.log(">>>>> applying to all motion detectors:");
+        log.info(">>>>> applying to all motion detectors:");
         // applies to all motion detectors
         for (let i in motionDetectors)
         {
@@ -44,12 +44,12 @@ class BaseFilter{
         break;
       case "string":
         // applies all motion detectors matching name
-        console.log(`>>>>> applying to motion detectors with name: ${this.applyToName}`);
+        log.info(`>>>>> applying to motion detectors with name: ${this.applyToName}`);
         this._applyToDetectorNames(motionDetectors, [this.applyToName]);
         break;
       case "object":
         //Assumes it is a motion detector, or at least an object which implements the applyFilter method
-        console.log(">>>>> applying to motion detector:");
+        log.info(">>>>> applying to motion detector:");
         //could be an array
         if(Array.isArray(this.applyToName)){
           this._applyToDetectorNames(motionDetectors, this.applyToName);
@@ -147,7 +147,7 @@ class SystemEnvironmentFilter extends BaseFilter{
 
   filter(newState, source, detector){
     let source_c = source ? source.constructor.name : undefined;
-    console.log(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}, sent by ${source_c}`);
+    log.info(`Filter ${this.constructor.name} is filtering values from detector: ${detector.name}: ${newState}, sent by ${source_c}`);
     //Tests first if the signal is comming from a System Environment
     if (source_c == "SystemEnvironment"){
       if(newState.freemem && newState.stdout){
@@ -158,7 +158,7 @@ class SystemEnvironmentFilter extends BaseFilter{
         }
       }
     } else {
-      console.log(`Signal does not come from a SystemEnvironment (${source_c} instead), ignoring filter.`);
+      log.info(`Signal does not come from a SystemEnvironment (${source_c} instead), ignoring filter.`);
       return newState;
     }
 

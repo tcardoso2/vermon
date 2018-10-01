@@ -759,6 +759,11 @@ e.addChange(9); //Some change introduced
 });
 ```
 
+**Meta**
+
+-   **deprecated**: Use "watch instead"
+
+
 ## \_AddInstance
 
 Internal function. Given a factory and an entity name (One of {Environment}, 
@@ -879,7 +884,7 @@ Returns **[object][146]** Returns a "profile" object in JSON.stringify format
 ## AddPlugin
 
 Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
-makes the added module available from the "plugins" varible, and adds its functions to t-motion-detector;
+makes the added module available from the "plugins" varible, and adds its functions to vermon;
 
 ### Parameters
 

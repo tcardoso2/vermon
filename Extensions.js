@@ -38,9 +38,9 @@ class SystemEnvironment extends ent.Environment {
     let f = () => {
       m.killAfter--;
       // This is executed after about x milliseconds.
-      console.log("SystemEnvironment is executing command...");
+      log.info("SystemEnvironment is executing command...");
       if ((m.interval == 0) || (m.killAfter == 0)){
-        console.log(`Clearing interval killAfter = ${killAfter}`);
+        log.info(`Clearing interval killAfter = ${killAfter}`);
         clearInterval(m.i);
       }
       m.getValues((m)=>{
@@ -225,11 +225,11 @@ class FileDetector extends MotionDetector{
               let ft = moment(stats.ctime);
               if (ft.isBefore(moment().subtract(5, 'seconds')))
               {
-                console.log('Ignoring old file: ', path);
+                log.info('Ignoring old file: ', path);
                 return;
               }
               else {
-                console.log('>>>>>>> File', path, 'has been added'); 
+                log.info('>>>>>>> File', path, 'has been added'); 
                 m.send(path, m);
               }
             } else {
@@ -240,7 +240,7 @@ class FileDetector extends MotionDetector{
       })
       .on('change', function(path) {
         fs.stat(path, (err, stats)=> {
-          console.log('>>>>>>> File', path, 'has been changed');
+          log.info('>>>>>>> File', path, 'has been changed');
           m.send(path, m);
         })
       });
@@ -421,10 +421,10 @@ class SlackNotifier extends BaseNotifier{
     else
     {
       if((typeof newState) != "string"){
-        console.log(`'${newState}' not a valid path, ignoring slack upload.`);
+        log.info(`'${newState}' not a valid path, ignoring slack upload.`);
         return;
       }
-      console.log("Uploading ", newState);
+      log.info("Uploading ", newState);
       //The slack API token needs to be there: https://api.slack.com/web
       this.slackUpload.uploadFile({
         file: fs.createReadStream(newState), //path.join(__dirname, '.', newState)),
@@ -435,11 +435,11 @@ class SlackNotifier extends BaseNotifier{
         channels: '#general'
       }, function(err, data) {
         if (err) {
-            console.error(err);
+          log.error(err);
         }
         else {
           _this.data.file = data; 
-          console.log('Uploaded file details: ', data);
+          log.info('Uploaded file details: ', data);
           _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);;
         }
       });
@@ -467,7 +467,7 @@ class RaspistillNotifier extends BaseNotifier{
     let _this = this;
     this.internalObj.takePhoto(this.fileName)
       .then((photo) => {
-        console.log('took photo', photo);
+        log.info('took photo', photo);
         _this.data.photo = photo;
         //Will propagate to this if the pushNotification is not well handled.
         _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data); 

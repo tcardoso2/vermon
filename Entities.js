@@ -448,7 +448,7 @@ class BaseNotifier{
       {
         template = `'${this.name}' received Notification received from: '${detector.name}'`;    
       }
-      console.log(`Binding Notifier '${this.name}' to detector '${detector.name}'...`);
+      log.info(`Binding Notifier '${this.name}' to detector '${detector.name}'...`);
       detector.on("hasDetected", function(currentIntensity, newState, environment, detector){
         if (n) { // Testing if the notifier is still there because it might be removed anytime
           n.notify(template, currentIntensity, newState, environment, detector);
@@ -457,7 +457,7 @@ class BaseNotifier{
       this.detectors.push(detector);      
     } else {
       //Safeguard in case 
-      console.log("WARN: No detector was found? Ignoring...");
+      leg.info("WARN: No detector was found? Ignoring...");
     }
   }
 

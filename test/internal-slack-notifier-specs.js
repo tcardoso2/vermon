@@ -6,7 +6,7 @@
  * for tests which are NOT using the npm tarball pack
  * For all others, the test should obviously include
  * something like:
- * let md = require('t-motion-detector');
+ * let md = require('vermon');
  *****************************************************/
 
 let chai = require('chai');
