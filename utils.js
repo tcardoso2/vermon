@@ -3,7 +3,7 @@
 //        also referred in main, and can be accessed externally from the module via .Utils
 // @author: Tiago Cardoso
 //
-let JSONCircular = require('circular-json');
+let flatted = require('flatted');
 let tracer = require('tracer');
 let log = tracer.colorConsole({level:'warn'}); //trace level
 log.warning = log.warn;
@@ -16,9 +16,9 @@ exports = module.exports = {
         return JSON.stringify(str);
       } catch (e){
         if (e instanceof TypeError){
-          log.debug(`Error in stringifying object (${e.message}), attempting with "circular-json"...`);
+          log.debug(`Error in stringifying object (${e.message}), attempting with "flatted"...`);
           try{
-            return JSONCircular.stringify(str);
+            return flatted.stringify(str);
           } catch(e){
             let msg = `Error in stringifying object (${e.message})`;
             log.warn(msg);

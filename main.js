@@ -1,5 +1,5 @@
 //
-// T-Motion-Detector:
+// VerMon:
 // Main module, containing the functions exposed by the API (See footer exports.xxx definitions).
 // Allows configuring, starting, adding/Removing an Environment, Motion Detectors and Notifiers
 // to the context.
@@ -31,6 +31,7 @@ let _ = require('lodash/core');
 let chalk = require('chalk');
 let plugins = {};
 let utils = require('./utils.js');
+let errors = require('./Errors.js');
 var log = utils.setLevel('warn');
 
 /**
@@ -456,6 +457,7 @@ function _StartPlugins(e,m,n,f){
       e.addChange(9); //Some change introduced      
     });
  * @public
+ * @deprecated Use "watch instead"
  */
 function StartWithConfig(configParams, callback){
   log.info("Starting t-motion-detector with config parameters...");
@@ -463,7 +465,7 @@ function StartWithConfig(configParams, callback){
   if (!configParams 
     || !(configParams instanceof Config))
   {
-    throw new Error("Requires a Config type object as first argument.");
+    throw new errors.MissingConfigError("Requires a Config type object as first argument.");
   }
   //Should now instanciate the objects if they exist in the default profile
   config = configParams;
@@ -499,6 +501,19 @@ function StartWithConfig(configParams, callback){
 
   log.info("ready. returning to callback...");
   if (callback) callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());
+}
+
+function watch(callback)
+{
+  return new Promise((resolve,reject) => {
+    try{
+      StartWithConfig(undefined, (e, m, n, f)=>{
+        resolve(e, m, n, f);
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
 
 //Internal function, given a factory, class name and arguments, instanciates it
@@ -894,3 +909,8 @@ exports.RemovePlugin = RemovePlugin;
 exports.GetPlugins = GetPlugins;
 //Utils
 exports.Utils = utils;
+
+//New Syntax / Alias replacers of old functions
+
+exports.use = AddPlugin;
+exports.watch = watch;
