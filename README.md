@@ -4,9 +4,9 @@
 [![dependencies](https://david-dm.org/tcardoso2/t-motion-detector.svg)](https://david-dm.org/tcardoso2/t-motion-detector.svg)
 
 
-[![Unit tests](https://github.com/tcardoso2/t-motion-detector/blob/master/badge.svg)](https://github.com/tcardoso2/t-motion-detector/blob/master/badge.svg) 
+[![Unit tests](https://github.com/tcardoso2/vermon/blob/master/badge.svg)](https://github.com/tcardoso2/vermon/blob/master/badge.svg) 
 
-# t-motion-detector
+# vermon
 A NodeJS Motion detector, initially aimed for Raspberry Pi.
 The Motion Detectors detect changes in the Environment and the Notifiers receive the Motion Detectors' event changes.  
 NOTE: this code has only been tested in the following Linux OS:
@@ -122,8 +122,8 @@ Unit tests:
 t-motion-detector uses mocha unit tests to test the detector, notifier and environment classes. I'll be adding more on the go. to test use "npm test"
 
 ## Links
-  - [ChangeLog](https://github.com/tcardoso2/t-motion-detector/blob/master/CHANGELOG.md)  
-  - [Documentation](https://github.com/tcardoso2/t-motion-detector/blob/master/DOCUMENTATION.md) 
-  - [Code of Conduct](https://github.com/tcardoso2/t-motion-detector/blob/master/CODE_OF_CONDUCT.md)   
+  - [ChangeLog](https://github.com/tcardoso2/vermon/blob/master/CHANGELOG.md)  
+  - [Documentation](https://github.com/tcardoso2/vermon/blob/master/DOCUMENTATION.md) 
+  - [Code of Conduct](https://github.com/tcardoso2/vermon/blob/master/CODE_OF_CONDUCT.md)   
   - [Related Packages](https://www.npmjs.com/package/t-motion-detector-433)  
-  - [Roadmap (Work in Progress)](https://github.com/tcardoso2/t-motion-detector/blob/master/ROADMAP.md) 
+  - [Roadmap (Work in Progress)](https://github.com/tcardoso2/vermon/blob/master/ROADMAP.md) 
