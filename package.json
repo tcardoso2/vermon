@@ -5,6 +5,7 @@
     "commander": "^2.13.0",
     "extend": "^3.0.1",
     "flatted": "^1.0.2",
+    "inquirer-menu": "^1.0.0",
     "knockout": "^3.4.2",
     "lodash": "^4.17.11",
     "log": "^1.4.0",
@@ -59,5 +60,5 @@
   "author": "Tiago Cardoso <tcardoso@gmail.com>",
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
-  "version": "0.6.2"
+  "version": "0.6.3"
 }

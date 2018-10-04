@@ -532,7 +532,6 @@ const reservedPatterns = {
   NEW: "$new$",
   DETECTORS: "$detectors$"
 }
-
  /**
  * TODO: Needs documentation
  */
@@ -720,8 +719,38 @@ handle_declarative_pattern(prop, all){
  * TODO: Needs documentation
  */
 //Extending Factory methods
-function GetExtensions(){
-  return classes;
+function GetExtensions(instanceName){
+  let result = {};
+  if (instanceName){
+    for (let c in classes){
+      if (classes[c].prototype instanceof instanceName){
+        result[c] = classes[c];
+      }
+    }
+  } else {
+    result = classes;
+  }
+  return result;
+}
+
+function GetExtensionsMetadata(instanceName){
+  let result = GetExtensions(instanceName);
+  let factory = new EntitiesFactory();
+  for (let c in result){
+    if(result[c].prototype._metadata){
+      ChangeMetadataExtension(result, c, (someInputs) => { 
+        factory.instanciate(c, { inputs: 0 }); //Continue from here!
+      });
+    }
+  }
+  return result;
+}
+
+function ChangeMetadataExtension(extensions, instanceName, handler){
+  //Create a new key
+  extensions[instanceName + ": " + extensions[instanceName].prototype._metadata()] = handler;
+  //...and delete the old one
+  delete extensions[instanceName];
 }
 
  /**
@@ -738,6 +767,8 @@ MotionDetector.prototype.__proto__ = events.EventEmitter.prototype;
 BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
 
 exports.GetExtensions = GetExtensions;
+exports.GetExtensionsMetadata = GetExtensionsMetadata;
+exports.ChangeMetadataExtension = ChangeMetadataExtension;
 exports.Filters = filters;
 exports.EntitiesFactory = EntitiesFactory;
 exports.Environment = Environment;

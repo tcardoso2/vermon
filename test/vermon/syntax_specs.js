@@ -62,5 +62,17 @@ describe("Basic new syntax, ", function() {
 	  	e.name.should.equal("MissingConfigError");
 	  	done();
 		});
+	});
+	
+	it('watch: returns an error promise if error happens', function (done) {
+		//Cleanup, start fresh
+		vermon.reset();
+    vermon.watch().then((environment, detectors)=>{
+	  	logger.info(`Watching environment ${environment.name}, currently detecting:`);
+		}).catch((e)=>{
+	  	logger.warn(`Some error happened: ${e}, ignoring...`);
+	  	e.name.should.equal("MissingConfigError");
+	  	done();
+		});
   });
 })

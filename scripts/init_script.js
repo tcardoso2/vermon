@@ -3,19 +3,17 @@
  * initial screen script, to be used by other scripts
  * (Except preinstall)
  */
-
+const menu = require('inquirer-menu');
+let entities = require('../Entities');
+let meta = require('../Metadata');
+let extensions = require('../Extensions');
 const screen = [
-"                    ___           ___                                      ___           ___      ",
-"      ___          /  /\\         /  /\\          ___            ___        /  /\\         /  /\\     ",
-"     /__/\\        /  /::|       /  /::\\        /__/\\          /__/\\      /  /::\\       /  /::|    ",
-"     \\  \\:\\      /  /:|:|      /  /:/\\:\\       \\  \\:\\         \\__\\:\\    /  /:/\\:\\     /  /:|:|    ",
-"      \\__\\:\\    /  /:/|:|__   /  /:/  \\:\\       \\__\\:\\        /  /::\\  /  /:/  \\:\\   /  /:/|:|__  ",
-"      /  /::\\  /__/:/_|::::\\ /__/:/ \\__\\:\\      /  /::\\    __/  /:/\\/ /__/:/ \\__\\:\\ /__/:/ |:| /\\ ",
-"     /  /:/\\:\\ \\__\\/  /~~/:/ \\  \\:\\ /  /:/     /  /:/\\:\\  /__/\\/:/~~  \\  \\:\\ /  /:/ \\__\\/  |:|/:/ ",
-"    /  /:/__\\/       /  /:/   \\  \\:\\  /:/     /  /:/__\\/  \\  \\::/      \\  \\:\\  /:/      |  |:/:/  ",
-"   /__/:/           /  /:/     \\  \\:\\/:/     /__/:/        \\  \\:\\       \\  \\:\\/:/       |__|::/   ",
-"   \\__\\/           /__/:/       \\  \\::/      \\__\\/          \\__\\/        \\  \\::/        /__/:/    ",
-"                   \\__\\/         \\__\\/                                    \\__\\/         \\__\\/     "
+  " __      __                             ",
+  " \\ \\    / /                             ",
+  "  \\ \\  / /__ _ __ _ __ ___   ___  _ __  ",
+  "   \\ \\/ / _ \\ '__| '_ ` _ \\ / _ \\| '_ \\ ",
+  "    \\  /  __/ |  | | | | | | (_) | | | |",
+  "     \\/ \\___|_|  |_| |_| |_|\\___/|_| |_|"                           
 ]
 const C = {
   Reset: "\x1b[0m",
@@ -58,7 +56,8 @@ function startScreen()
   }
   console.log("                                                         (Fonts by https://patorsk.com)");
   console.log(C.Reset, "_____________________________________________________________");
-  console.log(C.Reset, "A NodeJS Motion detector, aimed for the Raspberry Pi.");
+  console.log(C.Reset, "Welcome to the setup screen");
+  console.log(C.Reset, "");
 }
 
 function increaseCount()
@@ -71,6 +70,64 @@ function getCount()
 {
   return count;
 }
+
+const chooseEnvironment = {
+  message: 'Select my Environment',
+  choices: 
+    entities.GetExtensionsMetadata(entities.Environment)
+};
+ 
+const addDetectors = {
+  message: 'Add a Detector',
+  choices: {
+    callApi: function() {
+      console.log('red-api called');
+      return;
+    }
+  }
+};
+
+const addNotifiers = {
+  message: 'Add a Notifier',
+  choices: {
+    callApi: function() {
+      console.log('red-api called');
+      return;
+    }
+  }
+};
+
+const saveConfig = {
+  message: 'Save to Local Config file.',
+  choices: {
+    callApi: function() {
+      console.log('red-api called');
+      return;
+    }
+  }
+};
+
+let level = 0;
+ 
+function createMenu() {
+  return {
+    message: 'Choose your option(s) below',
+    choices: {
+      "Choose your Environment": chooseEnvironment,
+      "Add a Detector": addDetectors,
+      "Add a Notifier": addNotifiers,
+      "Save to local Config file": saveConfig
+    }
+  };
+};
+ 
+menu(createMenu)
+  .then(function() {
+    console.log('bye');
+  })
+  .catch(function(err) {
+    console.log(err.stack);
+  });
 
 exports.count = getCount();
 exports.C = C;

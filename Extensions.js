@@ -390,6 +390,7 @@ class SlackNotifier extends BaseNotifier{
     return this.slack !== undefined;
   }
 
+  //TODO: Fix this, too much nesting
   notify(some_text, oldState, newState, environment, detector){
     this.lastMessage = some_text;
     this.data = {
@@ -440,7 +441,7 @@ class SlackNotifier extends BaseNotifier{
         else {
           _this.data.file = data; 
           log.info('Uploaded file details: ', data);
-          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);;
+          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
         }
       });
     }

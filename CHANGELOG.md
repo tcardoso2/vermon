@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.3: (WIP) started working on terminal menu;  
 * v 0.6.2: Cleaning up, removing console.logs, update of documentation, fixing the npm and dependencies badges;   
 * v 0.6.1: Continuing with syntax simplification and further testing; changed a few more references from old t-motion-detector to vermon;  
 * v 0.6.0: Implementing syntax-specific vermon tests. Introducing promisses. Introducing Custom Error Types;  
