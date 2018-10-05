@@ -739,6 +739,7 @@ function GetExtensionsMetadata(instanceName){
   for (let c in result){
     if(result[c].prototype._metadata){
       ChangeMetadataExtension(result, c, (someInputs) => { 
+        console.log("&&&&&&&&&&&&&&&&&&&&&&", utils.getArgs(result[c]));
         factory.instanciate(c, { inputs: 0 }); //Continue from here!
       });
     }

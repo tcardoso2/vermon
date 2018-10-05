@@ -29,8 +29,8 @@ let ko = require("knockout");
 let fs = require('fs');
 let _ = require('lodash/core');
 let chalk = require('chalk');
-let plugins = {};
 let utils = require('./utils.js');
+let pm = require('./PluginManager');
 let errors = require('./Errors.js');
 var log = utils.setLevel('warn');
 
@@ -356,15 +356,15 @@ function Reset()
     em.SetEnvironment(undefined);
   }
   motionDetectors = [];
-  Object.keys(plugins).forEach(function(key) {
-    let p = plugins[key];
+  Object.keys(pm.GetPlugins()).forEach(function(key) {
+    let p = pm.GetPlugins()[key];
     console.log(`  Attempting to reset plugin ${p.id} with key ${key}...`);
     if(p.Reset){
       p.Reset();
       log.info("ok.");     
     }
   });
-  plugins = {};
+  pm.ResetPlugins();
   config = {};
   log.info("Done Reseting environment.");
 }
@@ -424,6 +424,7 @@ function Start(params, silent = false){
  */
 function _StartPlugins(e,m,n,f){
   log.info(`Checking if any plugin exists which should be started...`);
+  let plugins = pm.GetPlugins();
   Object.keys(plugins).forEach(function(key) {
     let p = plugins[key];
     log.info(`  Plugin found. Checking plugin signature methods ShouldStart and Start for plugin ${key}...`);
@@ -810,84 +811,8 @@ function _InternalSerializeCurrentContext(){
   return utils.JSON.stringify(profile);
 }
 
-/**
- * Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
- * makes the added module available from the "plugins" varible, and adds its functions to vermon;
- * @param {Object} ext_module is the actual module we are extending.
- * @return {boolean} True the plugin was successfully added.
- */
-function AddPlugin(ext_module){
-
-  let runPreWorkflowFunctions = function(){
-    if(!ext_module.exports.PreAddPlugin) throw new Error("Error: PreAddPlugin function must be implemented.");
-    ext_module.exports.PreAddPlugin(module.exports);
-  }
-
-  let runPostWorkflowFunctions = function(){
-    if(!plugins[ext_module.id].PostAddPlugin) throw new Error("Error: PostAddPlugin function must be implemented.");
-    plugins[ext_module.id].PostAddPlugin(plugins[ext_module.id]);
-  }
-
-  //Checks the extension module is not null
-  if(!ext_module) throw new Error("Error: AddPlugin requires a Plugin module as first argument.");
-  //Checks that the extension module has an id
-  if(!ext_module.id) throw new Error("Error: The plugin object does not have a valid 'id' property.");
-  //Cheks that there is no existing extension module with the same name
-  if(plugins[ext_module.id]) throw new Error(`Error: A plugin object with id '${ext_module.id}' already exists.`);
-
-  //Checks if the module exports functions
-  if(!ext_module.exports) {
-    throw new Error(`Error: Does not seem to be a valid module.`);    
-  }
-  else {
-    runPreWorkflowFunctions();  
-    //Adds the module
-    plugins[ext_module.id] = ext_module.exports;
-    
-    //stores a reference of the exported functions of the main library in the object
-    ext_module.exports._ = module.exports;
-
-    log.info("Added Plugin", ext_module.id);
-    runPostWorkflowFunctions();
-
-    return true;
-  }
-  return false;
-}
-
-/**
- * Removes an existing Extention plugin from the library
- * @param {string} ext_module_id is the id of the module to remove.
- * @return {boolean} True the plugin was successfully removed.
- */
-function RemovePlugin(ext_module_id){
-
-  let copy = plugins[ext_module_id];
-
-  let runPreWorkflowFunctions = function(){
-    if(!plugins[ext_module_id].PreRemovePlugin) throw new Error("Error: PreRemovePlugin function must be implemented.");
-    plugins[ext_module_id].PreRemovePlugin();
-  }
-
-  let runPostWorkflowFunctions = function(){
-    if(!copy.PostRemovePlugin) throw new Error("Error: PostRemovePlugin function must be implemented.");
-    copy.PostRemovePlugin(module.exports);
-  }
-
-  runPreWorkflowFunctions();
-  delete plugins[ext_module_id];
-  log.info("Removed Plugin", ext_module_id);
-  runPostWorkflowFunctions();
-
-  return true;
-}
-
-/**
- * Gets the existing extension plugins added to the library
- * @return {object} the plugins object; 
- */
-function GetPlugins(){
-  return plugins;
+function use(plugin){
+  return pm.AddPlugin(plugin, module.exports);
 }
 
 exports.AddNotifier = AddNotifier;
@@ -927,16 +852,14 @@ exports.SaveAllToConfig = SaveAllToConfig;
 exports.Config = Config;
 exports.Log = log;
 exports.SetTraceLevel = utils.setLevel;
-//Plugin management functions
-exports.AddPlugin = AddPlugin;
-exports.RemovePlugin = RemovePlugin;
-exports.GetPlugins = GetPlugins;
 //Utils
 exports.Utils = utils;
+//PluginManager
+exports.PluginManager = pm;
 
 //New Syntax / Alias replacers of old functions
 
-exports.use = AddPlugin;
+exports.use = use;
 exports.configure = configure;
 exports.profile = profile;
 exports.watch = watch;

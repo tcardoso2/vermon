@@ -60,99 +60,101 @@
 -   [extend][56]
     -   [Parameters][57]
 -   [GetExtensions][58]
--   [IsInstanceOf][59]
-    -   [Parameters][60]
--   [GetEnvironment][61]
+    -   [Parameters][59]
+-   [IsInstanceOf][60]
+    -   [Parameters][61]
 -   [GetEnvironment][62]
--   [SetEnvironment][63]
-    -   [Parameters][64]
--   [GetNotifiers][65]
+-   [GetEnvironment][63]
+-   [SetEnvironment][64]
+    -   [Parameters][65]
 -   [GetNotifiers][66]
--   [SetNotifiers][67]
-    -   [Parameters][68]
--   [AddDetectorToSubEnvironmentOnly][69]
-    -   [Parameters][70]
--   [AddDetectorToSubEnvironmentOnly][71]
-    -   [Parameters][72]
--   [SystemEnvironment][73]
-    -   [Parameters][74]
--   [MultiEnvironment][75]
-    -   [Parameters][76]
--   [IOBrokerDetector][77]
-    -   [Parameters][78]
-    -   [startMonitoring][79]
--   [BaseFilter][80]
-    -   [Parameters][81]
--   [\_InternalAddFilter][82]
-    -   [Parameters][83]
--   [\_InternalAddEnvironment][84]
-    -   [Parameters][85]
--   [AddNotifier][86]
-    -   [Parameters][87]
--   [AddNotifierToSubEnvironment][88]
-    -   [Parameters][89]
--   [AddDetector][90]
-    -   [Parameters][91]
--   [DeactivateDetector][92]
-    -   [Parameters][93]
--   [ActivateDetector][94]
-    -   [Parameters][95]
--   [RemoveNotifier][96]
-    -   [Parameters][97]
--   [RemoveDetector][98]
-    -   [Parameters][99]
--   [GetSubEnvironments][100]
--   [GetSubEnvironment][101]
-    -   [Parameters][102]
--   [GetMotionDetectors][103]
--   [GetMotionDetector][104]
-    -   [Parameters][105]
--   [GetFilters][106]
--   [Reset][107]
--   [Start][108]
-    -   [Parameters][109]
--   [\_StartPlugins][110]
-    -   [Parameters][111]
--   [StartWithConfig][112]
-    -   [Parameters][113]
-    -   [Examples][114]
--   [\_AddInstance][115]
-    -   [Parameters][116]
--   [Config][117]
-    -   [Parameters][118]
-    -   [Examples][119]
-    -   [mapToFile][120]
-        -   [Parameters][121]
-    -   [isFallback][122]
-    -   [profile][123]
-        -   [Parameters][124]
-    -   [getProperty][125]
-        -   [Parameters][126]
-    -   [slackHook][127]
-        -   [Parameters][128]
-    -   [slackAuth][129]
-        -   [Parameters][130]
-    -   [raspistillOptions][131]
-        -   [Parameters][132]
-    -   [toString][133]
--   [SaveAllToConfig][134]
-    -   [Parameters][135]
--   [\_InternalSerializeCurrentContext][136]
--   [AddPlugin][137]
-    -   [Parameters][138]
--   [RemovePlugin][139]
-    -   [Parameters][140]
--   [GetPlugins][141]
--   [Entities][142]
--   [Extensions][143]
--   [Cmd][144]
--   [Cli][145]
+-   [GetNotifiers][67]
+-   [SetNotifiers][68]
+    -   [Parameters][69]
+-   [AddDetectorToSubEnvironmentOnly][70]
+    -   [Parameters][71]
+-   [AddDetectorToSubEnvironmentOnly][72]
+    -   [Parameters][73]
+-   [SystemEnvironment][74]
+    -   [Parameters][75]
+-   [MultiEnvironment][76]
+    -   [Parameters][77]
+-   [IOBrokerDetector][78]
+    -   [Parameters][79]
+    -   [startMonitoring][80]
+-   [BaseFilter][81]
+    -   [Parameters][82]
+-   [\_InternalAddFilter][83]
+    -   [Parameters][84]
+-   [\_InternalAddEnvironment][85]
+    -   [Parameters][86]
+-   [AddNotifier][87]
+    -   [Parameters][88]
+-   [AddNotifierToSubEnvironment][89]
+    -   [Parameters][90]
+-   [AddDetector][91]
+    -   [Parameters][92]
+-   [DeactivateDetector][93]
+    -   [Parameters][94]
+-   [ActivateDetector][95]
+    -   [Parameters][96]
+-   [RemoveNotifier][97]
+    -   [Parameters][98]
+-   [RemoveDetector][99]
+    -   [Parameters][100]
+-   [GetSubEnvironments][101]
+-   [GetSubEnvironment][102]
+    -   [Parameters][103]
+-   [GetMotionDetectors][104]
+-   [GetMotionDetector][105]
+    -   [Parameters][106]
+-   [GetFilters][107]
+-   [Reset][108]
+-   [Start][109]
+    -   [Parameters][110]
+-   [\_StartPlugins][111]
+    -   [Parameters][112]
+-   [StartWithConfig][113]
+    -   [Parameters][114]
+    -   [Examples][115]
+-   [\_AddInstance][116]
+    -   [Parameters][117]
+-   [Config][118]
+    -   [Parameters][119]
+    -   [Examples][120]
+    -   [mapToFile][121]
+        -   [Parameters][122]
+    -   [isFallback][123]
+    -   [profile][124]
+        -   [Parameters][125]
+    -   [getProperty][126]
+        -   [Parameters][127]
+    -   [slackHook][128]
+        -   [Parameters][129]
+    -   [slackAuth][130]
+        -   [Parameters][131]
+    -   [raspistillOptions][132]
+        -   [Parameters][133]
+    -   [toString][134]
+-   [SaveAllToConfig][135]
+    -   [Parameters][136]
+-   [\_InternalSerializeCurrentContext][137]
+-   [Entities][138]
+-   [Extensions][139]
+-   [Cmd][140]
+-   [Cli][141]
+-   [AddPlugin][142]
+    -   [Parameters][143]
+-   [RemovePlugin][144]
+    -   [Parameters][145]
+-   [GetPlugins][146]
+-   [ResetPlugins][147]
 
 ## Environment
 
 ### Parameters
 
--   `params` **[Object][146]** to add, you can add a "name" and a "state".
+-   `params` **[Object][148]** to add, you can add a "name" and a "state".
 
 ### motionDetectors
 
@@ -165,10 +167,10 @@ Once binded, the Detector will receive change events in case the Environment val
 
 #### Parameters
 
--   `md` **[object][146]** is the MotionDetector object type to bind to this environment
--   `notifiers` **[Array][147]** is an optional array of Notifier objects which will be binded to the detector.
+-   `md` **[object][148]** is the MotionDetector object type to bind to this environment
+-   `notifiers` **[Array][149]** is an optional array of Notifier objects which will be binded to the detector.
 -   `force`   (optional, default `false`)
--   `if` **[Boolean][148]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+-   `if` **[Boolean][150]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
 
 ### unbindDetector
 
@@ -176,7 +178,7 @@ Unbinds and removes an existing {MotionDetector} object from the Environment, an
 
 #### Parameters
 
--   `md` **[object][146]** is the MotionDetector object type to remove from this environment
+-   `md` **[object][148]** is the MotionDetector object type to remove from this environment
 
 ### addChange
 
@@ -185,7 +187,7 @@ The value if the state is also affected by the existence of Filters. See {Filter
 
 #### Parameters
 
--   `intensity` **[object][146]** is the value which will change the state. If it is a Number, will add to the current state, if it is an object will replace it;
+-   `intensity` **[object][148]** is the value which will change the state. If it is a Number, will add to the current state, if it is an object will replace it;
 
 #### Examples
 
@@ -202,7 +204,7 @@ Only after the filter is added, will affect the {addChange} function
 
 #### Parameters
 
--   `filter` **[object][146]** is the Filter object;
+-   `filter` **[object][148]** is the Filter object;
 
 #### Examples
 
@@ -214,8 +216,8 @@ Only after the filter is added, will affect the {addChange} function
 
 ### Parameters
 
--   `name` **[String][149]** of the Motion Detector, will show up in logs and messages
--   `initialIntensity` **[object][146]** is the Motion Detector state. Motion Detectors record the last state which triggered them, which is passed from the environment to the detectors when there is a change.
+-   `name` **[String][151]** of the Motion Detector, will show up in logs and messages
+-   `initialIntensity` **[object][148]** is the Motion Detector state. Motion Detectors record the last state which triggered them, which is passed from the environment to the detectors when there is a change.
 
 ### applyFilter
 
@@ -224,7 +226,7 @@ Only after the filter is added, will affect the {addChange} function
 
 #### Parameters
 
--   `filter` **[object][146]** is the Filter object;
+-   `filter` **[object][148]** is the Filter object;
 
 #### Examples
 
@@ -244,7 +246,7 @@ Add any cleanup code here. For the Base MotionDetector class it does nothing.
 
 ### Parameters
 
--   `name` **[String][149]** of the Notifier. This is important as it will show up in the template message of the notification.
+-   `name` **[String][151]** of the Notifier. This is important as it will show up in the template message of the notification.
 
 ### notify
 
@@ -253,11 +255,11 @@ Notifier class for the communication means you intent to use.
 
 #### Parameters
 
--   `text` **[String][149]** is the contents of the notified message
--   `oldState` **[object][146]** is the previous state preceeding the change
--   `newState` **[object][146]** is the new state after the change happens as detected by the Change Detector
--   `environment` **[object][146]** is also propagated for convenience
--   `detector` **[object][146]** is the MotionDetector instance which has detected the related change
+-   `text` **[String][151]** is the contents of the notified message
+-   `oldState` **[object][148]** is the previous state preceeding the change
+-   `newState` **[object][148]** is the new state after the change happens as detected by the Change Detector
+-   `environment` **[object][148]** is also propagated for convenience
+-   `detector` **[object][148]** is the MotionDetector instance which has detected the related change
 
 #### Examples
 
@@ -272,10 +274,10 @@ After binding, the underlyig detector's Changes will be propagated to this Notif
 
 #### Parameters
 
--   `detector` **[object][146]** is the MotionDetector instance to bind this Notifier to.
--   `template` **[String][149]** is the skeleton of the message for the notifier
+-   `detector` **[object][148]** is the MotionDetector instance to bind this Notifier to.
+-   `template` **[String][151]** is the skeleton of the message for the notifier
 -   `force`   (optional, default `false`)
--   `if` **[Boolean][148]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+-   `if` **[Boolean][150]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
 
 #### Examples
 
@@ -289,10 +291,10 @@ Same as {bindToDetector} but bind the same Notifier to more Detectors
 
 #### Parameters
 
--   `detectors` **[object][146]** is an Array of MotionDetector instance to bind this Notifier to.
--   `template` **[String][149]** is the skeleton of the message for the notifier
+-   `detectors` **[object][148]** is an Array of MotionDetector instance to bind this Notifier to.
+-   `template` **[String][151]** is the skeleton of the message for the notifier
 -   `force`   (optional, default `false`)
--   `if` **[Boolean][148]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
+-   `if` **[Boolean][150]** force = true means the Notifiers will be added without the system actual checking these are real Notifiers. By default force = false;
 
 #### Examples
 
@@ -416,6 +418,10 @@ TODO: Needs documentation
 
 TODO: Needs documentation
 
+### Parameters
+
+-   `instanceName`  
+
 ## IsInstanceOf
 
 TODO: Needs documentation
@@ -444,7 +450,7 @@ Sets the object which represents the current Environment of the context.
 
 ### Parameters
 
--   `env` **[object][146]** is the Environemnt object to set.
+-   `env` **[object][148]** is the Environemnt object to set.
 
 ## GetNotifiers
 
@@ -465,7 +471,7 @@ Sets the object which represents the current Notifiers of the context.
 ### Parameters
 
 -   `n`  
--   `env` **[object][146]** is the array of notifiers.
+-   `env` **[object][148]** is the array of notifiers.
 
 ## AddDetectorToSubEnvironmentOnly
 
@@ -473,14 +479,14 @@ Adds a detector to an existing SubEnvironment by name. Assumes that the main Env
 
 ### Parameters
 
--   `detector` **[object][146]** is the MotionDetector object to add.
--   `force` **[boolean][148]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
--   `subEnvironment` **[object][146]** is the Environment name to add  to, within the MultiEnvironment, if it is a string
+-   `detector` **[object][148]** is the MotionDetector object to add.
+-   `force` **[boolean][150]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironment` **[object][148]** is the Environment name to add  to, within the MultiEnvironment, if it is a string
     the system will search for an existing sub-environment. If it is an actual environment uses that instance.
 -   `checkMulti`   (optional, default `true`)
--   `if` **[boolean][148]** false, will not check if there is already an existing MultiEnvironment in the context;
+-   `if` **[boolean][150]** false, will not check if there is already an existing MultiEnvironment in the context;
 
-Returns **[Boolean][148]** true if the detector is successfully created.
+Returns **[Boolean][150]** true if the detector is successfully created.
 
 ## AddDetectorToSubEnvironmentOnly
 
@@ -488,11 +494,11 @@ Adds a detector to a SubEnvironment. Assumes that the main Environment is a Mult
 
 ### Parameters
 
--   `detector` **[object][146]** is the MotionDetector object to add.
--   `force` **[boolean][148]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
--   `subEnvironment` **[string][149]** is the Environment to add  to, within the MultiEnvironment
+-   `detector` **[object][148]** is the MotionDetector object to add.
+-   `force` **[boolean][150]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironment` **[string][151]** is the Environment to add  to, within the MultiEnvironment
 
-Returns **[Boolean][148]** true if the detector is successfully created.
+Returns **[Boolean][150]** true if the detector is successfully created.
 
 ## SystemEnvironment
 
@@ -504,7 +510,7 @@ System additional info such as memory used, free memory and cpu usage
 
 ### Parameters
 
--   `command` **[String][149]** is a command to execute
+-   `command` **[String][151]** is a command to execute
 -   `interval`   (optional, default `0`)
 -   `killAfter`   (optional, default `0`)
 -   `an` **int** interval in milliseconds to execute the commands, if = 0 only executes once, by default is 0
@@ -529,13 +535,13 @@ via executing commands on the command line
 In order to work requires iobroker (see iobroker.net) to be installed, otherwise
 the executed commands will result in error. The constructor checks if the iobroker
 daemon exists. For more information on the iobroker commands visit:
-[https://github.com/ioBroker/ioBroker/wiki/Console-commands][150]
+[https://github.com/ioBroker/ioBroker/wiki/Console-commands][152]
 For the NPM package and installation details visit:
-[https://www.npmjs.com/package/iobroker][151]
+[https://www.npmjs.com/package/iobroker][153]
 
 ### Parameters
 
--   `callback` **[Function][152]** is the function to execute after initialization, it passes
+-   `callback` **[Function][154]** is the function to execute after initialization, it passes
     the list of items as the first argument (equivalent to doing "iobroker list" in command
     line).
 
@@ -558,9 +564,9 @@ returns true.
 
 ### Parameters
 
--   `filter` **[object][146]** object to add. This function is internal (optional, default `new filters.BaseFilter()`)
+-   `filter` **[object][148]** object to add. This function is internal (optional, default `new filters.BaseFilter()`)
 
-Returns **[Boolean][148]** true if the filters were binded to the existing detectors.
+Returns **[Boolean][150]** true if the filters were binded to the existing detectors.
 
 ## \_InternalAddEnvironment
 
@@ -569,9 +575,9 @@ if fails silently, logs the error in the logger and returns false.
 
 ### Parameters
 
--   `env` **[object][146]** is the Environment object to add. This function is internal (optional, default `new ent.Environment()`)
+-   `env` **[object][148]** is the Environment object to add. This function is internal (optional, default `new ent.Environment()`)
 
-Returns **[Boolean][148]** true if the environment is successfully created.
+Returns **[Boolean][150]** true if the environment is successfully created.
 
 ## AddNotifier
 
@@ -581,11 +587,11 @@ of the correct type, by setting force = true
 
 ### Parameters
 
--   `notifier` **[object][146]** is the Notifier object to add.
--   `template` **[object][146]** is the template message for the notifier, in case it triggers.
--   `force` **[boolean][148]** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
+-   `notifier` **[object][148]** is the Notifier object to add.
+-   `template` **[object][148]** is the template message for the notifier, in case it triggers.
+-   `force` **[boolean][150]** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
 
-Returns **[Boolean][148]** true if the notifier is successfully created.
+Returns **[Boolean][150]** true if the notifier is successfully created.
 
 ## AddNotifierToSubEnvironment
 
@@ -595,12 +601,12 @@ of the correct type, by setting force = true
 
 ### Parameters
 
--   `notifier` **[object][146]** is the Notifier object to add.
+-   `notifier` **[object][148]** is the Notifier object to add.
 -   `subEnvironmentName`  
--   `template` **[object][146]** is the template message for the notifier, in case it triggers.
--   `force` **[boolean][148]** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
+-   `template` **[object][148]** is the template message for the notifier, in case it triggers.
+-   `force` **[boolean][150]** can be set to true to push the notifier even if not of {BaseNotifier} instance (optional, default `false`)
 
-Returns **[Boolean][148]** true if the notifier is successfully created.
+Returns **[Boolean][150]** true if the notifier is successfully created.
 
 ## AddDetector
 
@@ -613,11 +619,11 @@ Fails hard (throws an Error) if there is no existing {Environment} set in the co
 
 ### Parameters
 
--   `detector` **[object][146]** is the MotionDetector object to add.
--   `force` **[boolean][148]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
--   `subEnvironmentName` **[string][149]** is the name of a Sub-Environment existing instance
+-   `detector` **[object][148]** is the MotionDetector object to add.
+-   `force` **[boolean][150]** can be set to true to push the detector even if not of {MotionDetector} instance (optional, default `false`)
+-   `subEnvironmentName` **[string][151]** is the name of a Sub-Environment existing instance
 
-Returns **[Boolean][148]** true if the detector is successfully created.
+Returns **[Boolean][150]** true if the detector is successfully created.
 
 ## DeactivateDetector
 
@@ -626,7 +632,7 @@ Fails hard (throws an Error) if a {MotionDetector} with that name is not found a
 
 ### Parameters
 
--   `name` **[string][149]** is the name of the {MotionDetector} to deactivate.
+-   `name` **[string][151]** is the name of the {MotionDetector} to deactivate.
 
 ## ActivateDetector
 
@@ -635,7 +641,7 @@ Fails hard (throws an Error) if a {MotionDetector} with that name is not found a
 
 ### Parameters
 
--   `name` **[string][149]** is the name of the {MotionDetector} to deactivate.
+-   `name` **[string][151]** is the name of the {MotionDetector} to deactivate.
 
 ## RemoveNotifier
 
@@ -644,7 +650,7 @@ Does not fail if the notifier is not found.
 
 ### Parameters
 
--   `notifier` **[object][146]** is the notifier instance to remove.
+-   `notifier` **[object][148]** is the notifier instance to remove.
 -   `silent`   (optional, default `false`)
 -   `sileng` **booleal** states if = true the removal should not send a notification
 
@@ -657,7 +663,7 @@ Does not fail if the detector is not found.
 
 ### Parameters
 
--   `detector` **[object][146]** is the MotionDetector instance to remove.
+-   `detector` **[object][148]** is the MotionDetector instance to remove.
 
 Returns **any** true if the detector was found (and subsequently removed).
 
@@ -691,7 +697,7 @@ Will throw an exception if there is no Motion detector with such name.
 
 ### Parameters
 
--   `name` **[string][149]** is the name of the MotionDetector instance to get.
+-   `name` **[string][151]** is the name of the MotionDetector instance to get.
 
 Returns **any** a MotionDetector objects.
 
@@ -699,7 +705,7 @@ Returns **any** a MotionDetector objects.
 
 Gets all the existing Filters present in the current context.
 
-Returns **[object][146]** an Array of Filter objects.
+Returns **[object][148]** an Array of Filter objects.
 
 ## Reset
 
@@ -712,11 +718,11 @@ to use {StartWithConfig} instead.
 
 ### Parameters
 
--   `params` **[object][146]** is a parameters object, any object which contains the following attributes: \\n
+-   `params` **[object][148]** is a parameters object, any object which contains the following attributes: \\n
     (1) an "environment" attribute with the {Environment} object to set; \\n
     (2) an "initialMotionDetector" attribute with one {MotionDetector} object to set (does not allow several motion detectors); \\n
     (3) an "initialNotifier" attribute with the {Notifier} object to set (does not allow several notifiers); \\n
--   `silent` **[string][149]** if set to true will not send an initial notification to notifiers when starting up (by default is set to false). (optional, default `false`)
+-   `silent` **[string][151]** if set to true will not send an initial notification to notifiers when starting up (by default is set to false). (optional, default `false`)
 
 ## \_StartPlugins
 
@@ -742,8 +748,8 @@ In the end executes a callback.
 
 ### Parameters
 
--   `configParams` **[Config][153]** a parameter object of the {Config} instance.
--   `callback` **[Function][152]** is a function which will be called after all initialization is done.\\n
+-   `configParams` **[Config][155]** a parameter object of the {Config} instance.
+-   `callback` **[Function][154]** is a function which will be called after all initialization is done.\\n
     args passed to that callback function, are: Environment, MotionDetectors, Notifiers and Filters objects.
     The correct way of initializing the program is by puting the main code inside that callback.
 
@@ -772,9 +778,9 @@ to the current context
 
 ### Parameters
 
--   `f` **[object][146]** is the factory instance.
--   `p` **[object][146]** is an object name to instanciate.
--   `args` **[Array][147]** is an array of arguments for the constructor invoke..
+-   `f` **[object][148]** is the factory instance.
+-   `p` **[object][148]** is an object name to instanciate.
+-   `args` **[Array][149]** is an array of arguments for the constructor invoke..
 
 ## Config
 
@@ -783,9 +789,9 @@ Collaborator: Environment
 
 ### Parameters
 
--   `profile` **[String][149]** is the path of the config file to use
--   `prepend_cwd` **[boolean][148]** tells if the config class should prepend CWD to the profile path or not (optional, default `true`)
--   `forceAdds` **[boolean][148]** if true means that all Entities in config should be added forcibly independent of being of the correct type. (optional, default `false`)
+-   `profile` **[String][151]** is the path of the config file to use
+-   `prepend_cwd` **[boolean][150]** tells if the config class should prepend CWD to the profile path or not (optional, default `true`)
+-   `forceAdds` **[boolean][150]** if true means that all Entities in config should be added forcibly independent of being of the correct type. (optional, default `false`)
 
 ### Examples
 
@@ -793,7 +799,7 @@ Collaborator: Environment
 let alternativeConfig = new main.Config("config_test1.js");
 ```
 
-Returns **[Object][146]** the config object itself
+Returns **[Object][148]** the config object itself
 
 ### mapToFile
 
@@ -825,7 +831,7 @@ TODO:
 -   `profile_name`  
 -   `prop`  
 
-Returns **[String][149]** the
+Returns **[String][151]** the
 
 ### slackHook
 
@@ -833,9 +839,9 @@ Direct assessor to the slackHook ({SlackMotionDetector}), if that exists on the 
 
 #### Parameters
 
--   `profile_name` **[String][149]** , the name of the profile to lookup into (default is "default")
+-   `profile_name` **[String][151]** , the name of the profile to lookup into (default is "default")
 
-Returns **[String][149]** the slackhook string
+Returns **[String][151]** the slackhook string
 
 ### slackAuth
 
@@ -843,9 +849,9 @@ Direct assessor to the slackAuth ({SlackMotionDetector}), if that exists on the 
 
 #### Parameters
 
--   `profile_name` **[String][149]** , the name of the profile to lookup into (default is "default")
+-   `profile_name` **[String][151]** , the name of the profile to lookup into (default is "default")
 
-Returns **[String][149]** profile_name, the slackhook string
+Returns **[String][151]** profile_name, the slackhook string
 
 ### raspistillOptions
 
@@ -859,7 +865,7 @@ TODO:
 
 Returns the string path of the Config file the current object points to.
 
-Returns **[String][149]** the string representation, in this case the file record pointing to
+Returns **[String][151]** the string representation, in this case the file record pointing to
 
 ## SaveAllToConfig
 
@@ -867,46 +873,19 @@ Saves all the Environment, Detector, Notifiers and Filters information into a co
 
 ### Parameters
 
--   `src` **[String][149]** is the path of the config file to use
--   `callback` **[Function][152]** is the callback function to call once the Save is all done, it passes
+-   `src` **[String][151]** is the path of the config file to use
+-   `callback` **[Function][154]** is the callback function to call once the Save is all done, it passes
     status and message as arguments to the function: \\m
     status = 0: Successfully has performed the action.
     status = 1: Error: File exists already.
--   `force` **[Boolean][148]** true if the user wants to overwrite an already existing file. (optional, default `false`)
+-   `force` **[Boolean][150]** true if the user wants to overwrite an already existing file. (optional, default `false`)
 
 ## \_InternalSerializeCurrentContext
 
 Internal function which serializes the current Context into the format matching the "profile" object 
 of the config file.
 
-Returns **[object][146]** Returns a "profile" object in JSON.stringify format
-
-## AddPlugin
-
-Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
-makes the added module available from the "plugins" varible, and adds its functions to vermon;
-
-### Parameters
-
--   `ext_module` **[Object][146]** is the actual module we are extending.
-
-Returns **[boolean][148]** True the plugin was successfully added.
-
-## RemovePlugin
-
-Removes an existing Extention plugin from the library
-
-### Parameters
-
--   `ext_module_id` **[string][149]** is the id of the module to remove.
-
-Returns **[boolean][148]** True the plugin was successfully removed.
-
-## GetPlugins
-
-Gets the existing extension plugins added to the library
-
-Returns **[object][146]** the plugins object;
+Returns **[object][148]** Returns a "profile" object in JSON.stringify format
 
 ## Entities
 
@@ -923,6 +902,40 @@ Exposes the command line library (node-cmd) accessible
 ## Cli
 
 Exposes a CLI tool based on 'commander' node package
+
+## AddPlugin
+
+Adds an Extention plugin to the library. This means it runs the Pre and Post Plugin functions,
+makes the added module available from the "plugins" varible, and adds its functions to vermon;
+IMPORTANT: If you want the plugin to be able to access the parent's functions via the '\_' accessor
+Do not use this function but use vermon.use(&lt;your_plugin>) instead.
+
+### Parameters
+
+-   `ext_module` **[Object][148]** is the actual module we are extending.
+-   `parent`  
+
+Returns **[boolean][150]** True the plugin was successfully added.
+
+## RemovePlugin
+
+Removes an existing Extention plugin from the library
+
+### Parameters
+
+-   `ext_module_id` **[string][151]** is the id of the module to remove.
+
+Returns **[boolean][150]** True the plugin was successfully removed.
+
+## GetPlugins
+
+Gets the existing extension plugins added to the library
+
+Returns **[object][148]** the plugins object;
+
+## ResetPlugins
+
+Removes all existing plugins
 
 [1]: #environment
 
@@ -1040,192 +1053,196 @@ Exposes a CLI tool based on 'commander' node package
 
 [58]: #getextensions
 
-[59]: #isinstanceof
+[59]: #parameters-23
 
-[60]: #parameters-23
+[60]: #isinstanceof
 
-[61]: #getenvironment
+[61]: #parameters-24
 
-[62]: #getenvironment-1
+[62]: #getenvironment
 
-[63]: #setenvironment
+[63]: #getenvironment-1
 
-[64]: #parameters-24
+[64]: #setenvironment
 
-[65]: #getnotifiers
+[65]: #parameters-25
 
-[66]: #getnotifiers-1
+[66]: #getnotifiers
 
-[67]: #setnotifiers
+[67]: #getnotifiers-1
 
-[68]: #parameters-25
+[68]: #setnotifiers
 
-[69]: #adddetectortosubenvironmentonly
+[69]: #parameters-26
 
-[70]: #parameters-26
+[70]: #adddetectortosubenvironmentonly
 
-[71]: #adddetectortosubenvironmentonly-1
+[71]: #parameters-27
 
-[72]: #parameters-27
+[72]: #adddetectortosubenvironmentonly-1
 
-[73]: #systemenvironment
+[73]: #parameters-28
 
-[74]: #parameters-28
+[74]: #systemenvironment
 
-[75]: #multienvironment
+[75]: #parameters-29
 
-[76]: #parameters-29
+[76]: #multienvironment
 
-[77]: #iobrokerdetector
+[77]: #parameters-30
 
-[78]: #parameters-30
+[78]: #iobrokerdetector
 
-[79]: #startmonitoring
+[79]: #parameters-31
 
-[80]: #basefilter
+[80]: #startmonitoring
 
-[81]: #parameters-31
+[81]: #basefilter
 
-[82]: #_internaladdfilter
+[82]: #parameters-32
 
-[83]: #parameters-32
+[83]: #_internaladdfilter
 
-[84]: #_internaladdenvironment
+[84]: #parameters-33
 
-[85]: #parameters-33
+[85]: #_internaladdenvironment
 
-[86]: #addnotifier
+[86]: #parameters-34
 
-[87]: #parameters-34
+[87]: #addnotifier
 
-[88]: #addnotifiertosubenvironment
+[88]: #parameters-35
 
-[89]: #parameters-35
+[89]: #addnotifiertosubenvironment
 
-[90]: #adddetector
+[90]: #parameters-36
 
-[91]: #parameters-36
+[91]: #adddetector
 
-[92]: #deactivatedetector
+[92]: #parameters-37
 
-[93]: #parameters-37
+[93]: #deactivatedetector
 
-[94]: #activatedetector
+[94]: #parameters-38
 
-[95]: #parameters-38
+[95]: #activatedetector
 
-[96]: #removenotifier
+[96]: #parameters-39
 
-[97]: #parameters-39
+[97]: #removenotifier
 
-[98]: #removedetector
+[98]: #parameters-40
 
-[99]: #parameters-40
+[99]: #removedetector
 
-[100]: #getsubenvironments
+[100]: #parameters-41
 
-[101]: #getsubenvironment
+[101]: #getsubenvironments
 
-[102]: #parameters-41
+[102]: #getsubenvironment
 
-[103]: #getmotiondetectors
+[103]: #parameters-42
 
-[104]: #getmotiondetector
+[104]: #getmotiondetectors
 
-[105]: #parameters-42
+[105]: #getmotiondetector
 
-[106]: #getfilters
+[106]: #parameters-43
 
-[107]: #reset-1
+[107]: #getfilters
 
-[108]: #start
+[108]: #reset-1
 
-[109]: #parameters-43
+[109]: #start
 
-[110]: #_startplugins
+[110]: #parameters-44
 
-[111]: #parameters-44
+[111]: #_startplugins
 
-[112]: #startwithconfig
+[112]: #parameters-45
 
-[113]: #parameters-45
+[113]: #startwithconfig
 
-[114]: #examples-6
+[114]: #parameters-46
 
-[115]: #_addinstance
+[115]: #examples-6
 
-[116]: #parameters-46
+[116]: #_addinstance
 
-[117]: #config
+[117]: #parameters-47
 
-[118]: #parameters-47
+[118]: #config
 
-[119]: #examples-7
+[119]: #parameters-48
 
-[120]: #maptofile
+[120]: #examples-7
 
-[121]: #parameters-48
+[121]: #maptofile
 
-[122]: #isfallback
+[122]: #parameters-49
 
-[123]: #profile
+[123]: #isfallback
 
-[124]: #parameters-49
+[124]: #profile
 
-[125]: #getproperty
+[125]: #parameters-50
 
-[126]: #parameters-50
+[126]: #getproperty
 
-[127]: #slackhook
+[127]: #parameters-51
 
-[128]: #parameters-51
+[128]: #slackhook
 
-[129]: #slackauth
+[129]: #parameters-52
 
-[130]: #parameters-52
+[130]: #slackauth
 
-[131]: #raspistilloptions
+[131]: #parameters-53
 
-[132]: #parameters-53
+[132]: #raspistilloptions
 
-[133]: #tostring
+[133]: #parameters-54
 
-[134]: #savealltoconfig
+[134]: #tostring
 
-[135]: #parameters-54
+[135]: #savealltoconfig
 
-[136]: #_internalserializecurrentcontext
+[136]: #parameters-55
 
-[137]: #addplugin
+[137]: #_internalserializecurrentcontext
 
-[138]: #parameters-55
+[138]: #entities
 
-[139]: #removeplugin
+[139]: #extensions
 
-[140]: #parameters-56
+[140]: #cmd
 
-[141]: #getplugins
+[141]: #cli
 
-[142]: #entities
+[142]: #addplugin
 
-[143]: #extensions
+[143]: #parameters-56
 
-[144]: #cmd
+[144]: #removeplugin
 
-[145]: #cli
+[145]: #parameters-57
 
-[146]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[146]: #getplugins
 
-[147]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[147]: #resetplugins
 
-[148]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[148]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[149]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[149]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[150]: https://github.com/ioBroker/ioBroker/wiki/Console-commands
+[150]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[151]: https://www.npmjs.com/package/iobroker
+[151]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[152]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[152]: https://github.com/ioBroker/ioBroker/wiki/Console-commands
 
-[153]: #config
+[153]: https://www.npmjs.com/package/iobroker
+
+[154]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[155]: #config

@@ -7,6 +7,13 @@ class MissingConfigError extends Error {
   }
 }
 
+class MissingPluginError extends Error {
+  constructor(message = "vernon.use or (internal) AddPlugin requires a Plugin module as first argument.") {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
 class TypeConfigError extends Error {
   constructor(message) {
     super(message);
@@ -16,3 +23,4 @@ class TypeConfigError extends Error {
 
 exports.MissingConfigError = MissingConfigError;
 exports.TypeConfigError = TypeConfigError;
+exports.MissingPluginError = MissingPluginError;
