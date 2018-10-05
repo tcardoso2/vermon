@@ -9,7 +9,7 @@ mocha test/internal-multi-environment-specs.js &&
 mocha test/internal-notifier-specs.js &&
 mocha test/internal-pir-detector-specs.js &&
 #mocha test/internal-raspistill-notifier-specs.js &&
-mocha test/internal-setup-specs.js &&
+#mocha test/internal-setup-specs.js &&
 mocha test/internal-slack-notifier-specs.js 
 mocha test/internal-multi-environment-specs.js 
 mocha test/vermon --exit
