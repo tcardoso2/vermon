@@ -25,11 +25,26 @@ describe("Basic new syntax, ", function() {
 	});
 	
 	it('configure: If no custom config parameters are passed, the configured profile will fallback to default, which is whatever you have on the root config.js file', function () {
+		vermon.reset();
 		vermon.configure();
 		vermon.profile().should.be.eql(defaultConfig.default);
 	});
 
+	it('configure: Can take a Config object as first parameter', function () {
+		vermon.reset();
+		vermon.configure(new vermon.Config());
+		vermon.profile().should.be.eql(defaultConfig.default);
+	});
+
+	it('configure: Can take a string of the path for the config as first parameter', function () {
+		vermon.reset();
+		vermon.configure('test/config_test4.js');
+		let testConfig4 = require("../config_test4.js");
+		vermon.profile().should.be.eql(testConfig4.default);
+	});
+
 	it('watch (replacer for former StartWithConfig)', function (done) {
+		vermon.reset();
 		vermon.configure();
 		vermon.watch().then((environment)=>{
 	  	logger.info(`Watching environment ${environment.name}.`);

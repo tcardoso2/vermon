@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.7: vermon.configure(arg) can now take a path to the configuration file as the first argument, added also unit test;    
 * v 0.6.6: Minor fixes;  
 * v 0.6.5: Rremoved setup tests because those hog the terminal (don't fail, but expect user input);  
 * v 0.6.4: Refactored Adding plugin tests. Created PluginManager to isolate plugin related stuff;  

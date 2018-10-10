@@ -520,9 +520,13 @@ function configure(configParams = new Config())
 {
   log.info("Configuring vermon...");
 
+  if(typeof configParams == "string"){
+    log.info(`Received a string as first argument will attempt to find and create the config instance ${configParams}...`)
+    configParams = new Config(configParams);
+  }
   if(!(configParams instanceof Config))
   {
-    throw new errors.TypeConfigError("vernon.configure() requires a Config type object as first argument.");
+    throw new errors.TypeConfigError("vermon.configure() requires a Config type object as first argument.");
   }
   //Should now instanciate the objects if they exist in the default profile, config is a singleton
   config = configParams;
@@ -533,7 +537,7 @@ function profile(){
   if(config && config.profile){
     return config.profile();
   } else {
-    throw new errors.MissingConfigError("Config profile is missing. Run vernon.configure() first.");
+    throw new errors.MissingConfigError("Config profile is missing. Run vermon.configure() first.");
   }
 }
 
