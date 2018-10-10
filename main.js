@@ -508,12 +508,12 @@ function StartWithConfig(configParams, callback){
   }
 }
 
-function watch(callback)
+function watch()
 {
   return new Promise((resolve,reject) => {
     try{
       StartWithConfig(undefined, (e, m, n, f)=>{
-        resolve(e, m, n, f);
+        resolve({ environment: e, detectors: m, notifiers: n, filters: f });
       });
     } catch (e) {
       reject(e);

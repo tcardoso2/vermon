@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.9: Fixed promisefrom main routine which can only take one argument, merged all Environment, detectors, notifiers and filters into one dictionary to allow resolving;  
 * v 0.6.8: Updated utils, the logger, to make sure trace level is able to be changed. Change with vermon.Utils.setLogLevel(level);  
 * v 0.6.7: vermon.configure(arg) can now take a path to the configuration file as the first argument, added also unit test;    
 * v 0.6.6: Minor fixes;  
