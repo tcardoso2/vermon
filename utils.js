@@ -32,6 +32,7 @@ exports = module.exports = {
   },
   log: log,
   setLevel: (traceLevel) => {
+    log.warn(`Setting log level to ${traceLevel}.`)
     log = tracer.colorConsole({level: traceLevel});
     log.warning = log.warn;
     return log;

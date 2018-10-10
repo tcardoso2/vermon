@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.6: Minor fixes;  
 * v 0.6.5: Rremoved setup tests because those hog the terminal (don't fail, but expect user input);  
 * v 0.6.4: Refactored Adding plugin tests. Created PluginManager to isolate plugin related stuff;  
 * v 0.6.3: (WIP) started working on terminal menu;  

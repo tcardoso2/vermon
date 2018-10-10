@@ -17,7 +17,7 @@ function AddPlugin(ext_module, parent){
   let runPreWorkflowFunctions = function(){
     log.info(`Attempting to run PreAddPlugin for ${ext_module.id}...`);
     if(!ext_module.PreAddPlugin) throw new Error("Error: PreAddPlugin function must be implemented.");
-    ext_module.PreAddPlugin(module.exports);
+    ext_module.PreAddPlugin(parent, new parent.Entities.EntitiesFactory());
   }
 
   let runPostWorkflowFunctions = function(){
