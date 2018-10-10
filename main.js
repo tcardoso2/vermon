@@ -45,6 +45,7 @@ var log = utils.setLevel('warn');
 function _InternalAddFilter(filter = new filters.BaseFilter()){
   if (filter instanceof filters.BaseFilter)
   {
+    log.debug("'filter' object is of type BaseFilter, binding to detectors...");
     filter.bindToDetectors(motionDetectors);
     return true;
   } else {
@@ -304,6 +305,7 @@ function GetNotifiers()
  */
 function GetMotionDetectors()
 {
+  log.debug(`Getting ${motionDetectors.length} detectors...`);
   return motionDetectors;
 }
 
@@ -329,10 +331,12 @@ function GetMotionDetector(name)
 function GetFilters()
 {
   let result = [];
+  log.debug(`Fetching filters in the existing ${motionDetectors.length} detector(s)...`);
   for (let i in motionDetectors)
   {
     result = result.concat(motionDetectors[i].filters);
   }
+  log.debug(`Getting ${result.length} filters...`);
   return result;
 }
 
@@ -493,11 +497,12 @@ function StartWithConfig(configParams, callback){
       }
     }
   }
-  _StartPlugins(em.GetEnvironment(),GetMotionDetectors(),GetNotifiers(),GetFilters());
+  let _filters = GetFilters();
+  _StartPlugins(em.GetEnvironment(),GetMotionDetectors(),GetNotifiers(),_filters);
 
   log.info("ready. returning to callback...");
   if (callback){ 
-    callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), GetFilters());
+    callback(GetEnvironment(), GetMotionDetectors(), GetNotifiers(), _filters);
   } else {
     log.warn("No callback was provided, ignoring...");
   }
@@ -560,10 +565,13 @@ function _AddInstance(f, p, args){
   let o = f.instanciate(p, args);
   //The way this is written, forces the environment to be created first
   if(!_InternalAddEnvironment(o)){
+    log.debug("Object is not of Environment type... checking if is a Notifier");
     if (!AddNotifier(o)){
+      log.debug("Object is not of Notifier type... checking if is a Detector");
       if(!AddDetector(o, config.forceAdds)){
+        log.debug("Object is not of Detector type... checking if is a Filter");
         if(!_InternalAddFilter(o)){
-          log.warn(chalk.yellow(`Object/class '${p}' could not be added. Proceeding.`));
+          log.warn(chalk.yellow(`Object/class '${p}' is not of any type, could not be added. Proceeding.`));
         }
       }
     }

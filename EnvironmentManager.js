@@ -16,6 +16,8 @@ let notifiers = [];
  */
 function GetEnvironment()
 {
+  log.debug("Getting the environment: ");
+  log.debug(environment);
   return environment; 
 }
 
@@ -26,6 +28,7 @@ function GetEnvironment()
  */
 function SetEnvironment(env)
 {
+  log.debug(`Setting the environment to ${env}...`);
   environment = env;
 }
 
@@ -36,6 +39,7 @@ function SetEnvironment(env)
  */
 function GetNotifiers()
 {
+  log.debug(`Getting ${notifiers.length} notifiers...`);
   return notifiers; 
 }
 
@@ -47,6 +51,7 @@ function GetNotifiers()
  */
 function SetNotifiers(n)
 {
+  log.debug(`Setting the notifiers to ${n}...`);
   notifiers = n;
 }
 /**
