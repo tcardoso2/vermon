@@ -5,8 +5,15 @@
 //
 let flatted = require('flatted');
 let tracer = require('tracer');
-let log = tracer.colorConsole({level:'warn'}); //trace level
+let log = tracer.colorConsole({level:'trace'}); //initialization requires it to go to trace level, can go up but not down, see https://www.npmjs.com/package/tracer
 log.warning = log.warn;
+tracer.setLevel('warn'); //Will start with this level
+tracer.console({
+  inspectOpt: {
+      showHidden : true, //the object's non-enumerable properties will be shown too
+      depth : 5 //tells inspect how many times to recurse while formatting the object. This is useful for inspecting large complicated objects. Defaults to 2. To make it recurse indefinitely pass null.
+  }
+});
 
 exports = module.exports = {
 
@@ -32,9 +39,10 @@ exports = module.exports = {
   },
   log: log,
   setLevel: (traceLevel) => {
+    //This is required to reset the current instance
+    console.log(tracer.setLevel);
     log.warn(`Setting log level to ${traceLevel}.`)
-    log = tracer.colorConsole({level: traceLevel});
-    log.warning = log.warn;
+    tracer.setLevel(traceLevel);
     return log;
   },
   getArgs: (func) => {
