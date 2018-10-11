@@ -45,19 +45,13 @@ exports = module.exports = {
     tracer.setLevel(traceLevel);
     return log;
   },
-  getArgs: (func) => {
-    if(func){
-      // First match everything inside the function argument parens.
-      var args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
-    
-      // Split the arguments string into an array comma delimited.
-      return args.split(',').map(function(arg) {
-        // Ensure no inline comments are parsed and trim the whitespace.
-        return arg.replace(/\/\*.*\*\//, '').trim();
-      }).filter(function(arg) {
-        // Ensure no undefined values are added.
-        return arg;
-      });
-      }
+  splitArgs(func) {  
+    return (func + '')
+      .replace(/[/][/].*$/mg,'') // strip single-line comments
+      .replace(/\s+/g, '') // strip white space
+      .replace(/[/][*][^/*]*[*][/]/g, '') // strip multi-line comments  
+      .split('){', 1)[0].replace(/^[^(]*[(]/, '') // extract the parameters  
+      .replace(/=[^,]+/g, '') // strip any ES6 defaults  
+      .split(',').filter(Boolean); // split & filter [""]
   }
 }

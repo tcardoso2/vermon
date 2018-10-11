@@ -738,9 +738,10 @@ function GetExtensionsMetadata(instanceName){
   let factory = new EntitiesFactory();
   for (let c in result){
     if(result[c].prototype._metadata){
-      ChangeMetadataExtension(result, c, (someInputs) => { 
-        console.log("&&&&&&&&&&&&&&&&&&&&&&", utils.getArgs(result[c]));
-        factory.instanciate(c, { inputs: 0 }); //Continue from here!
+      ChangeMetadataExtension(result, c, (objToInstanciate) => { 
+        let args = utils.splitArgs(objToInstanciate);
+        console.log(">>>>>>", args);
+        factory.instanciate(c, args); //Continue from here!
       });
     }
   }
@@ -749,7 +750,10 @@ function GetExtensionsMetadata(instanceName){
 
 function ChangeMetadataExtension(extensions, instanceName, handler){
   //Create a new key
-  extensions[instanceName + ": " + extensions[instanceName].prototype._metadata()] = handler;
+  let classRequired = extensions[instanceName];
+  extensions[instanceName + ": " + classRequired.prototype._metadata()] = () => {
+    handler(classRequired);
+  };
   //...and delete the old one
   delete extensions[instanceName];
 }
