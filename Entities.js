@@ -718,7 +718,8 @@ handle_declarative_pattern(prop, all){
  /**
  * TODO: Needs documentation
  */
-//Extending Factory methods
+//Gets the existing entities which are an instance of (sub-classes
+//of the 'instanceName' class name
 function GetExtensions(instanceName){
   let result = {};
   if (instanceName){
@@ -733,21 +734,43 @@ function GetExtensions(instanceName){
   return result;
 }
 
-function GetExtensionsMetadata(instanceName){
+//Gets the metadata pf the instanceName
+function GetExtensionsMetadata(instanceName, cb){
   let result = GetExtensions(instanceName);
   let factory = new EntitiesFactory();
   for (let c in result){
     if(result[c].prototype._metadata){
-      ChangeMetadataExtension(result, c, (objToInstanciate) => { 
-        let args = utils.splitArgs(objToInstanciate);
-        console.log(">>>>>>", args);
-        factory.instanciate(c, args); //Continue from here!
+      ChangeMetadataExtension(result, c, (literalClass) => { 
+        let args = utils.splitArgs(literalClass);
+        //console.log(">>>>>>", args);
+        //factory.instanciate(c, args);
+        if (cb){
+          cb(MetadataClassArguments(args));
+        }
+        else {
+          return MetadataClassArguments(args);
+        }
       });
     }
   }
   return result;
 }
 
+//Returns a list of functions which run when an argument is selected
+function MetadataClassArguments(args){
+  let result = {
+    message: "Class arguments",
+    choices: {}
+  }
+  for (let i in args){
+    result.choices[args[i]] = () => { //continue from here 
+    }
+  }
+  return result;
+  //Continue from here
+}
+
+//Appends metadata to the instance names belonging inside the extensions
 function ChangeMetadataExtension(extensions, instanceName, handler){
   //Create a new key
   let classRequired = extensions[instanceName];

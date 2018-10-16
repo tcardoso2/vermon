@@ -1,4 +1,4 @@
-
+#!/bin/node
 /*
  * initial screen script, to be used by other scripts
  * (Except preinstall)
@@ -74,7 +74,7 @@ function getCount()
 const chooseEnvironment = {
   message: 'Select my Environment',
   choices: 
-    entities.GetExtensionsMetadata(entities.Environment)
+    entities.GetExtensionsMetadata(entities.Environment, menu)
 };
  
 const addDetectors = {
