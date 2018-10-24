@@ -46,6 +46,7 @@ exports = module.exports = {
     return log;
   },
   splitArgs(func) {  
+    //Returns array of the arguments in the class constructor
     return (func + '')
       .replace(/[/][/].*$/mg,'') // strip single-line comments
       .replace(/\s+/g, '') // strip white space

@@ -734,49 +734,25 @@ function GetExtensions(instanceName){
   return result;
 }
 
-//Gets the metadata pf the instanceName
+//Gets the metadata of the instanceName
+//Requires the parent module which is calling this to include
+//the "Metadata.js" library
 function GetExtensionsMetadata(instanceName, cb){
   let result = GetExtensions(instanceName);
   let factory = new EntitiesFactory();
   for (let c in result){
-    if(result[c].prototype._metadata){
-      ChangeMetadataExtension(result, c, (literalClass) => { 
-        let args = utils.splitArgs(literalClass);
-        //console.log(">>>>>>", args);
-        //factory.instanciate(c, args);
-        if (cb){
-          cb(MetadataClassArguments(args));
-        }
-        else {
-          return MetadataClassArguments(args);
-        }
-      });
+    if(result[c].prototype._meta){
+      ChangeMetadataExtension(result, c, result[c].prototype._meta.reflectionHandler);
     }
   }
   return result;
-}
-
-//Returns a list of functions which run when an argument is selected
-function MetadataClassArguments(args){
-  let result = {
-    message: "Class arguments",
-    choices: {}
-  }
-  for (let i in args){
-    result.choices[args[i]] = () => { //continue from here 
-    }
-  }
-  return result;
-  //Continue from here
 }
 
 //Appends metadata to the instance names belonging inside the extensions
 function ChangeMetadataExtension(extensions, instanceName, handler){
   //Create a new key
   let classRequired = extensions[instanceName];
-  extensions[instanceName + ": " + classRequired.prototype._metadata()] = () => {
-    handler(classRequired);
-  };
+  extensions[instanceName + ": " + classRequired.prototype._meta.description()] = handler(classRequired);
   //...and delete the old one
   delete extensions[instanceName];
 }
