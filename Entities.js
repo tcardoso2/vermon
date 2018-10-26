@@ -739,22 +739,22 @@ function GetExtensions(instanceName){
 //the "Metadata.js" library
 function GetExtensionsMetadata(instanceName, cb){
   let result = GetExtensions(instanceName);
-  let factory = new EntitiesFactory();
-  for (let c in result){
-    if(result[c].prototype._meta){
-      ChangeMetadataExtension(result, c, result[c].prototype._meta.reflectionHandler);
-    }
-  }
+  ChangeMetadataExtensions(result);
   return result;
 }
 
 //Appends metadata to the instance names belonging inside the extensions
-function ChangeMetadataExtension(extensions, instanceName, handler){
-  //Create a new key
-  let classRequired = extensions[instanceName];
-  extensions[instanceName + ": " + classRequired.prototype._meta.description()] = handler(classRequired);
-  //...and delete the old one
-  delete extensions[instanceName];
+function ChangeMetadataExtensions(extensions){ //, instanceName, handler){
+  for (let i in extensions){
+    let classRequired = extensions[i];
+    if(classRequired.prototype._meta){
+      let handler = classRequired.prototype._meta.reflectionHandler;
+      //Create a new key
+      extensions[i + ": " + classRequired.prototype._meta.description()] = handler(classRequired);
+      //...and delete the old one
+      delete extensions[i];
+    }
+  }
 }
 
  /**
@@ -772,7 +772,7 @@ BaseNotifier.prototype.__proto__ = events.EventEmitter.prototype;
 
 exports.GetExtensions = GetExtensions;
 exports.GetExtensionsMetadata = GetExtensionsMetadata;
-exports.ChangeMetadataExtension = ChangeMetadataExtension;
+exports.ChangeMetadataExtensions = ChangeMetadataExtensions;
 exports.Filters = filters;
 exports.EntitiesFactory = EntitiesFactory;
 exports.Environment = Environment;

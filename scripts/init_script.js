@@ -5,7 +5,8 @@
  */
 const menu = require('inquirer-menu');
 let entities = require('../Entities');
-let meta = require('../Metadata');
+let filters = require('../Filters')
+let meta = require('../Metadata'); //Imported to trigger metadata functions, but not explicitely used
 let extensions = require('../Extensions');
 const screen = [
   " __      __                             ",
@@ -73,22 +74,26 @@ function getCount()
 
 const chooseEnvironment = {
   message: 'Select my Environment',
-  choices: 
-    entities.GetExtensionsMetadata(entities.Environment, menu)
+  choices: entities.GetExtensionsMetadata(entities.Environment, menu)
 };
  
 const addDetectors = {
   message: 'Add a Detector',
-  choices: {
-    callApi: function() {
-      console.log('red-api called');
-      return;
-    }
-  }
+  choices: entities.GetExtensionsMetadata(entities.MotionDetector, menu)
 };
 
 const addNotifiers = {
   message: 'Add a Notifier',
+  choices: entities.GetExtensionsMetadata(entities.BaseNotifier, menu)
+};
+
+const addFilters = {
+  message: 'Add a Filter',
+  choices: entities.GetExtensionsMetadata(filters.BaseFilter, menu)
+};
+
+const runWithoutSaving = {
+  message: 'Run current configuration without Saving.',
   choices: {
     callApi: function() {
       console.log('red-api called');
@@ -116,7 +121,9 @@ function createMenu() {
       "Choose your Environment": chooseEnvironment,
       "Add a Detector": addDetectors,
       "Add a Notifier": addNotifiers,
-      "Save to local Config file": saveConfig
+      "Add a Filter": addFilters,
+      "Run without saving": runWithoutSaving,
+      "Save to local Config file": saveConfig,
     }
   };
 };

@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.11: Added options for adding Detectors, Notifiers, Filters (WIP);   
 * v 0.6.10: WIP on init script (CLI tool for creating Entities), needs automated tests;  
 * v 0.6.9: Fixed promisefrom main routine which can only take one argument, merged all Environment, detectors, notifiers and filters into one dictionary to allow resolving;  
 * v 0.6.8: Updated utils, the logger, to make sure trace level is able to be changed. Change with vermon.Utils.setLogLevel(level);  
