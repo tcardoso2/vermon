@@ -1,21 +1,21 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "echo t-motion"
+      command: 'echo t-motion'
     },
     MotionDetector: {
-      name: "MD 1",
+      name: 'MD 1'
     },
     BaseNotifier: {
     },
     SystemEnvironmentFilter: [
-    {
-      freeMemBelow: 1000,
-      applyTo: "MD 1",
-      stdoutMatchesRegex: "t-motion"
-    }]
+      {
+        freeMemBelow: 1000,
+        applyTo: 'MD 1',
+        stdoutMatchesRegex: 't-motion'
+      }]
   }
 }
 
-exports.profiles = profiles;
-exports.default = profiles.default;
+exports.profiles = profiles
+exports.default = profiles.default

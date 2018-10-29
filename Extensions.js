@@ -1,20 +1,19 @@
-//Extensions which use the Base entities
-//Collaborator: MotionDetector
-let ent = require("./Entities.js");
-let MotionDetector = ent.MotionDetector;
-let BaseNotifier = ent.BaseNotifier;
-var Slack = require('slack-node');
-let path = require('path');
-Slack.Upload = require('node-slack-upload');
-let fs = require('fs');
-let os = require("os");
-const Raspistill = require('node-raspistill').Raspistill;
-let chokidar = require('chokidar');
-let node_cmd = require('node-cmd');
-let moment = require('moment');
-let utils = require("./utils.js");
-let log = utils.log;
-
+// Extensions which use the Base entities
+// Collaborator: MotionDetector
+let ent = require('./Entities.js')
+let MotionDetector = ent.MotionDetector
+let BaseNotifier = ent.BaseNotifier
+var Slack = require('slack-node')
+let path = require('path')
+Slack.Upload = require('node-slack-upload')
+let fs = require('fs')
+let os = require('os')
+const Raspistill = require('node-raspistill').Raspistill
+let chokidar = require('chokidar')
+let node_cmd = require('node-cmd')
+let moment = require('moment')
+let utils = require('./utils.js')
+let log = utils.log
 
 /**
  * A Simple Command line wrapper, it executes the command mentioned after a change in the Environment
@@ -25,56 +24,55 @@ let log = utils.log;
  * @param {int} an killAfter will clear the interval and stop the command after specified number of times.
  */
 class SystemEnvironment extends ent.Environment {
-  constructor(command, interval = 0, killAfter = 0){
-    super();
-    if (!command){
-      throw new Error("ERROR: You must provide a command as the first argument.");
+  constructor (command, interval = 0, killAfter = 0) {
+    super()
+    if (!command) {
+      throw new Error('ERROR: You must provide a command as the first argument.')
     }
-    this.command = command;
-    this.interval = interval;
-    this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 };
-    this.killAfter = killAfter;
-    let m = this;
+    this.command = command
+    this.interval = interval
+    this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 }
+    this.killAfter = killAfter
+    let m = this
     let f = () => {
-      m.killAfter--;
+      m.killAfter--
       // This is executed after about x milliseconds.
-      log.info("SystemEnvironment is executing command...");
-      if ((m.interval == 0) || (m.killAfter == 0)){
-        log.info(`Clearing interval killAfter = ${killAfter}`);
-        clearInterval(m.i);
+      log.info('SystemEnvironment is executing command...')
+      if ((m.interval == 0) || (m.killAfter == 0)) {
+        log.info(`Clearing interval killAfter = ${killAfter}`)
+        clearInterval(m.i)
       }
-      m.getValues((m)=>{
-        m.addChange(m.currentState);
-      });
+      m.getValues((m) => {
+        m.addChange(m.currentState)
+      })
     }
-    if (this.interval != 0)
-    {
-      this.i = setInterval(f, this.interval < 500 ? 500 : this.interval); //interval is never below 500 millisecond for performance reasons
+    if (this.interval != 0) {
+      this.i = setInterval(f, this.interval < 500 ? 500 : this.interval) // interval is never below 500 millisecond for performance reasons
     } else {
-      f();
+      f()
     }
   }
 
-  getValues(callback){
-    let m = this;
+  getValues (callback) {
+    let m = this
     node_cmd.get(
       m.command,
-      function(err, data, stderr){
+      function (err, data, stderr) {
         m.currentState = {
-          stdout: {"err": err, "data" : data, "stderr": stderr},
+          stdout: { 'err': err, 'data': data, 'stderr': stderr },
           cpus: os.cpus(),
           totalmem: os.totalmem(),
           freemem: os.freemem(),
           timestamp: new Date()
         }
-        callback(m);
+        callback(m)
       }
-    );
+    )
   }
 
-  exit(){
-    super.exit();
-    clearInterval(this.i);
+  exit () {
+    super.exit()
+    clearInterval(this.i)
   }
 }
 
@@ -82,90 +80,85 @@ class SystemEnvironment extends ent.Environment {
  * An Environment which stores several sub-environments
  */
 class MultiEnvironment extends ent.Environment {
-  constructor(params){
-    super(params);
-    if(params && !params.state){
-      if (typeof(params) != "object"){
-        throw new Error("If args are passed into the constructor of MultiEnvironment, there should be a state property.");
+  constructor (params) {
+    super(params)
+    if (params && !params.state) {
+      if (typeof (params) !== 'object') {
+        throw new Error('If args are passed into the constructor of MultiEnvironment, there should be a state property.')
       }
-      log.warn("Seems you instantiated MultiEnvironment with parameters but did not include an initial state, I hope you know what you're doing. Proceeding...");
+      log.warn("Seems you instantiated MultiEnvironment with parameters but did not include an initial state, I hope you know what you're doing. Proceeding...")
     }
-    if(this.currentState == 0){
-      this.currentState = {};
+    if (this.currentState == 0) {
+      this.currentState = {}
     }
-    if(params){
-      this.isParameterValid(params);
-      this.convertStateToDictionary();
+    if (params) {
+      this.isParameterValid(params)
+      this.convertStateToDictionary()
     }
   }
-  isParameterValid(params)
-  {
-    if (params && params.state){
-      if (!Array.isArray(params.state)){
-        throw new Error("MultiEnvironment expects a state of type Array.");
+  isParameterValid (params) {
+    if (params && params.state) {
+      if (!Array.isArray(params.state)) {
+        throw new Error('MultiEnvironment expects a state of type Array.')
       }
-      this.validateState();
+      this.validateState()
     }
   }
-  validateState()
-  {
-    log.info(`validating environment current state...`);
-    if (this.currentState){
-      for(let i=0;i<this.currentState.length;i++){
-        if(!(this.currentState[i] instanceof ent.Environment)){
-          throw new Error(`MultiEnvironment expects a state of type Array of type Environment, found '${typeof(this.currentState[i])}'`);
+  validateState () {
+    log.info(`validating environment current state...`)
+    if (this.currentState) {
+      for (let i = 0; i < this.currentState.length; i++) {
+        if (!(this.currentState[i] instanceof ent.Environment)) {
+          throw new Error(`MultiEnvironment expects a state of type Array of type Environment, found '${typeof (this.currentState[i])}'`)
         }
       }
     } else {
-      log.info(`State is empty. Nothing to validate, ignoring...`);
+      log.info(`State is empty. Nothing to validate, ignoring...`)
     }
   }
 
-  convertStateToDictionary(){
-    log.debug(`Converting current state to Dictionary, state is ${utils.JSON.stringify(this.currentState)}...`);
-    let envs = [];
-    while (this.currentState.length > 0){
-      envs.push(this.currentState.pop());
+  convertStateToDictionary () {
+    log.debug(`Converting current state to Dictionary, state is ${utils.JSON.stringify(this.currentState)}...`)
+    let envs = []
+    while (this.currentState.length > 0) {
+      envs.push(this.currentState.pop())
     }
-    this.currentState = {}; //Conversion happens here. Current state was an Array and it is now a Dictionary
-    for(let ei in envs){
-      this.addChange(envs[ei]);
-      //This is made just to ensure that the expected property is really there
-      if (!this.currentState[envs[ei].name]){
-        throw new Error(`Conciliation Error: The object has not been correctly turned into a property: '${envs[ei].name}'`);
+    this.currentState = {} // Conversion happens here. Current state was an Array and it is now a Dictionary
+    for (let ei in envs) {
+      this.addChange(envs[ei])
+      // This is made just to ensure that the expected property is really there
+      if (!this.currentState[envs[ei].name]) {
+        throw new Error(`Conciliation Error: The object has not been correctly turned into a property: '${envs[ei].name}'`)
       }
     }
-    log.debug(`Done converting current state to Dictionary, state now is ${utils.JSON.stringify(this.currentState)}...`);
+    log.debug(`Done converting current state to Dictionary, state now is ${utils.JSON.stringify(this.currentState)}...`)
   }
 
   /*
-  * if the parameter is an Environment, stacks Sub-environments (adds as object member) 
+  * if the parameter is an Environment, stacks Sub-environments (adds as object member)
   * the states in an object instead of overriding the state. If the parameter is not of
   * type Environment then it propagates the signal to the existing sub-Environments and
   * emits an 'ignoredChange' event;
   * @param {Object} the value to add.
   */
-  addChange(intensity)
-  { 
-    log.debug(`Attempting to add sub-environment ${intensity.name}...`);
-    if(intensity instanceof ent.Environment){
-      return this.addSubEnvironment(intensity);
-    }
-    else
-    {
-      log.warn("addChange detected intensity of not type Environment. Ignoring silently...");
-      this.emit("ignoredChange", this.currentState, intensity);
-      log.debug("Emmited 'ignoredChange'...");
-      this.propagateToSubEnvironments(intensity);
+  addChange (intensity) {
+    log.debug(`Attempting to add sub-environment ${intensity.name}...`)
+    if (intensity instanceof ent.Environment) {
+      return this.addSubEnvironment(intensity)
+    } else {
+      log.warn('addChange detected intensity of not type Environment. Ignoring silently...')
+      this.emit('ignoredChange', this.currentState, intensity)
+      log.debug("Emmited 'ignoredChange'...")
+      this.propagateToSubEnvironments(intensity)
     }
   }
 
-  addSubEnvironment(subEnvironment){
-    let s = this.currentState;
-    this.addReverseReferenceTo(subEnvironment);
-    s[subEnvironment.name] = subEnvironment;
-    let result = super.addChange(s);
-    return result;
+  addSubEnvironment (subEnvironment) {
+    let s = this.currentState
+    this.addReverseReferenceTo(subEnvironment)
+    s[subEnvironment.name] = subEnvironment
+    let result = super.addChange(s)
+    return result
   }
 
   /*
@@ -173,21 +166,20 @@ class MultiEnvironment extends ent.Environment {
    * so that it can communicate with other environments
    * @param {Object} the subEnvironment where the reverse reference will be added..
    */
-  addReverseReferenceTo(subEnvironment){
-    //overrides/implements the getParentEnvironment function
-    subEnvironment.getParentEnvironment = () => { return this };
+  addReverseReferenceTo (subEnvironment) {
+    // overrides/implements the getParentEnvironment function
+    subEnvironment.getParentEnvironment = () => { return this }
   }
 
   /*
    * Calls the 'addchange' method of the sub-Environments with the given intensity
    * @param {Object} the intensity to add to propagate to the sub-environments.
    */
-  propagateToSubEnvironments(intensity)
-  {
-    let _this = this;
-    Object.keys(this.currentState).forEach(function(key) {
-      _this.currentState[key].addChange(intensity);
-    });
+  propagateToSubEnvironments (intensity) {
+    let _this = this
+    Object.keys(this.currentState).forEach(function (key) {
+      _this.currentState[key].addChange(intensity)
+    })
   }
 
   /*
@@ -196,126 +188,115 @@ class MultiEnvironment extends ent.Environment {
    * later.
    * @param {String} the name of the sub-environment
    */
-  getSubEnvironment(name){
-    return this.currentState[name];
+  getSubEnvironment (name) {
+    return this.currentState[name]
   }
 }
 
-//A concrete MotionDetector for detecting files in a folder
-class FileDetector extends MotionDetector{
-  
-  constructor(name, filePath, sendOld = false){
-    super(name);
+// A concrete MotionDetector for detecting files in a folder
+class FileDetector extends MotionDetector {
+  constructor (name, filePath, sendOld = false) {
+    super(name)
     this.watcher = chokidar.watch(filePath, {
       ignored: /[\/\\]\./, persistent: true
-    });
-    this.path = filePath;
-    this.sendOld = sendOld;
+    })
+    this.path = filePath
+    this.sendOld = sendOld
   }
-  startMonitoring(){
-    super.startMonitoring();
-    let m = this;
+  startMonitoring () {
+    super.startMonitoring()
+    let m = this
     this.watcher
-      .on('add', (path)=> {
-        fs.stat(path, (err, stats)=> {
-          if(!err)
-          {
-            if (!m.sendOld){
-              //Checks if should send old files
-              let ft = moment(stats.ctime);
-              if (ft.isBefore(moment().subtract(5, 'seconds')))
-              {
-                log.info('Ignoring old file: ', path);
-                return;
-              }
-              else {
-                log.info('>>>>>>> File', path, 'has been added'); 
-                m.send(path, m);
+      .on('add', (path) => {
+        fs.stat(path, (err, stats) => {
+          if (!err) {
+            if (!m.sendOld) {
+              // Checks if should send old files
+              let ft = moment(stats.ctime)
+              if (ft.isBefore(moment().subtract(5, 'seconds'))) {
+                log.info('Ignoring old file: ', path)
+              } else {
+                log.info('>>>>>>> File', path, 'has been added')
+                m.send(path, m)
               }
             } else {
-              m.send(path, m);
+              m.send(path, m)
             }
           }
-        });
-      })
-      .on('change', function(path) {
-        fs.stat(path, (err, stats)=> {
-          log.info('>>>>>>> File', path, 'has been changed');
-          m.send(path, m);
         })
-      });
+      })
+      .on('change', function (path) {
+        fs.stat(path, (err, stats) => {
+          log.info('>>>>>>> File', path, 'has been changed')
+          m.send(path, m)
+        })
+      })
   }
 
-  send(data, from){
-    //Only sends if the signal was detected from self and not Environment
-    if (from == this){
-      super.send(data);//Ignores signals sent from Environment
+  send (data, from) {
+    // Only sends if the signal was detected from self and not Environment
+    if (from == this) {
+      super.send(data)// Ignores signals sent from Environment
     }
   }
 }
 
-//A concrete MotionDetector class which implements a Raspberry Pi PIR sensor detector
-//Collaborator: Environment
-class PIRMotionDetector extends MotionDetector{
-  
-  constructor(pin, callback){
-    super("PIR Motion detector");
-    this.log = require("./main.js").Log;
-    var Gpio = undefined;
-    this.pir = undefined;
+// A concrete MotionDetector class which implements a Raspberry Pi PIR sensor detector
+// Collaborator: Environment
+class PIRMotionDetector extends MotionDetector {
+  constructor (pin, callback) {
+    super('PIR Motion detector')
+    this.log = require('./main.js').Log
+    var Gpio = undefined
+    this.pir = undefined
 
-    if (!pin)
-    {
-      throw new Error('ERROR: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.');
+    if (!pin) {
+      throw new Error('ERROR: You must provide a pin number for the Raspberry Pi where the PIR sensor signal is being read.')
     }
-    if (this._isRPi()){
-      Gpio = require('onoff').Gpio;
+    if (this._isRPi()) {
+      Gpio = require('onoff').Gpio
       // The following requires elevated permissions
-      try{
-        this.pir = new Gpio(pin, 'in', 'both');
-        this.log.info("Pin was set to: ", pin);
-      } catch (e){
-        this.log.error(`Error initializing pin ${pin}, do you have sufficient privileges? ${e.message}`);
+      try {
+        this.pir = new Gpio(pin, 'in', 'both')
+        this.log.info('Pin was set to: ', pin)
+      } catch (e) {
+        this.log.error(`Error initializing pin ${pin}, do you have sufficient privileges? ${e.message}`)
       }
     } else {
-      this.log.warn("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...");
+      this.log.warn("This does not seem to be an Rpi. I'll continue, but I sure hope you know what you're doing...")
     }
   }
- 
-  //Private member: Used for determining if the current host is a Raspberry pi or not
-  _isRPi()
-  {
-    //Not that perfect, work in progress...
-    return os.arch() == "arm" && os.platform() == "linux";
+
+  // Private member: Used for determining if the current host is a Raspberry pi or not
+  _isRPi () {
+    // Not that perfect, work in progress...
+    return os.arch() == 'arm' && os.platform() == 'linux'
   }
-  
-  //Starts monitoring any movement
-  startMonitoring(){
-    super.startMonitoring();
-    if(this.pir){
-      let m = this;
-      this.pir.watch(function(err, value){
-        if (err) this.exit();
-        m.log.info('Intruder was detected.');
-        if (value == 1)
-        {
-          m.send(value);
+
+  // Starts monitoring any movement
+  startMonitoring () {
+    super.startMonitoring()
+    if (this.pir) {
+      let m = this
+      this.pir.watch(function (err, value) {
+        if (err) this.exit()
+        m.log.info('Intruder was detected.')
+        if (value == 1) {
+          m.send(value)
         }
-      });
+      })
     }
   }
 
-  exit()
-  {
-    super.exit();
-    pir.unexport;
-    process.exit();
+  exit () {
+    super.exit()
+    pir.unexport
+    process.exit()
   }
 
-  //TODO: Don't like this
-  if (callback)
-  {
-    callback();
+  // TODO: Don't like this
+  if (callback) {
+    callback()
   }
 }
 
@@ -328,172 +309,160 @@ class PIRMotionDetector extends MotionDetector{
  * https://github.com/ioBroker/ioBroker/wiki/Console-commands
  * For the NPM package and installation details visit:
  * https://www.npmjs.com/package/iobroker
- * 
+ *
  * @param {Function} callback is the function to execute after initialization, it passes
  * the list of items as the first argument (equivalent to doing "iobroker list" in command
  * line).
  */
-class IOBrokerDetector extends MotionDetector{
-  
-  constructor(callback){
-    //log = utils.setLevel('info');
-    super("PIR Motion detector");
-    if (callback){
-      let d = this;
-      log.info("Executing iobroker command...");
+class IOBrokerDetector extends MotionDetector {
+  constructor (callback) {
+    // log = utils.setLevel('info');
+    super('PIR Motion detector')
+    if (callback) {
+      let d = this
+      log.info('Executing iobroker command...')
       node_cmd.get(
-        "./iobroker list instances",
-        function(err, data, stderr){
-          log.info("Received response...");
+        './iobroker list instances',
+        function (err, data, stderr) {
+          log.info('Received response...')
           d.currentIntensity = {
             instances: data
           }
-          //Remove last item bcs it's an empty string
-          callback(data.split('\n').slice(0,-1)); 
+          // Remove last item bcs it's an empty string
+          callback(data.split('\n').slice(0, -1))
         }
-      );
+      )
     }
   }
- 
-/**
+
+  /**
  * Starts the iobroker daemon on the background
  */
-  //Starts monitoring any movement
-  startMonitoring(){
-    super.startMonitoring();
+  // Starts monitoring any movement
+  startMonitoring () {
+    super.startMonitoring()
     //      m.send(value);
   }
 
-  exit()
-  {
-    super.exit();
-    //kills the iobroker service?
+  exit () {
+    super.exit()
+    // kills the iobroker service?
   }
 }
 
-class SlackNotifier extends BaseNotifier{
-  
-  constructor(name, key, auth){
-    if (!key){
-      throw new Error("'key' is a required argument, which should contain the Slack hook URL.");
+class SlackNotifier extends BaseNotifier {
+  constructor (name, key, auth) {
+    if (!key) {
+      throw new Error("'key' is a required argument, which should contain the Slack hook URL.")
     }
-    super(name);
-    this.slack = new Slack();
-    this.slack.setWebhook(key);
-    this.slackUpload = new Slack.Upload(auth);
+    super(name)
+    this.slack = new Slack()
+    this.slack.setWebhook(key)
+    this.slackUpload = new Slack.Upload(auth)
 
-    this.key = key;
+    this.key = key
   }
 
-  hasInternalObj()
-  {
-    return this.slack !== undefined;
+  hasInternalObj () {
+    return this.slack !== undefined
   }
 
-  //TODO: Fix this, too much nesting
-  notify(some_text, oldState, newState, environment, detector){
-    this.lastMessage = some_text;
+  // TODO: Fix this, too much nesting
+  notify (some_text, oldState, newState, environment, detector) {
+    this.lastMessage = some_text
     this.data = {
-          "oldState": oldState,
-          "newState": newState,
-          "detector": detector,
-          "environment": environment,
-          "notifier": this
-        };
-    let _this = this;
-    if (!(detector instanceof FileDetector))
-    {
+      'oldState': oldState,
+      'newState': newState,
+      'detector': detector,
+      'environment': environment,
+      'notifier': this
+    }
+    let _this = this
+    if (!(detector instanceof FileDetector)) {
       this.slack.webhook({
         channel: '#general',
-        icon_emoji: ":ghost:",
+        icon_emoji: ':ghost:',
         text: some_text + utils.JSON.stringify(this.newState),
-        username: this.name,
-      }, function(err, response){
-        if (!err)
-        {
-          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
+        username: this.name
+      }, function (err, response) {
+        if (!err) {
+          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data)
+        } else {
+          new Error(err)
         }
-        else
-        {
-          new Error(err);
-        } 
-      });
-    } 
-    else
-    {
-      if((typeof newState) != "string"){
-        log.info(`'${newState}' not a valid path, ignoring slack upload.`);
-        return;
+      })
+    } else {
+      if ((typeof newState) !== 'string') {
+        log.info(`'${newState}' not a valid path, ignoring slack upload.`)
+        return
       }
-      log.info("Uploading ", newState);
-      //The slack API token needs to be there: https://api.slack.com/web
+      log.info('Uploading ', newState)
+      // The slack API token needs to be there: https://api.slack.com/web
       this.slackUpload.uploadFile({
-        file: fs.createReadStream(newState), //path.join(__dirname, '.', newState)),
-        //content: 'My file contents!',
-        filetype: path.extname(newState), 
+        file: fs.createReadStream(newState), // path.join(__dirname, '.', newState)),
+        // content: 'My file contents!',
+        filetype: path.extname(newState),
         title: 'FILE',
         initialComment: 'my comment',
         channels: '#general'
-      }, function(err, data) {
+      }, function (err, data) {
         if (err) {
-          log.error(err);
+          log.error(err)
+        } else {
+          _this.data.file = data
+          log.info('Uploaded file details: ', data)
+          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data)
         }
-        else {
-          _this.data.file = data; 
-          log.info('Uploaded file details: ', data);
-          _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
-        }
-      });
+      })
     }
   }
 }
 
-class RaspistillNotifier extends BaseNotifier{
-  
-  constructor(name, fileName, options){
-    super(name);
-    this.options = options;
-    this.fileName = fileName === undefined ? "NoName" : fileName;
-    this.internalObj = new Raspistill(this.options);
+class RaspistillNotifier extends BaseNotifier {
+  constructor (name, fileName, options) {
+    super(name)
+    this.options = options
+    this.fileName = fileName === undefined ? 'NoName' : fileName
+    this.internalObj = new Raspistill(this.options)
   }
 
-  notify(some_text, oldState, newState, environment, detector){
-    this.lastMessage = some_text;
+  notify (some_text, oldState, newState, environment, detector) {
+    this.lastMessage = some_text
     this.data = {
-          "oldState": oldState,
-          "newState": newState,
-          "detector": detector,
-          "environment": environment
-        };
-    let _this = this;
+      'oldState': oldState,
+      'newState': newState,
+      'detector': detector,
+      'environment': environment
+    }
+    let _this = this
     this.internalObj.takePhoto(this.fileName)
       .then((photo) => {
-        log.info('took photo', photo);
-        _this.data.photo = photo;
-        //Will propagate to this if the pushNotification is not well handled.
-        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data); 
+        log.info('took photo', photo)
+        _this.data.photo = photo
+        // Will propagate to this if the pushNotification is not well handled.
+        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data)
       })
       .catch((error) => {
-        //It seems that sometimes errors are triggered but the component still takes the picture
-        //console.log('Some error happened while taking the photo', error);
-        _this.lastMessage = error.message;
-        _this.data.error = error;
-        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data);
-      }); 
+        // It seems that sometimes errors are triggered but the component still takes the picture
+        // console.log('Some error happened while taking the photo', error);
+        _this.lastMessage = error.message
+        _this.data.error = error
+        _this.emit('pushedNotification', _this.name, _this.lastMessage, _this.data)
+      })
   }
 }
 
-//Extending Factory methods
+// Extending Factory methods
 
-//Extending Entities Factory
+// Extending Entities Factory
 const classes = { FileDetector, PIRMotionDetector, PIRMotionDetector, SystemEnvironment, SlackNotifier, RaspistillNotifier, MultiEnvironment }
 
-new ent.EntitiesFactory().extend(classes);
+new ent.EntitiesFactory().extend(classes)
 
-exports.FileDetector = FileDetector;
-exports.PIRMotionDetector = PIRMotionDetector;
-exports.IOBrokerDetector = IOBrokerDetector;
-exports.SlackNotifier = SlackNotifier;
-exports.RaspistillNotifier = RaspistillNotifier;
-exports.SystemEnvironment = SystemEnvironment;
-exports.MultiEnvironment = MultiEnvironment;
+exports.FileDetector = FileDetector
+exports.PIRMotionDetector = PIRMotionDetector
+exports.IOBrokerDetector = IOBrokerDetector
+exports.SlackNotifier = SlackNotifier
+exports.RaspistillNotifier = RaspistillNotifier
+exports.SystemEnvironment = SystemEnvironment
+exports.MultiEnvironment = MultiEnvironment

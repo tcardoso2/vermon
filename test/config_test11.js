@@ -1,15 +1,15 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "pwd",
+      command: 'pwd'
     },
     MotionDetector: {
-      name: "MD 1",
+      name: 'MD 1'
     },
     BaseNotifier: {
     }
   }
 }
 
-exports.profiles = profiles;
-exports.default = profiles.default;
+exports.profiles = profiles
+exports.default = profiles.default

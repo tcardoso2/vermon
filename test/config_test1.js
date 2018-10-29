@@ -1,10 +1,10 @@
 profiles = {
   default: {
-	some_group: {
-	  some_property: "Test Property" 
-	}
+    some_group: {
+	  some_property: 'Test Property'
+    }
   }
 }
 
-exports.profiles = profiles;
-exports.default = profiles.default;
+exports.profiles = profiles
+exports.default = profiles.default

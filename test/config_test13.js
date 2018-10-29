@@ -1,20 +1,20 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: "pwd"
+      command: 'pwd'
     },
     MotionDetector: {
-      name: "MD 1",
+      name: 'MD 1'
     },
     BaseNotifier: {
     },
     SystemEnvironmentFilter: [
-    {
-      freeMemBelow: 99000000000,
-      applyTo: "MD 1",
-    }]
+      {
+        freeMemBelow: 99000000000,
+        applyTo: 'MD 1'
+      }]
   }
 }
 
-exports.profiles = profiles;
-exports.default = profiles.default;
+exports.profiles = profiles
+exports.default = profiles.default
