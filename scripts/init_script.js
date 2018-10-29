@@ -74,7 +74,7 @@ function getCount()
 
 const chooseEnvironment = {
   message: 'Select my Environment',
-  choices: entities.GetExtensionsMetadata(entities.Environment, menu)
+  choices: entities.GetExtensionsMetadata(entities.Environment, { 'Save changes': ()=>{} })
 };
  
 const addDetectors = {
