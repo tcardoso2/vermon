@@ -94,7 +94,9 @@ function classArgsHandler (literalClass, appendObj) {
   }
   let classParametersChoices = tempBag[literalClass.name];
   if (appendObj) {
-    utils.extend(classParametersChoices, appendObj)
+    //the extended method is assumed to be a callback function taking the current bag as argument
+    //TODO: Tests, cleanup, separate concerns, isolate this function?
+    utils.extend(classParametersChoices, appendObj(literalClass.name, tempBag))
   }
 
   return {

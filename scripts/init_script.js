@@ -8,6 +8,7 @@ let entities = require('../Entities');
 let filters = require('../Filters')
 let meta = require('../Metadata'); //Imported to trigger metadata functions, but not explicitely used
 let extensions = require('../Extensions');
+let log = require('../utils').log;
 const screen = [
   " __      __                             ",
   " \\ \\    / /                             ",
@@ -72,24 +73,43 @@ function getCount()
   return count;
 }
 
+const saveChanges = (className, bag) => {
+  return {
+    'Save changes': ()=>{
+      log.info(`Saving object ${className}...`)
+      let choices = bag[className]
+      delete choices['Save changes']
+      //Expect to receive the actual entry which needs to be instantiated
+      log.debug(choices)
+      let factory = new entities.EntitiesFactory()
+      let args = {}
+      for(var c in choices){
+        args[c] = choices[c].answer
+      }
+      log.debug(`Instanciating with args ${JSON.stringify(args)}...`)
+      factory.instanciate(className, choices)
+    } 
+  }
+}
+
 const chooseEnvironment = {
   message: 'Select my Environment',
-  choices: entities.GetExtensionsMetadata(entities.Environment, { 'Save changes': ()=>{} })
+  choices: entities.GetExtensionsMetadata(entities.Environment, saveChanges)
 };
  
 const addDetectors = {
   message: 'Add a Detector',
-  choices: entities.GetExtensionsMetadata(entities.MotionDetector, menu)
+  choices: entities.GetExtensionsMetadata(entities.MotionDetector, saveChanges)
 };
 
 const addNotifiers = {
   message: 'Add a Notifier',
-  choices: entities.GetExtensionsMetadata(entities.BaseNotifier, menu)
+  choices: entities.GetExtensionsMetadata(entities.BaseNotifier, saveChanges)
 };
 
 const addFilters = {
   message: 'Add a Filter',
-  choices: entities.GetExtensionsMetadata(filters.BaseFilter, menu)
+  choices: entities.GetExtensionsMetadata(filters.BaseFilter, saveChanges)
 };
 
 const runWithoutSaving = {

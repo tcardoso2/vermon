@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.13: WIP in init script, allowing to save user changes;  
 * v 0.6.12: Bug fixes. Finally started linting (eslint) WIP;  
 * v 0.6.11: Added options for adding Detectors, Notifiers, Filters (WIP);   
 * v 0.6.10: WIP on init script (CLI tool for creating Entities), needs automated tests;  
