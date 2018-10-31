@@ -30,7 +30,7 @@ class SystemEnvironment extends ent.Environment {
       throw new Error('ERROR: You must provide a command as the first argument.')
     }
     this.command = command
-    this.interval = interval
+    this.interval = isNaN(interval) ? 0 : interval
     this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 }
     this.killAfter = killAfter
     let m = this
