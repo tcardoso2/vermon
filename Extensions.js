@@ -32,14 +32,14 @@ class SystemEnvironment extends ent.Environment {
     this.command = command
     this.interval = isNaN(interval) ? 0 : interval
     this.currentState = { stdout: undefined, cpus: -1, totalmem: -1, freemem: -1 }
-    this.killAfter = killAfter
+    this.killAfter = isNaN(killAfter) ? 0 : killAfter
     let m = this
     let f = () => {
       m.killAfter--
       // This is executed after about x milliseconds.
       log.info('SystemEnvironment is executing command...')
-      if ((m.interval == 0) || (m.killAfter == 0)) {
-        log.info(`Clearing interval killAfter = ${killAfter}`)
+      if ((m.interval == 0) || (m.killAfter == 0) && m.i) {
+        log.debug(`Clearing interval killAfter = ${JSON.stringify(killAfter)}...`)
         clearInterval(m.i)
       }
       m.getValues((m) => {
@@ -47,8 +47,10 @@ class SystemEnvironment extends ent.Environment {
       })
     }
     if (this.interval != 0) {
+      log.info(`Setting interval function to run every ${this.interval} ms...`)
       this.i = setInterval(f, this.interval < 500 ? 500 : this.interval) // interval is never below 500 millisecond for performance reasons
     } else {
+      log.info('No interval was set. Executing function f() directly')
       f()
     }
   }

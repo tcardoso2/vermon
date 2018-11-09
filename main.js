@@ -716,20 +716,16 @@ function SaveAllToConfig (src, callback, force = false) {
   if (fs.existsSync(src) && !force) {
     return resultError('File exists, if you want to overwrite it, use the force attribute')
   } else {
-    if (force) {
-      return resultWarning('File exists, overwriting with new version')
-    } else {
-      let contents = addConfigDefinitions(_InternalSerializeCurrentContext())
-      fs.writeFile(src, contents, function (err) {
-        if (err) {
-          return resultError(err)
-        } else {
-          status = 0
-          message = 'Success'
-        }
-        callback(status, message)
-      })
-    }
+    let contents = addConfigDefinitions(_InternalSerializeCurrentContext())
+    fs.writeFile(src, contents, function (err) {
+      if (err) {
+        return resultError(err)
+      } else {
+        status = 0
+        message = 'Success'
+      }
+      callback(status, message)
+    })
   }
 }
 
@@ -828,4 +824,6 @@ exports.profile = profile
 exports.watch = watch
 exports.reset = Reset
 exports.logger = log
+exports.save = SaveAllToConfig
 exports.setLogLevel = setLogLevel
+exports.addInstance = _AddInstance

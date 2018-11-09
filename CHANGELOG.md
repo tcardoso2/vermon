@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.6.14: vermon, added 'save' and 'addInstance' functions which substitutes SaveAllToConfig and internal _AddInstance respectively. Worked on improvements of the save option for init_script;  
 * v 0.6.13: WIP in init script, allowing to save user changes;  
 * v 0.6.12: Bug fixes. Finally started linting (eslint) WIP;  
 * v 0.6.11: Added options for adding Detectors, Notifiers, Filters (WIP);   
