@@ -144,7 +144,7 @@ const saveConfig = {
 let level = 0
 
 function createMenu () {
-  utils.setLevel('info');
+  utils.setLevel('error');
   return {
     message: 'Choose your option(s) below',
     choices: {
