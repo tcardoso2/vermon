@@ -76,6 +76,7 @@ const saveChanges = (className, bag) => {
     'Save changes': () => {
       log.info(`Saving object ${className}...`)
       let choices = bag[className]
+      let saveOption = choices['Save changes']
       delete choices['Save changes']
       // Expect to receive the actual entry which needs to be instantiated
       log.debug(choices)
@@ -85,8 +86,13 @@ const saveChanges = (className, bag) => {
         args[c] = choices[c].answer
       }
       log.debug(`Instanciating with args ${JSON.stringify(args)}...`)
-      //factory.instanciate(className, args)
-      vermon.addInstance(factory, className, args)
+      try {
+        vermon.addInstance(factory, className, args)
+      } catch (e) {
+        log.error(e.message)
+        //Need to reinstate save changes
+        choices['Save changes'] = saveOption
+      }
       //TODO: This should actually only be done at the end, in the 
       //vermon.save('test_config.js', (status, message) => {
 
@@ -138,7 +144,7 @@ const saveConfig = {
 let level = 0
 
 function createMenu () {
-  utils.setLevel('debug');
+  utils.setLevel('info');
   return {
     message: 'Choose your option(s) below',
     choices: {

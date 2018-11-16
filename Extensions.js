@@ -36,8 +36,8 @@ class SystemEnvironment extends ent.Environment {
     let m = this
     let f = () => {
       m.killAfter--
-      // This is executed after about x milliseconds.
-      log.info('SystemEnvironment is executing command...')
+      // This is executed after about x milliseconds, so we want this on debug mode only
+      log.debug('SystemEnvironment is executing command...')
       if ((m.interval == 0) || (m.killAfter == 0) && m.i) {
         log.debug(`Clearing interval killAfter = ${JSON.stringify(killAfter)}...`)
         clearInterval(m.i)

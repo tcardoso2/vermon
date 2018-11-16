@@ -537,7 +537,7 @@ function _AddInstance (f, p, args) {
     log.debug('Object is not of Environment type... checking if is a Notifier')
     if (!AddNotifier(o)) {
       log.debug('Object is not of Notifier type... checking if is a Detector')
-      if (!AddDetector(o, config.forceAdds)) {
+      if (!AddDetector(o, config ? config.forceAdds : false)) {
         log.debug('Object is not of Detector type... checking if is a Filter')
         if (!_InternalAddFilter(o)) {
           log.warn(chalk.yellow(`Object/class '${p}' is not of any type, could not be added. Proceeding.`))
