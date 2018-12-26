@@ -826,4 +826,4 @@ exports.reset = Reset
 exports.logger = log
 exports.save = SaveAllToConfig
 exports.setLogLevel = setLogLevel
-exports.addInstance = _AddInstance
+exports.instanciate = _AddInstance
