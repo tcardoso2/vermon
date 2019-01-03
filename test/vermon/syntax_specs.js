@@ -19,7 +19,7 @@ after(function (done) {
 
 describe('Basic new syntax, ', function () {
   describe('configure ', function () {
-    it('configure (needs to be done before starting vernon)', function () {
+    it('configure (needs to be done before starting vermon)', function () {
       vermon.setLogLevel('info')
       vermon.configure()
       // No errors should happen
@@ -129,6 +129,14 @@ describe('Basic new syntax, ', function () {
       }, true)
     })
   })
+  
+  describe('force ', function () {
+    xit('force: allows setting globaly that any type of Detector is allowed regardless of object type', function (done) {
+      vermon.reset()
+      vermon.configure('test/config_test4.js')
+      vermon.use();
+    })
+  });
 
   describe('use ', function () {
     xit('use: (replacer for former PluginManager.AddPlugin), takes a library as arg', function (done) {

@@ -33,6 +33,12 @@ let pm = require('./PluginManager')
 let errors = require('./Errors.js')
 var log = utils.setLevel('warn')
 
+
+/**
+ * If true will add Detectors regardless of their type. Override it with force(bool) function
+ */
+let _globalForceAdds = false
+
 /**
  * Adds a Filter into the current Detectors in {motionDetectors}. If the filter is not of BaseFilter instance,
  * it fails silently (logs a warning message into the logger) and returns false. If there are no Detectors still
@@ -492,6 +498,10 @@ function watch () {
   })
 }
 
+function force (forceAdds) {
+  _globalForceAdds = forceAdds
+}
+
 function configure (configParams = new Config()) {
   log.info('Configuring vermon...')
 
@@ -552,7 +562,8 @@ function _AddInstance (f, p, args) {
  * Collaborator: Environment
  * @param {String} profile is the path of the config file to use
  * @param {boolean} prependCwd tells if the config class should prepend CWD to the profile path or not
- * @param {boolean} forceAdds if true means that all Entities in config should be added forcibly independent of being of the correct type.
+ * @param {boolean} forceAdds if true means that all Entities in config should be added forcibly independent of being of the correct type. Overriden by _globalForceAdds
+ *  DISLAIMER: Might not be implemented for all entities but only detectors.
  * @example     let alternativeConfig = new main.Config("config_test1.js");
  * @returns {Object} the config object itself
  */
@@ -561,7 +572,7 @@ class Config {
     // config.js must always exist
     this.fallback = require('./config.js')
     this.fileNotFound = false
-    this.forceAdds = forceAdds
+    this.forceAdds = forceAdds || _globalForceAdds //if true, _globalForceAdds overrides this
     if (!profile) {
       this.mapToFile('local.js')
     } else {
@@ -824,6 +835,7 @@ exports.profile = profile
 exports.watch = watch
 exports.reset = Reset
 exports.logger = log
+exports.force = force
 exports.save = SaveAllToConfig
 exports.setLogLevel = setLogLevel
 exports.instanciate = _AddInstance

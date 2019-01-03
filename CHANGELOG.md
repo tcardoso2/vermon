@@ -2,7 +2,8 @@
 
 ***  
 
-* v 0.6.16: Small chages, vermon.addInstance is changed to vermon.instanciate; added 2 more syntax tests (WIP);  
+* v 0.6.17: Use vermon.force(true) to add Detectors regardless of type;  
+* v 0.6.16: Small changes, vermon.addInstance is changed to vermon.instanciate; added 2 more syntax tests (WIP);  
 * v 0.6.15: Fixed issue on init_script where if a failure happened while saving the Detector (without the environment) would crash and Save option would disappear;  
 * v 0.6.14: vermon, added 'save' and 'addInstance' functions which substitutes SaveAllToConfig and internal _AddInstance respectively. Worked on improvements of the save option for init_script;  
 * v 0.6.13: WIP in init script, allowing to save user changes;  
