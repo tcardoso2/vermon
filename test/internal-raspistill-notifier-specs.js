@@ -22,6 +22,8 @@ let ext = core.extensions
 let main = require('../main.js')
 let events = require('events')
 const Raspistill = require('node-raspistill').Raspistill
+const isPi = require('detect-rpi');
+
 
 // Chai will use promises for async events
 chai.use(chaiAsPromised)
@@ -43,6 +45,12 @@ after(function (done) {
 })
 
 describe('When a new Environment with a Raspistill Notifier is created, ', function () {
+  
+  if (!isPi()) {
+    console.log('Not running on a pi, returning...')
+    return
+  }
+
   it('should save a picture', function (done) {
     main.Reset()
     this.timeout(8000)
@@ -92,6 +100,12 @@ describe('When a new Environment with a Raspistill Notifier is created, ', funct
 })
 
 describe('When a new Raspistill Notifier is created, ', function () {
+
+  if (!isPi()) {
+    console.log('Not running on a pi, returning...')
+    return
+  }
+  
   it('its internalObj property should be a node-raspistill object', function () {
     let n = new ext.RaspistillNotifier()
     n.hasInternalObj().should.not.equal(undefined);
@@ -138,6 +152,12 @@ describe('When a new Raspistill Notifier is created, ', function () {
 })
 
 describe('When a file drops into a folder', function () {
+
+  if (!isPi()) {
+    console.log('Not running on a pi, returning...')
+    return
+  }
+
   it('It should detect it and trigger notifiers', function (done) {
     main.Reset()
     let n0 = new ent.BaseNotifier()

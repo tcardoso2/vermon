@@ -94,7 +94,7 @@ describe('When a new Simple Command is created for an environment with a Filter,
       n[0].on('pushedNotification', function (message, text, data) {
         // Contrary to Motion Detector Filters, Environment filters prevent state to change
         console.log('CONSOLE:', data.newState.stdout.data)
-        data.newState.stdout.data.should.include('1 packets transmitted, 1 packets received, 0.0% packet loss')
+        data.newState.stdout.data.should.include('We Are Vermon!')
         done()
       })
       // Should send a signal right away

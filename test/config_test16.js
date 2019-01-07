@@ -12,7 +12,7 @@ profiles = {
       path: 'photos',
       sendOld: true
     },
-    BaseDetector: [{
+    MotionDetector: [{
       name: 'MD 1'
     },
     {

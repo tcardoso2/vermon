@@ -97,7 +97,7 @@ describe('When using t-motion-detector, ', function () {
         main.SaveAllToConfig(src_save, (status, message) => {
           // Saving second time
           main.SaveAllToConfig(src_save, (status, message) => {
-            message.should.equal('Warn: File exists, overwriting with new version')
+            message.should.equal('Success')
             status.should.equal(0)
             done()
           }, true) // Force attribute

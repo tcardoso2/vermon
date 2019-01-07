@@ -1,7 +1,7 @@
 profiles = {
   default: {
     SystemEnvironment: {
-      command: 'echo t-motion'
+      command: 'echo We Are Vermon!'
     },
     MotionDetector: {
       name: 'MD 1'
@@ -12,7 +12,7 @@ profiles = {
       {
         freeMemBelow: 1000,
         applyTo: 'MD 1',
-        stdoutMatchesRegex: 't-motion'
+        stdoutMatchesRegex: 'We Are Vermon!'
       }]
   }
 }
