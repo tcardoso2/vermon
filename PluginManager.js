@@ -1,6 +1,7 @@
 
 let plugins = {}
-let utils = require('./utils.js')
+let core = require('vermon-core-entities')
+let utils = core.utils
 let log = utils.log
 let errors = require('./Errors')
 

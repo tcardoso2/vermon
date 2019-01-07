@@ -1,8 +1,9 @@
 // TODO: Add custom messages here instead of main.js
-let ent = require('./Entities')
-let filters = require('./Filters')
-let ext = require('./Extensions')
-let utils = require('./utils')
+let core = require('vermon-core-entities')
+let ent = core.entities
+let ext = core.extensions
+let filters = core.filters
+let utils = core.utils
 utils.setLevel('debug')
 let log = utils.log
 let SystemEnvironment = ext.SystemEnvironment

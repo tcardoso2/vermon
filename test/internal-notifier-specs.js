@@ -13,8 +13,10 @@ let chai = require('chai')
 let chaiAsPromised = require('chai-as-promised')
 let should = chai.should()
 let fs = require('fs')
-let ent = require('../Entities.js')
-let ext = require('../Extensions.js')
+let core = require('vermon-core-entities')
+let ent = core.entities
+let ext = core.extensions
+let filters = core.filters
 let main = require('../main.js')
 let events = require('events')
 
@@ -29,7 +31,7 @@ after(function (done) {
   // here you can clear fixtures, etc.
   main = require('../main.js')
   main.Reset()
-  ent = require('../Entities.js')
+  ent = core.entities
   done()
 })
 

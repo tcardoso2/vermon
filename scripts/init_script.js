@@ -5,11 +5,11 @@
  */
 let vermon = require('../main')
 const menu = require('inquirer-menu')
-let entities = require('../Entities')
-let filters = require('../Filters')
+let core = require('vermon-core-entities')
+let entities = core.entities
+let filters = core.filters
+let utils = core.utils
 let meta = require('../Metadata') // Imported to trigger metadata functions, but not explicitely used
-let extensions = require('../Extensions')
-let utils = require('../utils')
 let log = utils.log
 const screen = [
   ' __      __                             ',

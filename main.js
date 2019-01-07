@@ -13,25 +13,26 @@
 // @author: Tiago Cardoso
 //
 
-let ent = require('./Entities.js')
 // Simple commandline or terminal interface to allow
 // you to run cli or bash style commands as if you
 // were in the terminal. Do not mistake with node-cmd,
 // which allows the current script to be run as a command
 let cli = require('commander')
 let cmd = require('node-cmd')
-let filters = ent.Filters
-let ext = require('./Extensions.js')
-let em = require('./EnvironmentManager.js')
+let core = require('vermon-core-entities')
+let ent = core.entities
+let ext = core.extensions
+let filters = core.filters
+let utils = core.utils
+let em = core.em
 let motionDetectors = []
 let config
 let fs = require('fs')
 let _ = require('lodash/core')
 let chalk = require('chalk')
-let utils = require('./utils.js')
 let pm = require('./PluginManager')
 let errors = require('./Errors.js')
-var log = utils.setLevel('warn')
+var log = core.utils.setLevel('warn')
 
 
 /**
@@ -547,7 +548,7 @@ function _AddInstance (f, p, args) {
     log.debug('Object is not of Environment type... checking if is a Notifier')
     if (!AddNotifier(o)) {
       log.debug('Object is not of Notifier type... checking if is a Detector')
-      if (!AddDetector(o, config ? config.forceAdds : false)) {
+      if (!AddDetector(o, config ? config.forceAdds : _globalForceAdds)) {
         log.debug('Object is not of Detector type... checking if is a Filter')
         if (!_InternalAddFilter(o)) {
           log.warn(chalk.yellow(`Object/class '${p}' is not of any type, could not be added. Proceeding.`))
@@ -821,9 +822,9 @@ exports.StartWithConfig = StartWithConfig
 exports.SaveAllToConfig = SaveAllToConfig
 exports.Config = Config
 exports.Log = log
-exports.SetTraceLevel = utils.setLevel
+exports.SetTraceLevel = core.utils.setLevel
 // Utils
-exports.Utils = utils
+exports.Utils = core.utils
 // PluginManager
 exports.PluginManager = pm
 

@@ -18,9 +18,10 @@ let chaiAsPromised = require('chai-as-promised')
 let should = chai.should()
 let expect = chai.expect()
 let fs = require('fs')
-let ent = require('../Entities.js')
-let ext = require('../Extensions.js')
-let filters = require('../Filters.js')
+let core = require('vermon-core-entities')
+let ent = core.entities
+let ext = core.extensions
+let filters = core.filters
 let main = require('../main.js')
 
 before(function (done) {

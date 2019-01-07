@@ -13,8 +13,9 @@ let chai = require('chai')
 let chaiAsPromised = require('chai-as-promised')
 let should = chai.should()
 let fs = require('fs')
-let ent = require('../Entities.js')
-let ext = require('../Extensions.js')
+let core = require('vermon-core-entities')
+let ent = core.entities
+let ext = core.extensions
 let main = require('../main.js')
 
 // Chai will use promises for async events

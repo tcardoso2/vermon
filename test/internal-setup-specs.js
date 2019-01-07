@@ -13,8 +13,9 @@ let chai = require('chai')
 let chaiAsPromised = require('chai-as-promised')
 let should = chai.should()
 let fs = require('fs')
-let ent = require('../Entities.js')
-let ext = require('../Extensions.js')
+let core = require('vermon-core-entities')
+let ent = core.entities
+let ext = core.extensions
 let main = require('../main.js')
 let events = require('events')
 
@@ -25,7 +26,7 @@ before(function (done) {
 after(function (done) {
   // here you can clear fixtures, etc.
   main = require('../main.js')
-  ent = require('../Entities.js')
+  ent = core.entities
   done()
 })
 
@@ -51,18 +52,19 @@ describe('When using t-motion-detector, ', function () {
     let src_save = src_template.replace('config', '1')
     let alternativeConfig = new main.Config('/test/config_test4.js')
     // Make sure the temporary file is deleted
-    if (fs.existsSync(src_save)) fs.unlink(src_save)
-    main.StartWithConfig(alternativeConfig, () => {
-      main.SaveAllToConfig(src_save, (status, message) => {
-        // Check file exists
-        if (fs.existsSync(src_save)) {
-        } else {
-          should.fail()
-        }
-        message.should.equal('Success')
-        status.should.equal(0)
-        done()
-      })
+    if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
+      main.StartWithConfig(alternativeConfig, () => {
+        main.SaveAllToConfig(src_save, (status, message) => {
+          // Check file exists
+          if (fs.existsSync(src_save)) {
+          } else {
+            should.fail()
+          }
+          message.should.equal('Success')
+          status.should.equal(0)
+          done()
+        })
+      })      
     })
   })
   it('if file exists should return an error', function (done) {
@@ -71,16 +73,17 @@ describe('When using t-motion-detector, ', function () {
     let src_save = src_template.replace('config', '2')
     let alternativeConfig = new main.Config('/test/config_test4.js')
     // Make sure the temporary file is deleted
-    if (fs.existsSync(src_save)) fs.unlink(src_save)
-    main.StartWithConfig(alternativeConfig, () => {
-      main.SaveAllToConfig(src_save, (status, message) => {
-        // Saving second time
+    if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
+      main.StartWithConfig(alternativeConfig, () => {
         main.SaveAllToConfig(src_save, (status, message) => {
-          status.should.equal(1)
-          message.should.equal('Error: File exists, if you want to overwrite it, use the force attribute')
-          done()
+          // Saving second time
+          main.SaveAllToConfig(src_save, (status, message) => {
+            status.should.equal(1)
+            message.should.equal('Error: File exists, if you want to overwrite it, use the force attribute')
+            done()
+          })
         })
-      })
+      })      
     })
   })
   it('when saving with force attribute if file exists should overwrite it', function (done) {
@@ -89,15 +92,16 @@ describe('When using t-motion-detector, ', function () {
     let src_save = src_template.replace('config', '3')
     let alternativeConfig = new main.Config('/test/config_test4.js')
     // Make sure the temporary file is deleted
-    if (fs.existsSync(src_save)) fs.unlink(src_save)
-    main.StartWithConfig(alternativeConfig, () => {
-      main.SaveAllToConfig(src_save, (status, message) => {
-        // Saving second time
+    if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
+      main.StartWithConfig(alternativeConfig, () => {
         main.SaveAllToConfig(src_save, (status, message) => {
-          message.should.equal('Warn: File exists, overwriting with new version')
-          status.should.equal(0)
-          done()
-        }, true) // Force attribute
+          // Saving second time
+          main.SaveAllToConfig(src_save, (status, message) => {
+            message.should.equal('Warn: File exists, overwriting with new version')
+            status.should.equal(0)
+            done()
+          }, true) // Force attribute
+        })
       })
     })
   })
