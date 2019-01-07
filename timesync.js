@@ -15,7 +15,8 @@ let tz = require('timezone/loaded')
 let bodyparser = require('body-parser')
 let cmd = require('node-cmd')
 
-let utils = require('./utils.js')
+let core = require('vermon-core-entities')
+let utils = core.utils
 
 var log = utils.setLevel('info')
 
