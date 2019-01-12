@@ -51,14 +51,10 @@ describe('When using vermon, ', function () {
     this.timeout(4000)
     // Prepare
     main.Reset()
-    let src_save = src_template.replace('config', '1')
-    let alternativeConfig = new main.Config('/test/config_test4.js')
-    console.log('>> Checking if file exists...', src_save);
-    // Make sure the temporary file is deleted
-    if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
-      console.log('>> File exists');
+
+    function saveConfig() {
       main.StartWithConfig(alternativeConfig, () => {
-        console.log('>> Vermon started');
+        console.log('>> Vermon started, attempting to save config...');
         main.SaveAllToConfig(src_save, (status, message) => {
           console.log('>> Saved to config');
           // Check file exists
@@ -70,18 +66,34 @@ describe('When using vermon, ', function () {
           status.should.equal(0)
           done()
         })
-      })      
-    })
+      })
+    }
+
+    let src_save = src_template.replace('config', '1')
+    let alternativeConfig = new main.Config('/test/config_test4.js')
+    console.log('>> Checking if file exists...', src_save);
+    // Make sure the temporary file is deleted
+    if (fs.existsSync(src_save)) {
+      console.log('>> File exists, deleting it...');
+      fs.unlink(src_save, (err) => {
+        if (err) throw err;
+        console.log('>> File deleted');
+        saveConfig();
+      })
+    } else {
+      console.log("File not found, will continue test...")
+      saveConfig()
+    }
   })
+
   it('if file exists should return an error', function (done) {
     this.timeout(4000)
     // Prepare
     main.Reset()
-    let src_save = src_template.replace('config', '2')
-    let alternativeConfig = new main.Config('/test/config_test4.js')
-    // Make sure the temporary file is deleted
-    if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
+
+    function saveConfig() {
       main.StartWithConfig(alternativeConfig, () => {
+        console.log('>> Vermon started, attempting to save config...');
         main.SaveAllToConfig(src_save, (status, message) => {
           // Saving second time
           main.SaveAllToConfig(src_save, (status, message) => {
@@ -90,18 +102,34 @@ describe('When using vermon, ', function () {
             done()
           })
         })
-      })      
-    })
+      })
+    }
+
+    let src_save = src_template.replace('config', '2')
+    let alternativeConfig = new main.Config('/test/config_test4.js')
+    console.log('>> Checking if file exists...', src_save);
+    // Make sure the temporary file is deleted
+    if (fs.existsSync(src_save)) {
+      console.log('>> File exists, deleting it...');
+      fs.unlink(src_save, (err) => {
+        if (err) throw err;
+        console.log('>> File deleted');
+        saveConfig();
+      })
+    } else {
+      console.log("File not found, will continue test...")
+      saveConfig()
+    }
   })
+
   it('when saving with force attribute if file exists should overwrite it', function (done) {
     this.timeout(4000)
     // Prepare
     main.Reset()
-    let src_save = src_template.replace('config', '3')
-    let alternativeConfig = new main.Config('/test/config_test4.js')
-    // Make sure the temporary file is deleted
-    if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
+
+    function saveConfig() {
       main.StartWithConfig(alternativeConfig, () => {
+        console.log('>> Vermon started, attempting to save config...');
         main.SaveAllToConfig(src_save, (status, message) => {
           // Saving second time
           main.SaveAllToConfig(src_save, (status, message) => {
@@ -111,8 +139,25 @@ describe('When using vermon, ', function () {
           }, true) // Force attribute
         })
       })
-    })
+    }
+
+    let src_save = src_template.replace('config', '3')
+    let alternativeConfig = new main.Config('/test/config_test4.js')
+    console.log('>> Checking if file exists...', src_save);
+    // Make sure the temporary file is deleted
+    if (fs.existsSync(src_save)) {
+      console.log('>> File exists, deleting it...');
+      fs.unlink(src_save, (err) => {
+        if (err) throw err;
+        console.log('>> File deleted');
+        saveConfig();
+      })
+    } else {
+      console.log("File not found, will continue test...")
+      saveConfig()
+    }
   })
+
   xit('The file should equal the contents of the initially loaded config file', function (done) {
     this.timeout(4000)
     main.Reset()
