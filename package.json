@@ -41,7 +41,7 @@
   "config": {},
   "scripts": {
     "preinstall": "node scripts/preinstall.js",
-    "test": "mocha test/internal-setup-specs.js --exit"
+    "test": "mocha test/ --exit"
   },
   "contributors": [
     {

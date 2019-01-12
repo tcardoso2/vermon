@@ -18,7 +18,6 @@ let ent = core.entities
 let ext = core.extensions
 let main = require('../main.js')
 let events = require('events')
-var log = core.utils.setLevel('debug')
 
 before(function (done) {
   done()
