@@ -570,6 +570,7 @@ function _AddInstance (f, p, args) {
  */
 class Config {
   constructor (profile, prependCwd = true, forceAdds = false) {
+    log.info(`Running config with forceAdds = ${forceAdds}`)
     // config.js must always exist
     this.fallback = require('./config.js')
     this.fileNotFound = false

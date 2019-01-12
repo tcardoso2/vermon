@@ -53,6 +53,7 @@ describe('When using vermon, ', function () {
     main.Reset()
     let src_save = src_template.replace('config', '1')
     let alternativeConfig = new main.Config('/test/config_test4.js')
+    console.log('>> Checking if file exists...', src_save);
     // Make sure the temporary file is deleted
     if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
       console.log('>> File exists');
