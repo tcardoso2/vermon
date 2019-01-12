@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.7.1: Minor test fix, ignoring slack uploads if no auth token is found (important for CI tests, e.g. travis), adjusting some test timeouts to allow more time as they are failing on CI;  
 * v 0.7.0: Using the new vermon-core-entities package instead of locally defining entities, extensions and utils. major code refactoring;   
 * v 0.6.17: Use vermon.force(true) to add Detectors regardless of type;  
 * v 0.6.16: Small changes, vermon.addInstance is changed to vermon.instanciate; added 2 more syntax tests (WIP);  

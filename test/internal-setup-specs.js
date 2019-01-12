@@ -47,6 +47,7 @@ describe('When using t-motion-detector, ', function () {
   })
 
   it('I should be able to save the current Environment, Detectors and Notifiers into disk as a configuration file', function (done) {
+    this.timeout(4000)
     // Prepare
     main.Reset()
     let src_save = src_template.replace('config', '1')
@@ -68,6 +69,7 @@ describe('When using t-motion-detector, ', function () {
     })
   })
   it('if file exists should return an error', function (done) {
+    this.timeout(4000)
     // Prepare
     main.Reset()
     let src_save = src_template.replace('config', '2')
@@ -87,6 +89,7 @@ describe('When using t-motion-detector, ', function () {
     })
   })
   it('when saving with force attribute if file exists should overwrite it', function (done) {
+    this.timeout(4000)
     // Prepare
     main.Reset()
     let src_save = src_template.replace('config', '3')
