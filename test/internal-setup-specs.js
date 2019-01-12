@@ -18,7 +18,7 @@ let ent = core.entities
 let ext = core.extensions
 let main = require('../main.js')
 let events = require('events')
-var log = core.utils.setLevel('info')
+var log = core.utils.setLevel('debug')
 
 before(function (done) {
   done()
@@ -32,7 +32,7 @@ after(function (done) {
 })
 
 var src_template = './test/config_test_my_saved_config.js'
-describe('When using t-motion-detector, ', function () {
+describe('When using vermon, ', function () {
   it('The start function callback should send the environment, detector, notifiers, and filters as args.', function (done) {
     main.Reset()
 
@@ -55,8 +55,11 @@ describe('When using t-motion-detector, ', function () {
     let alternativeConfig = new main.Config('/test/config_test4.js')
     // Make sure the temporary file is deleted
     if (fs.existsSync(src_save)) fs.unlink(src_save, () => {
+      console.log('>> File exists');
       main.StartWithConfig(alternativeConfig, () => {
+        console.log('>> Vermon started');
         main.SaveAllToConfig(src_save, (status, message) => {
+          console.log('>> Saved to config');
           // Check file exists
           if (fs.existsSync(src_save)) {
           } else {
@@ -140,10 +143,10 @@ describe('When using t-motion-detector, ', function () {
   })
 })
 
-describe('After installing a new t-motion-detector, ', function () {
+describe('After installing a new vermon, ', function () {
   it('if file is imported with the "require" keyword the setup should not run', function (done) {
     // Prepare
-
+    var log = core.utils.setLevel('warn')
     let pi = require('../scripts/postinstall.js')
     pi.count.should.equal(0)
     done()
