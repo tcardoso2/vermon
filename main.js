@@ -25,7 +25,7 @@ let ext = core.extensions
 let filters = core.filters
 let utils = core.utils
 let em = core.em
-let motionDetectors = []
+let motionDetectors = [] //Attention! motionDetectors acts as a Singleton!!
 let config
 let fs = require('fs')
 let _ = require('lodash/core')
@@ -293,9 +293,11 @@ function GetNotifiers () {
 /**
  * Gets the Motion Detectors array present in the context.
  * @returns an Array of MotionDetector objects.
+ * Attention! motion detectors is a singleton!
  * @public
  */
 function GetMotionDetectors () {
+  console.log("Attention! this function GetMotionDetectors returns a singleton of motion detectors! If you are running several instances only one instance prevails!");
   log.debug(`Getting ${motionDetectors.length} detectors...`)
   return motionDetectors
 }
@@ -305,10 +307,12 @@ function GetMotionDetectors () {
  * Will throw an exception if there is no Motion detector with such name.
  * @param {string} name is the name of the MotionDetector instance to get.
  * @returns a MotionDetector objects.
+ * Attention! motion detectors is a singleton!
  * @public
  */
 function GetMotionDetector (name) {
   // It's assumed the number of motion detectors will be sufficiently small to be ok to iterate without major loss of efficiency
+  console.log("Attention! this function GetMotionDetectors returns a singleton of motion detectors! If you are running several instances only one instance prevails!");
   return _.filter(motionDetectors, x => x.name === name)[0]
   // Another alternative way: lodash.filter(motionDetectors, { 'name': 'Something' } );
 }
