@@ -22,7 +22,7 @@
     "readline": "^1.3.0",
     "slack-node": "^0.1.8",
     "tracer": "^0.8.12",
-    "vermon-core-entities": "^0.5.8"
+    "vermon-core-entities": "^0.5.9"
   },
   "devDependencies": {
     "chai": "*",
@@ -68,5 +68,5 @@
   "author": "Tiago Cardoso <tcardoso@gmail.com>",
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
-  "version": "0.7.4"
+  "version": "0.7.5"
 }

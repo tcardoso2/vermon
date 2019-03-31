@@ -2,6 +2,7 @@
 
 ***  
 
+* v 0.7.5: Upgraded to new version of vermon-core-entities 0.5.9;   
 * v 0.7.4: Upgraded to new version of vermon-core-entities 0.5.8;   
 * v 0.7.3: Upgraded to new version of vermon-core-entities 0.5.7;  
 * v 0.7.2: Added some warning on GetMotionDetector* functions as they act as singletons!  
