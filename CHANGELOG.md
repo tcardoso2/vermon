@@ -2,7 +2,7 @@
 
 ***  
 
-
+* v 0.7.4: Upgraded to new version of vermon-core-entities 0.5.8;   
 * v 0.7.3: Upgraded to new version of vermon-core-entities 0.5.7;  
 * v 0.7.2: Added some warning on GetMotionDetector* functions as they act as singletons!  
 * v 0.7.1: Minor test fix, ignoring slack uploads if no auth token is found (important for CI tests, e.g. travis), adjusting some test timeouts to allow more time as they are failing on CI;  
