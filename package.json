@@ -22,7 +22,7 @@
     "readline": "^1.3.0",
     "slack-node": "^0.1.8",
     "tracer": "^0.8.12",
-    "vermon-core-entities": "^0.5.9"
+    "vermon-core-entities": "^0.5.10"
   },
   "devDependencies": {
     "chai": "*",
