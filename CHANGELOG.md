@@ -1,7 +1,7 @@
-# Change log:
+Change log:
+-----------
 
-***  
-
+* v 0.7.7: Upgraded to new version of vermon-core-entities 0.5.12;
 * v 0.7.6: Upgraded to new version of vermon-core-entities 0.5.10;   
 * v 0.7.5: Upgraded to new version of vermon-core-entities 0.5.9;   
 * v 0.7.4: Upgraded to new version of vermon-core-entities 0.5.8;   

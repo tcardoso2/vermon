@@ -1,0 +1,6 @@
+#!/bin/bash
+# Updates core dependencies
+
+echo "Updating dependencies..."
+npm remove vermon-core-entities
+npm install vermon-core-entities --save
