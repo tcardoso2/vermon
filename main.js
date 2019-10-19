@@ -19,7 +19,8 @@
 // which allows the current script to be run as a command
 let cli = require('commander')
 let cmd = require('node-cmd')
-let core = require('vermon-core-entities')
+let core = require('../vermon-core-entities/main')
+//require('vermon-core-entities')
 let ent = core.entities
 let ext = core.extensions
 let filters = core.filters
@@ -33,6 +34,9 @@ let chalk = require('chalk')
 let pm = require('./PluginManager')
 let errors = require('./Errors.js')
 var log = core.utils.setLevel('warn')
+
+//Inject vermon in core
+core.vermon = () => this
 
 
 /**
@@ -545,7 +549,7 @@ function setLogLevel (level) {
  * @internal
  */
 function _AddInstance (f, p, args) {
-  log.info(`Creating entity "${p}" with args ${args}...`)
+  log.info(`Creating entity "${p}" with args ${JSON.stringify(args)}...`)
   let o = f.instanciate(p, args)
   // The way this is written, forces the environment to be created first
   if (!_InternalAddEnvironment(o)) {
@@ -793,7 +797,7 @@ function use (plugin) {
 
 exports.AddNotifier = AddNotifier
 exports.AddNotifierToSubEnvironment = AddNotifierToSubEnvironment
-exports.AddDetector = AddDetector
+exports.AddDetector = exports.addDetector = AddDetector
 exports.AddDetectorToSubEnvironmentOnly = AddDetectorToSubEnvironmentOnly
 exports.ActivateDetector = ActivateDetector
 exports.DeactivateDetector = DeactivateDetector
@@ -802,7 +806,7 @@ exports.GetEnvironment = GetEnvironment
 exports.GetSubEnvironments = GetSubEnvironments
 exports.GetFilters = GetFilters
 exports.GetNotifiers = GetNotifiers
-exports.GetMotionDetectors = GetMotionDetectors
+exports.GetMotionDetectors = exports.getDetectors = GetMotionDetectors
 exports.GetMotionDetector = GetMotionDetector
 exports.Reset = Reset
 /**
@@ -836,6 +840,7 @@ exports.PluginManager = pm
 // New Syntax / Alias replacers of old functions
 
 exports.use = use
+exports.core_ent = core
 exports.configure = configure
 exports.profile = profile
 exports.watch = watch

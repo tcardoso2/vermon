@@ -82,7 +82,7 @@ describe('When a detector is added, ', function () {
 })
 
 describe('When there is a surroundings change relative to an object, ', function () {
-  it('should detect motion if the surrounding environment changed or a position on an object changed', function () {
+  it('should detect motion if the surrounding environment changed or a position or an object changed', function () {
     // Prepare
     var env = new ent.Environment()
     var mDetector = new ent.MotionDetector()
