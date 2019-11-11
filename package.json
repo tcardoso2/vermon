@@ -25,6 +25,7 @@
     "vermon-core-entities": "^0.5.13"
   },
   "devDependencies": {
+    "node-gyp": "*",
     "chai": "*",
     "chai-as-promised": "*",
     "eslint": "^5.8.0",
@@ -68,4 +69,5 @@
   "author": "Tiago Cardoso <tcardoso@gmail.com>",
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
-  "version": "0.7.999999999
+  "version": "0.7.10"
+}

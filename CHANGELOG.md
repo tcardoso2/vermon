@@ -1,6 +1,7 @@
 Change log:
 -----------
 
+* v 0.7.10: Bug fix, typo in package.json, added windows as list of systems to pre-install (Requires Visual Studio installed and node-gyp);  
 * v 0.7.9: Added new NodeEnvironment and NodeDetector entities for detecting nodes in a network (via nmap);  
 * v 0.7.8: Upgraded to new version of vermon-core-entities 0.5.13;
 * v 0.7.7: Upgraded to new version of vermon-core-entities 0.5.12;

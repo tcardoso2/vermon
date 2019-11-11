@@ -2,7 +2,7 @@
 
 /* OS */
 
-const os_x = ['darwin', 'freebsd', 'linux', 'sunos'];
+const os_x = ['darwin', 'freebsd', 'linux', 'sunos', 'win32'];
 const os_m = ['win32'];
 
 /* Quick reference to colors */
