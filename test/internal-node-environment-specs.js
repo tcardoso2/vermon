@@ -45,33 +45,18 @@ describe('NodeEnvironment basics, ', function () {
     done()
   })
 
-  it('should output the network nodes via Environment state', function(done) {
-    // Prepare
-    this.timeout(20000)
-    vermon.setLogLevel('info')
-    vermon.configure('test/config_test21.js')
-    vermon.watch().then((v) => {
-      v.environment.on('changedState', (before, after) => {
-	(after.stdout.stderr == '').should.equal(true)
-	Array.isArray(after.cpus).should.equal(true)
-	done()
-      })
-    }).catch((e) => {
-      should.fail(e)
-    })
-  })
-
   xit('should get the hosts response with also the latency and total nr. of hosts found', function(done) {
   })
 
   it('should convert automatically the hosts into NodeMotionDetectors', function(done) {
     // Prepare
-    this.timeout(20000)
+    this.timeout(60000)
     vermon.setLogLevel('info')
     vermon.configure('test/config_test22.js')
     vermon.watch().then((v) => {
       v.environment.on('changedState', (before, after) => {
-	vermon.getDetectors().length.should.be.gt(0)
+        vermon.getDetectors().length.should.be.gt(1)
+        console.log(vermon.getDetectors()[1].currentIntensity.stdout.data)
         done()
       })
     }).catch((e) => {

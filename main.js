@@ -322,6 +322,16 @@ function GetMotionDetector (name) {
 }
 
 /**
+ * Checks if the detector exists (by anme).
+ * @param {string} name is the name of the MotionDetector instance to get.
+ * @returns {boolean} if exists.
+ * @public
+ */
+function HasMotionDetector (name) {
+  return _.filter(motionDetectors, x => x.name === name).length > 0
+}
+
+/**
  * Gets all the existing Filters present in the current context.
  * @returns {object} an Array of Filter objects.
  * @public
@@ -807,7 +817,8 @@ exports.GetSubEnvironments = GetSubEnvironments
 exports.GetFilters = GetFilters
 exports.GetNotifiers = GetNotifiers
 exports.GetMotionDetectors = exports.getDetectors = GetMotionDetectors
-exports.GetMotionDetector = GetMotionDetector
+exports.GetMotionDetector = exports.getDetector = GetMotionDetector
+exports.HasMotionDetector = exports.hasDetector = HasMotionDetector
 exports.Reset = Reset
 /**
  * Exposes the Entities accessible

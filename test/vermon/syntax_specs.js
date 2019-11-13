@@ -1,4 +1,4 @@
-let vermon = require('./vermon')
+let vermon = require('../../main')
 let fs = require('fs')
 let entities = vermon.Entities
 let logger = vermon.logger
@@ -151,4 +151,16 @@ describe('Basic new syntax, ', function () {
       vermon.use();
     })
   })
+
+  describe('hasDetector ', function () {
+    it('hasdetector: Returns true if detector is found (by name)', function (done) {
+      vermon.reset()
+      vermon.configure('test/config_test4.js')
+      vermon.watch().then((environment, detectors) => {
+        vermon.hasDetector("MD 1").should.equal(true)
+        done()
+      })
+    })
+  })
+  
 })
