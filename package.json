@@ -8,7 +8,7 @@
     "flatted": "^1.0.2",
     "inquirer-menu": "^1.0.0",
     "knockout": "^3.4.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "log": "^1.4.0",
     "mock-stdin": "^0.3.1",
     "moment": "^2.20.1",
@@ -69,5 +69,5 @@
   "author": "Tiago Cardoso <tcardoso@gmail.com>",
   "license": "BSD-2-Clause",
   "readmeFilename": "README.md",
-  "version": "0.7.11"
+  "version": "0.7.12"
 }
